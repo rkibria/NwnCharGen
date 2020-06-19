@@ -1,7 +1,7 @@
 #include <cassert>
 
-#include <nwnrules.hpp>
 #include <nwnrace.hpp>
+#include <nwnrules.hpp>
 
 namespace Nwn {
 
