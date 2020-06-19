@@ -14,8 +14,11 @@ using RaceContainer = std::unordered_map<std::string, std::unique_ptr<Race>>;
 
 class RacesConstItr {
 public:
-    void next() { ++itr; }
-    const Race& get() const { return *( (*itr).second ); }
+    RacesConstItr& operator++() {
+        ++itr;
+        return *this;
+    }
+    const Race& operator*() const { return *( (*itr).second ); }
     bool end() const { return itr == races.cend(); }
 
 private:

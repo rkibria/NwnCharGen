@@ -21,8 +21,8 @@ RaceDialog::RaceDialog( const std::unique_ptr<Rules>& rules, QWidget *parent ) :
     QList<QTreeWidgetItem *> items;
 
     std::unordered_map<std::string, QTreeWidgetItem*> classItems;
-    for( auto itr = rules->getRaces(); !itr.end(); itr.next() ) {
-        const auto& r = itr.get();
+    for( auto itr = rules->getRaces(); !itr.end(); ++itr ) {
+        const auto& r = *itr;
         const auto& classification = r.getClassification();
 
         QTreeWidgetItem* classItem;
