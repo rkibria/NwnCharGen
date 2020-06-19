@@ -38,9 +38,10 @@ private:
     friend class boost::serialization::access;
 
     template<class Archive>
-    void serialize(Archive & ar, const unsigned int /* file_version */)
+    void serialize( Archive & ar, const unsigned int /* file_version */ )
     {
         ar & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
+           & boost::serialization::make_nvp( "abls", *abls )
            & boost::serialization::make_nvp( "race", race );
     }
 

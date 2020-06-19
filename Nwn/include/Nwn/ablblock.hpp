@@ -4,6 +4,9 @@
 #include <Nwn/base.hpp>
 #include <array>
 
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/array.hpp>
+
 namespace Nwn {
 
 class AblBlock
@@ -18,6 +21,14 @@ public:
     AblBlock& add( const AblBlock& rhs );
 
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize( Archive & ar, const unsigned int /* file_version */ )
+    {
+        ar & boost::serialization::make_nvp( "ablblock", abls );
+    }
+
     std::array< int, 6 > abls;
 };
 
