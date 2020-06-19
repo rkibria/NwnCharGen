@@ -1,4 +1,5 @@
 #include <nwnablblock.hpp>
+#include <algorithm>
 
 namespace Nwn {
 
@@ -26,6 +27,12 @@ int AblBlock::getAblMod( AblScore abl ) const
     const auto score = getAbl( abl );
     auto mod = ( score / 2 ) - 5;
     return mod;
+}
+
+AblBlock& AblBlock::add( const AblBlock& rhs )
+{
+    std::transform( abls.begin(), abls.end(), rhs.abls.begin(), abls.begin(), std::plus<int>() );
+    return *this;
 }
 
 } // namespace Nwn

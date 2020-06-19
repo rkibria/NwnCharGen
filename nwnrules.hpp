@@ -9,6 +9,8 @@
 namespace Nwn {
 
 class Race;
+class Character;
+class AblBlock;
 
 using RaceContainer = std::unordered_map<std::string, std::unique_ptr<Race>>;
 
@@ -50,7 +52,10 @@ public:
 
     void addRace( const Race& r );
     RacesConstLooper getRaces() const { return RacesConstLooper( races ); }
-    const Race& getRaceByName( const std::string& name ) { return *( races.at( name ) ); }
+    const Race& getRaceByName( const std::string& name ) const { return *( races.at( name ) ); }
+    bool isRaceValid( const std::string& name ) const { return races.find( name ) != races.end(); }
+
+    AblBlock getAdjustedAbls( const Character& chr ) const;
 
 private:
     RaceContainer races;
