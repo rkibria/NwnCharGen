@@ -12,24 +12,33 @@ class Race;
 
 using RaceContainer = std::unordered_map<std::string, std::unique_ptr<Race>>;
 
-class RacesConstItr {
+class RacesConstItr
+{
 public:
+    const Race& operator*() const { return *( (*itr).second ); }
+    bool operator!=( const RacesConstItr &b ) const { return itr != b.itr; }
     RacesConstItr& operator++() {
         ++itr;
         return *this;
     }
-    const Race& operator*() const { return *( (*itr).second ); }
-    bool end() const { return itr == races.cend(); }
-
 private:
-    explicit RacesConstItr( const RaceContainer& r ) :
-      races{ r },
-      itr{ r.cbegin() }
+    explicit RacesConstItr( RaceContainer::const_iterator i ) :
+      itr{ i }
     {}
-
-    const RaceContainer& races;
     RaceContainer::const_iterator itr;
+    friend class RacesConstLooper;
+};
 
+class RacesConstLooper
+{
+public:
+    RacesConstItr begin() { return RacesConstItr( races.cbegin() ); }
+    RacesConstItr end() { return RacesConstItr( races.cend() ); }
+private:
+    explicit RacesConstLooper( const RaceContainer& r ) :
+      races{ r }
+    {}
+    const RaceContainer& races;
     friend class Rules;
 };
 
@@ -40,7 +49,7 @@ public:
     ~Rules();
 
     void addRace( const Race& r );
-    RacesConstItr getRaces() const { return RacesConstItr( races ); }
+    RacesConstLooper getRaces() const { return RacesConstLooper( races ); }
     const Race& getRaceByName( const std::string& name ) { return *( races.at( name ) ); }
 
 private:

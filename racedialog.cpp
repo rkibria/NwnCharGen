@@ -13,29 +13,28 @@ RaceDialog::RaceDialog( const std::unique_ptr<Rules>& rules, QWidget *parent ) :
     ui( new Ui::RaceDialog ),
     nwnRules{ rules }
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
-    ui->treeWidgetRace->setColumnCount(1);
-    ui->treeWidgetRace->setHeaderHidden(true);
+    ui->treeWidgetRace->setColumnCount( 1 );
+    ui->treeWidgetRace->setHeaderHidden( true );
 
     QList<QTreeWidgetItem *> items;
 
     std::unordered_map<std::string, QTreeWidgetItem*> classItems;
-    for( auto itr = rules->getRaces(); !itr.end(); ++itr ) {
-        const auto& r = *itr;
-        const auto& classification = r.getClassification();
+    for( const auto& race : rules->getRaces() ) {
+        const auto& classification = race.getClassification();
 
         QTreeWidgetItem* classItem;
         if( classItems.find( classification ) != classItems.end() ) {
             classItem = classItems[ classification ];
         }
         else {
-            classItem = new QTreeWidgetItem(ui->treeWidgetRace, QStringList(QString(classification.c_str())));
+            classItem = new QTreeWidgetItem( ui->treeWidgetRace, QStringList( QString( classification.c_str() ) ) );
             classItem->setFlags( classItem->flags() & ~Qt::ItemIsSelectable );
             classItems[ classification ] = classItem;
         }
 
-        new QTreeWidgetItem(classItem, QStringList(QString(r.getName().c_str())));
+        new QTreeWidgetItem( classItem, QStringList( QString( race.getName().c_str() ) ) );
     }
 
     ui->treeWidgetRace->expandAll();
@@ -51,7 +50,7 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
     const auto selection = ui->treeWidgetRace->selectedItems();
     if( selection.size() ) {
         const auto item = selection.first();
-        raceChoice = item->text(0);
+        raceChoice = item->text( 0 );
         const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() ).getDescription();
         ui->textEditDescription->setText( QString::fromStdString( description ) );
     }
