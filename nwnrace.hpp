@@ -22,6 +22,9 @@ public:
 
     void setDescription( const std::string& d ) { description = d; }
 
+    AblBlock& getAblAdjusts();
+    const AblBlock& getAblAdjusts() const;
+
 private:
     std::string name;
     std::string classification;
