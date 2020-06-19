@@ -1,6 +1,10 @@
+#include <iostream>
+#include <fstream>
+
 #include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
-#include <iostream>
+
+#include <boost/archive/xml_oarchive.hpp>
 
 namespace Nwn {
 
@@ -60,6 +64,13 @@ void Character::decAbl( AblScore abl )
         ablPointsRemain += cost;
         abls->setAbl( abl, curValue - 1);
     }
+}
+
+void Character::save( const char* fileName ) const
+{
+    std::ofstream ofs( fileName );
+    boost::archive::xml_oarchive oa( ofs );
+    oa << boost::serialization::make_nvp( "character", *this );
 }
 
 } // namespace Nwn

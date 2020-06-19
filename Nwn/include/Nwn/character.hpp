@@ -31,6 +31,9 @@ public:
     std::string getRace() const { return race; }
     void setRace( const std::string& r ) { race = r; }
 
+    /* Serialization */
+    void save( const char* fileName ) const;
+
 private:
     friend class boost::serialization::access;
 

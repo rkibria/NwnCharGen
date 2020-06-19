@@ -1,7 +1,5 @@
 #include <QFileDialog>
 
-#include <fstream>
-
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
 
@@ -11,8 +9,6 @@
 #include <Nwn/rules.hpp>
 
 #include "racedialog.h"
-
-#include <boost/archive/xml_oarchive.hpp>
 
 using namespace Nwn;
 
@@ -163,8 +159,6 @@ void NwnCharGen::on_actionSave_triggered()
                                                     "character.xml",
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
-        std::ofstream ofs( qPrintable( fileName ) );
-        boost::archive::xml_oarchive oa(ofs);
-        oa << boost::serialization::make_nvp( "character", *nwnChar );
+        nwnChar->save( qPrintable( fileName ) );
     }
 }
