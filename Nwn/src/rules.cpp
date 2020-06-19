@@ -3,7 +3,7 @@
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
 #include <Nwn/ablblock.hpp>
-#include <Nwn/char.hpp>
+#include <Nwn/character.hpp>
 #include <Nwn/race.hpp>
 
 namespace Nwn {

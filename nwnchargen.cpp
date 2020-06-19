@@ -5,7 +5,7 @@
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
 
-#include <Nwn/char.hpp>
+#include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>

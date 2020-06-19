@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 add_library(Nwn STATIC
-    src/char.cpp
+    src/character.cpp
     src/race.cpp
     src/rules.cpp
     src/ablblock.cpp

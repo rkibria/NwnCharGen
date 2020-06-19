@@ -1,4 +1,4 @@
-#include <Nwn/char.hpp>
+#include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
 #include <iostream>
 
