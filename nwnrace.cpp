@@ -2,9 +2,9 @@
 
 namespace Nwn {
 
-Race::Race(const std::string& n, const std::string& c) :
-    name{n},
-    classification{c}
+Race::Race( const std::string& n, const std::string& c ) :
+    name{ n },
+    classification{ c }
 {
 }
 

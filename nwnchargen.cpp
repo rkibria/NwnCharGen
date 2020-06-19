@@ -3,6 +3,7 @@
 
 #include <nwnchar.hpp>
 #include <nwnablblock.hpp>
+#include <nwnrace.hpp>
 #include <nwnrules.hpp>
 
 #include "racedialog.h"

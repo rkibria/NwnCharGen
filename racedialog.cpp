@@ -1,6 +1,7 @@
 #include "racedialog.h"
 #include "ui_racedialog.h"
 
+#include <nwnrace.hpp>
 #include <nwnrules.hpp>
 
 #include <unordered_map>
@@ -20,7 +21,7 @@ RaceDialog::RaceDialog( const std::unique_ptr<Rules>& rules, QWidget *parent ) :
     QList<QTreeWidgetItem *> items;
 
     std::unordered_map<std::string, QTreeWidgetItem*> classItems;
-    for( auto itr = rules->getRacesConstItr(); !itr.end(); itr.next() ) {
+    for( auto itr = rules->getRaces(); !itr.end(); itr.next() ) {
         const auto& r = itr.get();
         const auto& classification = r.getClassification();
 

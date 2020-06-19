@@ -2,26 +2,30 @@
 #define NWNRULES_H
 
 #include <unordered_map>
+#include <memory>
 
 #include <nwnbase.hpp>
-#include <nwnrace.hpp>
 
 namespace Nwn {
 
-class RaceConstItr {
+class Race;
+
+using RaceContainer = std::unordered_map<std::string, std::unique_ptr<Race>>;
+
+class RacesConstItr {
 public:
-    void next() {++itr;}
-    const Race& get() const {return (*itr).second;}
-    bool end() const {return itr == races.cend();}
+    void next() { ++itr; }
+    const Race& get() const { return *( (*itr).second ); }
+    bool end() const { return itr == races.cend(); }
 
 private:
-    explicit RaceConstItr(const std::unordered_map<std::string, Race>& r) :
-      races{r},
-      itr{r.cbegin()}
+    explicit RacesConstItr( const RaceContainer& r ) :
+      races{ r },
+      itr{ r.cbegin() }
     {}
 
-    const std::unordered_map<std::string, Race>& races;
-    std::unordered_map<std::string, Race>::const_iterator itr;
+    const RaceContainer& races;
+    RaceContainer::const_iterator itr;
 
     friend class Rules;
 };
@@ -32,12 +36,12 @@ public:
     explicit Rules();
     ~Rules();
 
-    void addRace(const Race& r);
-    RaceConstItr getRacesConstItr() const { return RaceConstItr(races); }
-    const Race& getRaceByName( const std::string& name ) { return races.at( name ); }
+    void addRace( const Race& r );
+    RacesConstItr getRaces() const { return RacesConstItr( races ); }
+    const Race& getRaceByName( const std::string& name ) { return *( races.at( name ) ); }
 
 private:
-    std::unordered_map<std::string, Race> races;
+    RaceContainer races;
 };
 
 } // namespace Nwn
