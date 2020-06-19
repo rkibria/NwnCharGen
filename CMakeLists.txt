@@ -9,6 +9,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+# set(Boost_DEBUG ON)
+if(WIN32)
+    set(Boost_COMPILER "-mgw8")
+endif()
+set(Boost_ARCHITECTURE "-x64")
+find_package(Boost REQUIRED COMPONENTS serialization)
+
 add_subdirectory(Nwn)
 
 qt5_wrap_cpp(MOC_SOURCES

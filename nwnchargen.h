@@ -37,6 +37,8 @@ private slots:
 
     void on_buttonRace_clicked();
 
+    void on_actionSave_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 

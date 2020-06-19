@@ -8,3 +8,5 @@ add_library(Nwn STATIC
     )
 
 target_include_directories(Nwn PUBLIC include)
+
+target_link_libraries(Nwn PUBLIC Boost::serialization)

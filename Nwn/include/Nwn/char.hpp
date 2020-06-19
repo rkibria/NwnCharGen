@@ -2,9 +2,12 @@
 #define NWNCHAR_H
 
 #include <Nwn/base.hpp>
+
 #include <array>
 #include <string>
 #include <memory>
+
+#include <boost/serialization/nvp.hpp>
 
 namespace Nwn {
 
@@ -29,6 +32,14 @@ public:
     void setRace( const std::string& r ) { race = r; }
 
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /* file_version */)
+    {
+        ar & boost::serialization::make_nvp( "race", race );
+    }
+
     int incCost( int curScore ) const;
 
     static const int ablPointBuy;

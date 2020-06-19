@@ -1,3 +1,7 @@
+#include <QFileDialog>
+
+#include <fstream>
+
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
 
@@ -7,6 +11,8 @@
 #include <Nwn/rules.hpp>
 
 #include "racedialog.h"
+
+#include <boost/archive/xml_oarchive.hpp>
 
 using namespace Nwn;
 
@@ -147,5 +153,18 @@ void NwnCharGen::on_buttonRace_clicked()
             nwnChar->setRace( rd.raceChoice.toStdString() );
             updateSummary();
         }
+    }
+}
+
+void NwnCharGen::on_actionSave_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save Character"),
+                                                    "character.xml",
+                                                    tr("Character files (*.xml)"));
+    if( !fileName.isNull() ) {
+        std::ofstream ofs( qPrintable( fileName ) );
+        boost::archive::xml_oarchive oa(ofs);
+        oa << boost::serialization::make_nvp( "character", *nwnChar );
     }
 }
