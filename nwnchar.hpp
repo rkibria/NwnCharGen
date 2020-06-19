@@ -3,6 +3,7 @@
 
 #include <nwnbase.hpp>
 #include <array>
+#include <string>
 
 namespace Nwn {
 
@@ -12,13 +13,17 @@ public:
     explicit Character();
     ~Character();
 
-    int getPointsRemain() const {return ablPointsRemain;}
+    /* Abilities  */
 
+    int getPointsRemain() const { return ablPointsRemain; }
     int getAbl(AblScore) const;
     int getAblMod(AblScore) const;
-
     void decAbl(AblScore);
     void incAbl(AblScore);
+
+    /* Race */
+    std::string getRace() const { return race; }
+    void setRace(const std::string& r) { race = r; }
 
 private:
     int incCost(int curScore) const;
@@ -29,6 +34,8 @@ private:
 
     int ablPointsRemain;
     std::array<int, 6> abls;
+
+    std::string race;
 };
 
 } // namespace Nwn

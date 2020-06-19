@@ -27,6 +27,13 @@ void NwnCharGen::updateAbilityBlock()
     ui->lineEditChaMod->setText( QString::number( nwnChar->getAblMod( AblScore::Cha ) ) );
 }
 
+void NwnCharGen::updateSummary()
+{
+    ui->lineEditRace->setText( nwnChar->getRace().c_str() );
+
+    updateAbilityBlock();
+}
+
 NwnCharGen::NwnCharGen(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::NwnCharGen)
@@ -44,7 +51,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     nwnRules->addRace( Race( "Gray Dwarf", "Dwarf" ) );
     nwnRules->addRace( Race( "Drow", "Elf" ) );
 
-    updateAbilityBlock();
+    updateSummary();
 }
 
 NwnCharGen::~NwnCharGen()
@@ -128,6 +135,9 @@ void NwnCharGen::on_buttonRace_clicked()
 {
     RaceDialog rd(nwnRules, this);
     if( rd.exec() == QDialog::Accepted ) {
-
+        if( !rd.raceChoice.isEmpty() ) {
+            nwnChar->setRace( rd.raceChoice.toStdString() );
+            updateSummary();
+        }
     }
 }

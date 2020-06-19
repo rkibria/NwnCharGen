@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Boost 1.70 REQUIRED)
 
 add_library(Nwn STATIC
     nwnchar.cpp

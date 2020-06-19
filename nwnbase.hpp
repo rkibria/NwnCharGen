@@ -3,7 +3,7 @@
 
 namespace Nwn {
 
-enum class AblScore {
+enum class AblScore : int {
     Str,
     Dex,
     Con,

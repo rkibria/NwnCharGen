@@ -44,6 +44,7 @@ private:
     std::unique_ptr<Nwn::Rules> nwnRules;
 
     void updateAbilityBlock();
+    void updateSummary();
 };
 
 #endif // NWNCHARGEN_H

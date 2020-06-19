@@ -5,7 +5,8 @@ namespace Nwn {
 
 Character::Character() :
     ablPointsRemain( ablPointBuy ),
-    abls{ minAblScore, minAblScore, minAblScore, minAblScore, minAblScore, minAblScore }
+    abls{ minAblScore, minAblScore, minAblScore, minAblScore, minAblScore, minAblScore },
+    race{}
 {
 
 }

@@ -20,6 +20,8 @@ public:
     explicit RaceDialog(const std::unique_ptr<Nwn::Rules>& rules, QWidget *parent = nullptr);
     ~RaceDialog();
 
+    QString raceChoice;
+
 private slots:
     void on_treeWidgetRace_itemSelectionChanged();
 

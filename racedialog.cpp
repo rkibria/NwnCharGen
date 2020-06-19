@@ -50,8 +50,8 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
     const auto selection = ui->treeWidgetRace->selectedItems();
     if( selection.size() ) {
         const auto item = selection.first();
-        const auto name = item->text(0);
-        const auto& description = nwnRules->getRaceByName( name.toStdString() ).getDescription();
+        raceChoice = item->text(0);
+        const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() ).getDescription();
         ui->textEditDescription->setText( QString::fromStdString( description ) );
     }
 }
