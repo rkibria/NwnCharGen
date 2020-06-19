@@ -14,6 +14,7 @@ add_library(Nwn STATIC
     nwnchar.cpp
     nwnrace.cpp
     nwnrules.cpp
+    nwnablblock.cpp
     )
 
 qt5_wrap_cpp(MOC_SOURCES

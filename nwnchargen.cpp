@@ -2,6 +2,7 @@
 #include "./ui_nwnchargen.h"
 
 #include <nwnchar.hpp>
+#include <nwnablblock.hpp>
 #include <nwnrules.hpp>
 
 #include "racedialog.h"
@@ -12,19 +13,19 @@ void NwnCharGen::updateAbilityBlock()
 {
     ui->lineEditPoints->setText( QString::number( nwnChar->getPointsRemain() ) );
 
-    ui->lineEditStrAbs->setText( QString::number( nwnChar->getAbl(AblScore::Str ) ) );
-    ui->lineEditDexAbs->setText( QString::number( nwnChar->getAbl(AblScore::Dex ) ) );
-    ui->lineEditConAbs->setText( QString::number( nwnChar->getAbl(AblScore::Con ) ) );
-    ui->lineEditIntAbs->setText( QString::number( nwnChar->getAbl(AblScore::Int ) ) );
-    ui->lineEditWisAbs->setText( QString::number( nwnChar->getAbl(AblScore::Wis ) ) );
-    ui->lineEditChaAbs->setText( QString::number( nwnChar->getAbl(AblScore::Cha ) ) );
+    ui->lineEditStrAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Str ) ) );
+    ui->lineEditDexAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Dex ) ) );
+    ui->lineEditConAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Con ) ) );
+    ui->lineEditIntAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Int ) ) );
+    ui->lineEditWisAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Wis ) ) );
+    ui->lineEditChaAbs->setText( QString::number( nwnChar->getAbls().getAbl( AblScore::Cha ) ) );
 
-    ui->lineEditStrMod->setText( QString::number( nwnChar->getAblMod( AblScore::Str ) ) );
-    ui->lineEditDexMod->setText( QString::number( nwnChar->getAblMod( AblScore::Dex ) ) );
-    ui->lineEditConMod->setText( QString::number( nwnChar->getAblMod( AblScore::Con ) ) );
-    ui->lineEditIntMod->setText( QString::number( nwnChar->getAblMod( AblScore::Int ) ) );
-    ui->lineEditWisMod->setText( QString::number( nwnChar->getAblMod( AblScore::Wis ) ) );
-    ui->lineEditChaMod->setText( QString::number( nwnChar->getAblMod( AblScore::Cha ) ) );
+    ui->lineEditStrMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Str ) ) );
+    ui->lineEditDexMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Dex ) ) );
+    ui->lineEditConMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Con ) ) );
+    ui->lineEditIntMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Int ) ) );
+    ui->lineEditWisMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Wis ) ) );
+    ui->lineEditChaMod->setText( QString::number( nwnChar->getAbls().getAblMod( AblScore::Cha ) ) );
 }
 
 void NwnCharGen::updateSummary()

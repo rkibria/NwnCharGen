@@ -1,11 +1,16 @@
 #include <nwnchar.hpp>
+#include <nwnablblock.hpp>
 #include <iostream>
 
 namespace Nwn {
 
+const int Character::ablPointBuy = 32;
+const int Character::minAblScore = 8;
+const int Character::maxAblScore = 18;
+
 Character::Character() :
     ablPointsRemain( ablPointBuy ),
-    abls{ minAblScore, minAblScore, minAblScore, minAblScore, minAblScore, minAblScore },
+    abls{ std::make_unique< AblBlock >( minAblScore ) },
     race{}
 {
 
@@ -13,18 +18,6 @@ Character::Character() :
 
 Character::~Character()
 {
-}
-
-int Character::getAbl(AblScore abl) const
-{
-    return abls[ static_cast<int>(abl) ];
-}
-
-int Character::getAblMod(AblScore abl) const
-{
-    const auto score = getAbl( abl );
-    auto mod = ( score / 2 ) - 5;
-    return mod;
 }
 
 int Character::incCost(int curScore) const
@@ -47,24 +40,26 @@ int Character::incCost(int curScore) const
     }
 }
 
-void Character::incAbl(AblScore abl)
+void Character::incAbl( AblScore abl )
 {
-    if( getAbl( abl ) < maxAblScore ) {
-        const auto cost = incCost( getAbl( abl ) );
+    const auto curValue = abls->getAbl( abl );
+    if( curValue < maxAblScore ) {
+        const auto cost = incCost( curValue );
         if( cost <= ablPointsRemain ) {
             ablPointsRemain -= cost;
-            ++abls[ static_cast<int>( abl ) ];
+            abls->setAbl( abl, curValue + 1);
         }
     }
 }
 
-void Character::decAbl(AblScore abl)
+void Character::decAbl( AblScore abl )
 {
-    if( getAbl( abl ) > minAblScore ) {
-        const auto cost = incCost( getAbl( abl ) - 1 );
+    const auto curValue = abls->getAbl( abl );
+    if( curValue > minAblScore ) {
+        const auto cost = incCost( curValue - 1 );
         ablPointsRemain += cost;
-        --abls[ static_cast<int>( abl ) ];
+        abls->setAbl( abl, curValue - 1);
     }
 }
 
-} // namespace NwnChar
+} // namespace Nwn
