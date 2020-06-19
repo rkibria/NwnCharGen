@@ -40,7 +40,8 @@ private:
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /* file_version */)
     {
-        ar & boost::serialization::make_nvp( "race", race );
+        ar & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
+           & boost::serialization::make_nvp( "race", race );
     }
 
     int incCost( int curScore ) const;
