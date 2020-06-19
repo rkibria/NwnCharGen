@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NwnCharGen</class>
+ <widget class="QMainWindow" name="NwnCharGen">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1074</width>
+    <height>956</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>NwnCharGen</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>931</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabSummary">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="accessibleName">
+      <string/>
+     </property>
+     <attribute name="title">
+      <string>Summary</string>
+     </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>9</y>
+        <width>771</width>
+        <height>553</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayoutBasics">
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelName">
+           <property name="text">
+            <string>Name:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEditName"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="labelRace">
+           <property name="text">
+            <string>Race:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelAlignment">
+           <property name="text">
+            <string>Alignment:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboBoxAlignment">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>100</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>0</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string>Lawful Good</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Neutral Good</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Chaotic Good</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lawful Neutral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Neutral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Chaotic Neutral</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lawful Evil</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Neutral Evil</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Chaotic Evil</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="lineEdit"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonRace">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>100</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Choose...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxAbilities">
+         <property name="title">
+          <string>Abilities</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayoutPoints">
+            <item>
+             <widget class="QLabel" name="labelPoints">
+              <property name="text">
+               <string>Points remaining:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEditPoints">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QFormLayout" name="formLayoutAbilities">
+            <item row="0" column="0">
+             <widget class="QLabel" name="labelStr">
+              <property name="text">
+               <string>Strength:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutStr">
+              <item>
+               <widget class="QLineEdit" name="lineEditStrAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonStrMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonStrPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditStrMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="labelDex">
+              <property name="text">
+               <string>Dexterity:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutDex">
+              <item>
+               <widget class="QLineEdit" name="lineEditDexAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonDexMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonDexPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditDexMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelCon">
+              <property name="text">
+               <string>Constitution:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutStr_2">
+              <item>
+               <widget class="QLineEdit" name="lineEditConAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonConMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonConPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditConMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Intelligence:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutStr_3">
+              <item>
+               <widget class="QLineEdit" name="lineEditIntAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonIntMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonIntPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditIntMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Wisdom:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutStr_4">
+              <item>
+               <widget class="QLineEdit" name="lineEditWisAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonWisMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonWisPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditWisMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Charisma:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayoutStr_5">
+              <item>
+               <widget class="QLineEdit" name="lineEditChaAbs">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(abs)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonChaMinus">
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonChaPlus">
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lineEditChaMod">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>(mod)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Levels:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+            <string>Totals</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QFormLayout" name="formLayout_3">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Hit Points:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_4">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>BAB:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEdit_5">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>Saving Throws</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <layout class="QFormLayout" name="formLayout_2">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Fortitude:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_6">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Reflex:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEdit_7">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Will:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="lineEdit_8">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Levels</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Skills</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1074</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
