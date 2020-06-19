@@ -1,5 +1,5 @@
-#include <nwnrace.hpp>
-#include <nwnablblock.hpp>
+#include <Nwn/race.hpp>
+#include <Nwn/ablblock.hpp>
 
 namespace Nwn {
 

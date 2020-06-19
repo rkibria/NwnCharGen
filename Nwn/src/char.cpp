@@ -1,5 +1,5 @@
-#include <nwnchar.hpp>
-#include <nwnablblock.hpp>
+#include <Nwn/char.hpp>
+#include <Nwn/ablblock.hpp>
 #include <iostream>
 
 namespace Nwn {

@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include <nwnbase.hpp>
+#include <Nwn/base.hpp>
 
 namespace Nwn {
 

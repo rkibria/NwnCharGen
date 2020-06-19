@@ -1,8 +1,8 @@
 #include "racedialog.h"
 #include "ui_racedialog.h"
 
-#include <nwnrace.hpp>
-#include <nwnrules.hpp>
+#include <Nwn/race.hpp>
+#include <Nwn/rules.hpp>
 
 #include <unordered_map>
 

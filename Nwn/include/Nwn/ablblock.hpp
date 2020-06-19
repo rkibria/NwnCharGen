@@ -1,7 +1,7 @@
 #ifndef NWNABLBLOCK_H
 #define NWNABLBLOCK_H
 
-#include <nwnbase.hpp>
+#include <Nwn/base.hpp>
 #include <array>
 
 namespace Nwn {

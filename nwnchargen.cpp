@@ -1,10 +1,10 @@
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
 
-#include <nwnchar.hpp>
-#include <nwnablblock.hpp>
-#include <nwnrace.hpp>
-#include <nwnrules.hpp>
+#include <Nwn/char.hpp>
+#include <Nwn/ablblock.hpp>
+#include <Nwn/race.hpp>
+#include <Nwn/rules.hpp>
 
 #include "racedialog.h"
 

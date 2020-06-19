@@ -1,4 +1,4 @@
-#include <nwnablblock.hpp>
+#include <Nwn/ablblock.hpp>
 #include <algorithm>
 
 namespace Nwn {

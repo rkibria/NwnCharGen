@@ -1,7 +1,7 @@
 #ifndef NWNCHAR_H
 #define NWNCHAR_H
 
-#include <nwnbase.hpp>
+#include <Nwn/base.hpp>
 #include <array>
 #include <string>
 #include <memory>

@@ -1,7 +1,7 @@
 #ifndef NWNRACE_H
 #define NWNRACE_H
 
-#include <nwnbase.hpp>
+#include <Nwn/base.hpp>
 #include <string>
 #include <memory>
 

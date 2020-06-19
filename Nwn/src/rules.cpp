@@ -1,10 +1,10 @@
 #include <cassert>
 
-#include <nwnrace.hpp>
-#include <nwnrules.hpp>
-#include <nwnablblock.hpp>
-#include <nwnchar.hpp>
-#include <nwnrace.hpp>
+#include <Nwn/race.hpp>
+#include <Nwn/rules.hpp>
+#include <Nwn/ablblock.hpp>
+#include <Nwn/char.hpp>
+#include <Nwn/race.hpp>
 
 namespace Nwn {
 
