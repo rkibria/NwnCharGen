@@ -43,6 +43,12 @@ private slots:
 
     void on_comboBoxAlignment_currentIndexChanged(int index);
 
+    void on_actionAbout_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_actionNew_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 

@@ -72,6 +72,7 @@ void NwnCharGen::updateAbilityBlock()
 void NwnCharGen::updateSummary()
 {
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
+    ui->comboBoxAlignment->setCurrentIndex( static_cast<int>( nwnChar->getAlignment() ) );
 
     updateAbilityBlock();
 }
@@ -190,5 +191,21 @@ void NwnCharGen::on_actionOpen_triggered()
 void NwnCharGen::on_comboBoxAlignment_currentIndexChanged(int index)
 {
     nwnChar->setAlignment( static_cast<Alignment>( index ) );
+    updateAll();
+}
+
+void NwnCharGen::on_actionAbout_triggered()
+{
+    QMessageBox::about( this, "NwnCharGen", "A character builder for Neverwinter Nights 2" );
+}
+
+void NwnCharGen::on_actionExit_triggered()
+{
+    qApp->exit();
+}
+
+void NwnCharGen::on_actionNew_triggered()
+{
+    nwnChar = std::make_unique<Character>();
     updateAll();
 }
