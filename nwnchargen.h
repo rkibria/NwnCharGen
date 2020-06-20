@@ -44,6 +44,8 @@ private slots:
     void on_actionNew_triggered();
     void on_lineEditName_editingFinished();
 
+    void on_textEditDescription_textChanged();
+
 private:
     Ui::NwnCharGen *ui;
 

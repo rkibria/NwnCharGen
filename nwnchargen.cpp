@@ -30,8 +30,6 @@ NwnCharGen::NwnCharGen(QWidget *parent)
         ui->comboBoxAlignment->addItem( alignmentStrings.left.at( a ).c_str() );
     }
 
-    clearDirtyFlag();
-
     Race human( "Human", "Human" );
     human.setDescription("Humans are the most adaptable of the common races. Short generations and a penchant for migration and conquest mean they are very physically diverse as well. Skin shades range from nearly black to very pale, hair from black to blond, and facial hair (for men) from sparse to thick. Humans are often unorthodox in their dress, sporting unusual hairstyles, fanciful clothes, tattoos, and the like.");
     nwnRules->addRace( human );
@@ -46,6 +44,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     nwnRules->addRace( Race( "Drow", "Elf" ) );
 
     updateSummary();
+    clearDirtyFlag();
 }
 
 NwnCharGen::~NwnCharGen()
@@ -152,6 +151,7 @@ void NwnCharGen::on_actionOpen_triggered()
 void NwnCharGen::on_comboBoxAlignment_currentIndexChanged(int index)
 {
     nwnChar->setAlignment( static_cast<Alignment>( index ) );
+    setDirtyFlag();
     updateAll();
 }
 
@@ -196,4 +196,9 @@ void NwnCharGen::clearDirtyFlag()
 {
     dirtyFlag = false;
     updateWindowTitle();
+}
+
+void NwnCharGen::on_textEditDescription_textChanged()
+{
+    setDirtyFlag();
 }
