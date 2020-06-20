@@ -14,11 +14,13 @@ const int Character::minAblScore = 8;
 const int Character::maxAblScore = 18;
 
 Character::Character() :
+    name{},
+    description{},
+    race{},
+    alignment{},
     ablPointsRemain( ablPointBuy ),
-    abls{ std::make_unique< AblBlock >( minAblScore ) },
-    race{}
+    abls{ std::make_unique< AblBlock >( minAblScore ) }
 {
-
 }
 
 Character::~Character()

@@ -961,6 +961,21 @@
       </layout>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_description">
+     <attribute name="title">
+      <string>Description</string>
+     </attribute>
+     <widget class="QTextEdit" name="textEditDescription">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>12</y>
+        <width>911</width>
+        <height>581</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
       <string>Levels</string>

@@ -19,6 +19,15 @@ public:
     explicit Character();
     ~Character();
 
+    void setName( const std::string n ) { name = n; }
+    const std::string& getName() const { return name; }
+
+    void setDescription( const std::string d ) { description = d; }
+    const std::string& getDescription() const { return description; }
+
+    void setAlignment( const std::string a ) { alignment = a; }
+    const std::string& getAlignment() const { return alignment; }
+
     /* Abilities  */
     AblBlock& getAbls() { return *abls; }
     const AblBlock& getAbls() const { return *abls; }
@@ -41,9 +50,12 @@ private:
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ )
     {
-        ar & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
-           & boost::serialization::make_nvp( "abls", *abls )
-           & boost::serialization::make_nvp( "race", race );
+        ar & boost::serialization::make_nvp( "name", name )
+           & boost::serialization::make_nvp( "description", description )
+           & boost::serialization::make_nvp( "race", race )
+           & boost::serialization::make_nvp( "alignment", alignment )
+           & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
+           & boost::serialization::make_nvp( "abls", *abls );
     }
 
     int incCost( int curScore ) const;
@@ -52,10 +64,13 @@ private:
     static const int minAblScore;
     static const int maxAblScore;
 
+    std::string name;
+    std::string description;
+    std::string race;
+    std::string alignment;
+
     int ablPointsRemain;
     std::unique_ptr< AblBlock > abls;
-
-    std::string race;
 };
 
 } // namespace Nwn
