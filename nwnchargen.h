@@ -60,6 +60,8 @@ private:
 
     void setDirtyFlag();
     void clearDirtyFlag();
+
+    void modAbility( int abl, bool isInc );
 };
 
 #endif // NWNCHARGEN_H

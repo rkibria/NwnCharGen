@@ -88,77 +88,26 @@ void NwnCharGen::updateAll()
     updateSummary();
 }
 
-void NwnCharGen::on_pushButtonStrMinus_clicked()
+void NwnCharGen::modAbility( int iAbl, bool isInc )
 {
-    nwnChar->decAbl( AblScore::Str );
+    const auto abl = static_cast<AblScore>( iAbl );
+    isInc ? nwnChar->incAbl( abl ) : nwnChar->decAbl( abl );
+    setDirtyFlag();
     updateAbilityBlock();
 }
 
-void NwnCharGen::on_pushButtonStrPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Str );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonDexMinus_clicked()
-{
-    nwnChar->decAbl( AblScore::Dex );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonDexPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Dex );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonConMinus_clicked()
-{
-    nwnChar->decAbl( AblScore::Con );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonConPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Con );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonIntMinus_clicked()
-{
-    nwnChar->decAbl( AblScore::Int );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonIntPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Int );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonWisMinus_clicked()
-{
-    nwnChar->decAbl( AblScore::Wis );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonWisPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Wis );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonChaMinus_clicked()
-{
-    nwnChar->decAbl( AblScore::Cha );
-    updateAbilityBlock();
-}
-
-void NwnCharGen::on_pushButtonChaPlus_clicked()
-{
-    nwnChar->incAbl( AblScore::Cha );
-    updateAbilityBlock();
-}
+void NwnCharGen::on_pushButtonStrMinus_clicked() { modAbility( static_cast<int>( AblScore::Str ), false ); }
+void NwnCharGen::on_pushButtonStrPlus_clicked() { modAbility( static_cast<int>( AblScore::Str ), true ); }
+void NwnCharGen::on_pushButtonDexMinus_clicked() { modAbility( static_cast<int>( AblScore::Dex ), false ); }
+void NwnCharGen::on_pushButtonDexPlus_clicked() { modAbility( static_cast<int>( AblScore::Dex ), true ); }
+void NwnCharGen::on_pushButtonConMinus_clicked() { modAbility( static_cast<int>( AblScore::Con ), false ); }
+void NwnCharGen::on_pushButtonConPlus_clicked() { modAbility( static_cast<int>( AblScore::Con ), true ); }
+void NwnCharGen::on_pushButtonIntMinus_clicked() { modAbility( static_cast<int>( AblScore::Int ), false ); }
+void NwnCharGen::on_pushButtonIntPlus_clicked() { modAbility( static_cast<int>( AblScore::Int ), true ); }
+void NwnCharGen::on_pushButtonWisMinus_clicked() { modAbility( static_cast<int>( AblScore::Wis ), false ); }
+void NwnCharGen::on_pushButtonWisPlus_clicked() { modAbility( static_cast<int>( AblScore::Wis ), true ); }
+void NwnCharGen::on_pushButtonChaMinus_clicked() { modAbility( static_cast<int>( AblScore::Cha ), false ); }
+void NwnCharGen::on_pushButtonChaPlus_clicked() { modAbility( static_cast<int>( AblScore::Cha ), true ); }
 
 void NwnCharGen::on_buttonRace_clicked()
 {
