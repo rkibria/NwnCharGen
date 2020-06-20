@@ -39,6 +39,8 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void on_actionOpen_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 
@@ -47,6 +49,7 @@ private:
 
     void updateAbilityBlock();
     void updateSummary();
+    void updateAll();
 };
 
 #endif // NWNCHARGEN_H

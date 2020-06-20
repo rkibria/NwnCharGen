@@ -33,6 +33,7 @@ public:
 
     /* Serialization */
     void save( const char* fileName ) const;
+    void restore( const char* fileName );
 
 private:
     friend class boost::serialization::access;

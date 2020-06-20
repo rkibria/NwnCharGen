@@ -4,6 +4,7 @@
 #include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
 
+#include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 
 namespace Nwn {
@@ -69,8 +70,17 @@ void Character::decAbl( AblScore abl )
 void Character::save( const char* fileName ) const
 {
     std::ofstream ofs( fileName );
+    assert( ofs.good() );
     boost::archive::xml_oarchive oa( ofs );
     oa << boost::serialization::make_nvp( "character", *this );
+}
+
+void Character::restore( const char* fileName )
+{
+    std::ifstream ifs( fileName );
+    assert( ifs.good() );
+    boost::archive::xml_iarchive ia( ifs );
+    ia >> boost::serialization::make_nvp( "character", *this );
 }
 
 } // namespace Nwn

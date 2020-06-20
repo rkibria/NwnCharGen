@@ -12,33 +12,6 @@
 
 using namespace Nwn;
 
-void NwnCharGen::updateAbilityBlock()
-{
-    ui->lineEditPoints->setText( QString::number( nwnChar->getPointsRemain() ) );
-
-    const auto abls = nwnRules->getAdjustedAbls( *nwnChar );
-    ui->lineEditStrAbs->setText( QString::number( abls.getAbl( AblScore::Str ) ) );
-    ui->lineEditDexAbs->setText( QString::number( abls.getAbl( AblScore::Dex ) ) );
-    ui->lineEditConAbs->setText( QString::number( abls.getAbl( AblScore::Con ) ) );
-    ui->lineEditIntAbs->setText( QString::number( abls.getAbl( AblScore::Int ) ) );
-    ui->lineEditWisAbs->setText( QString::number( abls.getAbl( AblScore::Wis ) ) );
-    ui->lineEditChaAbs->setText( QString::number( abls.getAbl( AblScore::Cha ) ) );
-
-    ui->lineEditStrMod->setText( QString::number( abls.getAblMod( AblScore::Str ) ) );
-    ui->lineEditDexMod->setText( QString::number( abls.getAblMod( AblScore::Dex ) ) );
-    ui->lineEditConMod->setText( QString::number( abls.getAblMod( AblScore::Con ) ) );
-    ui->lineEditIntMod->setText( QString::number( abls.getAblMod( AblScore::Int ) ) );
-    ui->lineEditWisMod->setText( QString::number( abls.getAblMod( AblScore::Wis ) ) );
-    ui->lineEditChaMod->setText( QString::number( abls.getAblMod( AblScore::Cha ) ) );
-}
-
-void NwnCharGen::updateSummary()
-{
-    ui->lineEditRace->setText( nwnChar->getRace().c_str() );
-
-    updateAbilityBlock();
-}
-
 NwnCharGen::NwnCharGen(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::NwnCharGen)
@@ -67,6 +40,38 @@ NwnCharGen::NwnCharGen(QWidget *parent)
 NwnCharGen::~NwnCharGen()
 {
     delete ui;
+}
+
+void NwnCharGen::updateAbilityBlock()
+{
+    ui->lineEditPoints->setText( QString::number( nwnChar->getPointsRemain() ) );
+
+    const auto abls = nwnRules->getAdjustedAbls( *nwnChar );
+    ui->lineEditStrAbs->setText( QString::number( abls.getAbl( AblScore::Str ) ) );
+    ui->lineEditDexAbs->setText( QString::number( abls.getAbl( AblScore::Dex ) ) );
+    ui->lineEditConAbs->setText( QString::number( abls.getAbl( AblScore::Con ) ) );
+    ui->lineEditIntAbs->setText( QString::number( abls.getAbl( AblScore::Int ) ) );
+    ui->lineEditWisAbs->setText( QString::number( abls.getAbl( AblScore::Wis ) ) );
+    ui->lineEditChaAbs->setText( QString::number( abls.getAbl( AblScore::Cha ) ) );
+
+    ui->lineEditStrMod->setText( QString::number( abls.getAblMod( AblScore::Str ) ) );
+    ui->lineEditDexMod->setText( QString::number( abls.getAblMod( AblScore::Dex ) ) );
+    ui->lineEditConMod->setText( QString::number( abls.getAblMod( AblScore::Con ) ) );
+    ui->lineEditIntMod->setText( QString::number( abls.getAblMod( AblScore::Int ) ) );
+    ui->lineEditWisMod->setText( QString::number( abls.getAblMod( AblScore::Wis ) ) );
+    ui->lineEditChaMod->setText( QString::number( abls.getAblMod( AblScore::Cha ) ) );
+}
+
+void NwnCharGen::updateSummary()
+{
+    ui->lineEditRace->setText( nwnChar->getRace().c_str() );
+
+    updateAbilityBlock();
+}
+
+void NwnCharGen::updateAll()
+{
+    updateSummary();
 }
 
 void NwnCharGen::on_pushButtonStrMinus_clicked()
@@ -160,5 +165,17 @@ void NwnCharGen::on_actionSave_triggered()
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
         nwnChar->save( qPrintable( fileName ) );
+    }
+}
+
+void NwnCharGen::on_actionOpen_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open Character"),
+                                                    "character.xml",
+                                                    tr("Character files (*.xml)"));
+    if( !fileName.isNull() ) {
+        nwnChar->restore( qPrintable( fileName ) );
+        updateAll();
     }
 }
