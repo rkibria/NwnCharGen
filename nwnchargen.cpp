@@ -71,6 +71,7 @@ void NwnCharGen::updateAbilityBlock()
 
 void NwnCharGen::updateSummary()
 {
+    ui->lineEditName->setText( nwnChar->getName().c_str() );
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
     ui->comboBoxAlignment->setCurrentIndex( static_cast<int>( nwnChar->getAlignment() ) );
 
@@ -208,4 +209,9 @@ void NwnCharGen::on_actionNew_triggered()
 {
     nwnChar = std::make_unique<Character>();
     updateAll();
+}
+
+void NwnCharGen::on_lineEditName_editingFinished()
+{
+    nwnChar->setName( ui->lineEditName->text().toStdString() );
 }
