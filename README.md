@@ -1,2 +1,2 @@
 # NwnCharGen
-Character builder for the Neverwinter Nights games
+Character builder for Neverwinter Nights 2
