@@ -908,16 +908,11 @@
        <attribute name="title">
         <string>Description</string>
        </attribute>
-       <widget class="QTextEdit" name="textEditDescription">
-        <property name="geometry">
-         <rect>
-          <x>6</x>
-          <y>12</y>
-          <width>911</width>
-          <height>581</height>
-         </rect>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QTextEdit" name="textEditDescription"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
