@@ -17,7 +17,7 @@ Character::Character() :
     name{},
     description{},
     race{},
-    alignment{},
+    alignment{ Alignment::LawfulGood },
     ablPointsRemain( ablPointBuy ),
     abls{ std::make_unique< AblBlock >( minAblScore ) }
 {

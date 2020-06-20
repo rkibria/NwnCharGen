@@ -1,8 +1,10 @@
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
 
+#include <Nwn/base.hpp>
 #include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
 #include <Nwn/race.hpp>
@@ -20,6 +22,11 @@ NwnCharGen::NwnCharGen(QWidget *parent)
 {
     ui->setupUi(this);
     setCentralWidget(ui->tabWidget);
+
+    for( size_t i = 0; i < alignmentStrings.size(); ++i ) {
+        const auto a = static_cast<Alignment>( i );
+        ui->comboBoxAlignment->addItem( alignmentStrings.left.at( a ).c_str() );
+    }
 
     Race human( "Human", "Human" );
     human.setDescription("Humans are the most adaptable of the common races. Short generations and a penchant for migration and conquest mean they are very physically diverse as well. Skin shades range from nearly black to very pale, hair from black to blond, and facial hair (for men) from sparse to thick. Humans are often unorthodox in their dress, sporting unusual hairstyles, fanciful clothes, tattoos, and the like.");
@@ -178,4 +185,10 @@ void NwnCharGen::on_actionOpen_triggered()
         nwnChar->restore( qPrintable( fileName ) );
         updateAll();
     }
+}
+
+void NwnCharGen::on_comboBoxAlignment_currentIndexChanged(int index)
+{
+    nwnChar->setAlignment( static_cast<Alignment>( index ) );
+    updateAll();
 }

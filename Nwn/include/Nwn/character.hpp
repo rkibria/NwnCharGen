@@ -25,8 +25,8 @@ public:
     void setDescription( const std::string d ) { description = d; }
     const std::string& getDescription() const { return description; }
 
-    void setAlignment( const std::string a ) { alignment = a; }
-    const std::string& getAlignment() const { return alignment; }
+    void setAlignment( const Alignment a ) { alignment = a; }
+    Alignment getAlignment() const { return alignment; }
 
     /* Abilities  */
     AblBlock& getAbls() { return *abls; }
@@ -67,7 +67,7 @@ private:
     std::string name;
     std::string description;
     std::string race;
-    std::string alignment;
+    Alignment alignment;
 
     int ablPointsRemain;
     std::unique_ptr< AblBlock > abls;
