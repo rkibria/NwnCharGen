@@ -168,8 +168,8 @@ void NwnCharGen::on_actionExit_triggered()
 void NwnCharGen::on_actionNew_triggered()
 {
     nwnChar = std::make_unique<Character>();
-    clearDirtyFlag();
     updateAll();
+    clearDirtyFlag();
 }
 
 void NwnCharGen::on_lineEditName_editingFinished()
