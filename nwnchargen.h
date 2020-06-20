@@ -36,19 +36,12 @@ private slots:
     void on_pushButtonChaPlus_clicked();
 
     void on_buttonRace_clicked();
-
     void on_actionSave_triggered();
-
     void on_actionOpen_triggered();
-
     void on_comboBoxAlignment_currentIndexChanged(int index);
-
     void on_actionAbout_triggered();
-
     void on_actionExit_triggered();
-
     void on_actionNew_triggered();
-
     void on_lineEditName_editingFinished();
 
 private:
@@ -57,9 +50,16 @@ private:
     std::unique_ptr<Nwn::Character> nwnChar;
     std::unique_ptr<Nwn::Rules> nwnRules;
 
+    bool dirtyFlag;
+    QString currentFile;
+
     void updateAbilityBlock();
     void updateSummary();
     void updateAll();
+    void updateWindowTitle();
+
+    void setDirtyFlag();
+    void clearDirtyFlag();
 };
 
 #endif // NWNCHARGEN_H

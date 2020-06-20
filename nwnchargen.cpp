@@ -19,6 +19,8 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , ui(new Ui::NwnCharGen)
     , nwnChar( std::make_unique<Character>() )
     , nwnRules( std::make_unique<Rules>() )
+    , dirtyFlag{ false }
+    , currentFile{ "character.xml" }
 {
     ui->setupUi(this);
     setCentralWidget(ui->tabWidget);
@@ -27,6 +29,8 @@ NwnCharGen::NwnCharGen(QWidget *parent)
         const auto a = static_cast<Alignment>( i );
         ui->comboBoxAlignment->addItem( alignmentStrings.left.at( a ).c_str() );
     }
+
+    clearDirtyFlag();
 
     Race human( "Human", "Human" );
     human.setDescription("Humans are the most adaptable of the common races. Short generations and a penchant for migration and conquest mean they are very physically diverse as well. Skin shades range from nearly black to very pale, hair from black to blond, and facial hair (for men) from sparse to thick. Humans are often unorthodox in their dress, sporting unusual hairstyles, fanciful clothes, tattoos, and the like.");
@@ -162,6 +166,7 @@ void NwnCharGen::on_buttonRace_clicked()
     if( rd.exec() == QDialog::Accepted ) {
         if( !rd.raceChoice.isEmpty() ) {
             nwnChar->setRace( rd.raceChoice.toStdString() );
+            setDirtyFlag();
             updateSummary();
         }
     }
@@ -171,11 +176,13 @@ void NwnCharGen::on_actionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
                                                     tr("Save Character"),
-                                                    "character.xml",
+                                                    currentFile,
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
         nwnChar->setDescription( ui->textEditDescription->toPlainText().toStdString() );
         nwnChar->save( qPrintable( fileName ) );
+        currentFile = fileName;
+        clearDirtyFlag();
     }
 }
 
@@ -183,10 +190,12 @@ void NwnCharGen::on_actionOpen_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open Character"),
-                                                    "character.xml",
+                                                    currentFile,
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
         nwnChar->restore( qPrintable( fileName ) );
+        currentFile = fileName;
+        clearDirtyFlag();
         updateAll();
     }
 }
@@ -210,10 +219,32 @@ void NwnCharGen::on_actionExit_triggered()
 void NwnCharGen::on_actionNew_triggered()
 {
     nwnChar = std::make_unique<Character>();
+    clearDirtyFlag();
     updateAll();
 }
 
 void NwnCharGen::on_lineEditName_editingFinished()
 {
     nwnChar->setName( ui->lineEditName->text().toStdString() );
+    setDirtyFlag();
+}
+
+void NwnCharGen::updateWindowTitle()
+{
+    QString title = dirtyFlag ? "*" : "";
+    title += currentFile;
+    title += " - NwnCharGen";
+    this->setWindowTitle( title );
+}
+
+void NwnCharGen::setDirtyFlag()
+{
+    dirtyFlag = true;
+    updateWindowTitle();
+}
+
+void NwnCharGen::clearDirtyFlag()
+{
+    dirtyFlag = false;
+    updateWindowTitle();
 }
