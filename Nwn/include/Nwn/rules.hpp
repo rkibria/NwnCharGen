@@ -6,6 +6,10 @@
 
 #include <Nwn/base.hpp>
 
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/unique_ptr.hpp>
+
 namespace Nwn {
 
 class Race;
@@ -50,14 +54,28 @@ public:
     explicit Rules();
     ~Rules();
 
+    /* Races */
     void addRace( const Race& r );
     RacesConstLooper getRaces() const { return RacesConstLooper( races ); }
     const Race& getRaceByName( const std::string& name ) const { return *( races.at( name ) ); }
     bool isRaceValid( const std::string& name ) const { return races.find( name ) != races.end(); }
 
+    /* Character methods */
     AblBlock getAdjustedAbls( const Character& chr ) const;
 
+    /* Serialization */
+    void save( const char* fileName ) const;
+    void restore( const char* fileName );
+
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize( Archive & ar, const unsigned int /* file_version */ )
+    {
+        ar & boost::serialization::make_nvp( "races", races );
+    }
+
     RaceContainer races;
 };
 

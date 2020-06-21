@@ -8,6 +8,7 @@
 #include <memory>
 
 #include <boost/serialization/nvp.hpp>
+#include <boost/serialization/unique_ptr.hpp>
 
 namespace Nwn {
 
@@ -55,7 +56,7 @@ private:
            & boost::serialization::make_nvp( "race", race )
            & boost::serialization::make_nvp( "alignment", alignment )
            & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
-           & boost::serialization::make_nvp( "abls", *abls );
+           & boost::serialization::make_nvp( "abls", abls );
     }
 
     int incCost( int curScore ) const;

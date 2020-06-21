@@ -21,7 +21,10 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , nwnRules( std::make_unique<Rules>() )
     , dirtyFlag{ false }
     , currentFile{ "character.xml" }
+    , currentRules()
 {
+    currentRules = "nwn2.xml";
+
     ui->setupUi(this);
     setCentralWidget(ui->tabWidget);
 
@@ -182,6 +185,7 @@ void NwnCharGen::updateWindowTitle()
 {
     QString title = dirtyFlag ? "*" : "";
     title += currentFile;
+    title += " [" + currentRules + "]";
     title += " - NwnCharGen";
     this->setWindowTitle( title );
 }
@@ -201,4 +205,17 @@ void NwnCharGen::clearDirtyFlag()
 void NwnCharGen::on_textEditDescription_textChanged()
 {
     setDirtyFlag();
+}
+
+void NwnCharGen::on_actionRulesSave_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save Rules"),
+                                                    currentRules,
+                                                    tr("Rules files (*.xml)"));
+    if( !fileName.isNull() ) {
+        nwnRules->save( qPrintable( fileName ) );
+        currentRules = fileName;
+//        clearDirtyFlag();
+    }
 }

@@ -5,6 +5,9 @@
 #include <string>
 #include <memory>
 
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/unique_ptr.hpp>
+
 namespace Nwn {
 
 class AblBlock;
@@ -26,6 +29,17 @@ public:
     const AblBlock& getAblAdjusts() const;
 
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize( Archive & ar, const unsigned int /* file_version */ )
+    {
+        ar & boost::serialization::make_nvp( "name", name )
+           & boost::serialization::make_nvp( "classification", classification )
+           & boost::serialization::make_nvp( "description", description )
+           & boost::serialization::make_nvp( "ablAdjusts", ablAdjusts );
+    }
+
     std::string name;
     std::string classification;
     std::string description;

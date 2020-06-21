@@ -46,6 +46,8 @@ private slots:
 
     void on_textEditDescription_textChanged();
 
+    void on_actionRulesSave_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 
@@ -54,6 +56,7 @@ private:
 
     bool dirtyFlag;
     QString currentFile;
+    QString currentRules;
 
     void updateAbilityBlock();
     void updateSummary();
