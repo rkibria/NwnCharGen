@@ -20,10 +20,10 @@ Rules::~Rules()
 {
 }
 
-void Rules::addRace( const Race& r )
+void Rules::setRace( std::unique_ptr<Nwn::Race> r )
 {
-    assert( !r.getName().empty() );
-    races.insert( { r.getName(), std::make_unique<Race>( r ) } );
+    assert( !r->getName().empty() );
+    races[ r->getName() ] = std::move( r );
 }
 
 AblBlock Rules::getAdjustedAbls( const Character& chr ) const

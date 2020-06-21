@@ -55,7 +55,7 @@ public:
     ~Rules();
 
     /* Races */
-    void addRace( const Race& r );
+    void setRace( std::unique_ptr<Nwn::Race> r );
     RacesConstLooper getRaces() const { return RacesConstLooper( races ); }
     const Race& getRaceByName( const std::string& name ) const { return *( races.at( name ) ); }
     bool isRaceValid( const std::string& name ) const { return races.find( name ) != races.end(); }
