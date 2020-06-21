@@ -11,6 +11,7 @@
 #include <Nwn/rules.hpp>
 
 #include "racedialog.h"
+#include "rulesracesdialog.h"
 
 using namespace Nwn;
 
@@ -123,7 +124,7 @@ void NwnCharGen::on_pushButtonChaPlus_clicked() { modAbility( static_cast<int>( 
 
 void NwnCharGen::on_buttonRace_clicked()
 {
-    RaceDialog rd(nwnRules, this);
+    RaceDialog rd( nwnRules.get(), this );
     if( rd.exec() == QDialog::Accepted ) {
         if( !rd.raceChoice.isEmpty() ) {
             nwnChar->setRace( rd.raceChoice.toStdString() );
@@ -239,5 +240,12 @@ void NwnCharGen::on_actionRulesOpen_triggered()
         nwnRules->restore( qPrintable( fileName ) );
         currentRules = fileName;
         updateAll();
+    }
+}
+
+void NwnCharGen::on_actionRaces_triggered()
+{
+    RulesRacesDialog rd( nwnRules.get(), this );
+    if( rd.exec() == QDialog::Accepted ) {
     }
 }

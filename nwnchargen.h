@@ -50,6 +50,8 @@ private slots:
 
     void on_actionRulesOpen_triggered();
 
+    void on_actionRaces_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 

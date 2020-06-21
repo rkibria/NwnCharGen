@@ -21,8 +21,8 @@ public:
 
     const std::string& getName() const { return name; }
     const std::string& getClassification() const { return classification; }
-    const std::string& getDescription() const { return description; }
 
+    const std::string& getDescription() const { return description; }
     void setDescription( const std::string& d ) { description = d; }
 
     AblBlock& getAblAdjusts();

@@ -8,7 +8,7 @@
 
 using namespace Nwn;
 
-RaceDialog::RaceDialog( const std::unique_ptr<Rules>& rules, QWidget *parent ) :
+RaceDialog::RaceDialog( const Nwn::Rules *rules, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::RaceDialog ),
     nwnRules{ rules }
