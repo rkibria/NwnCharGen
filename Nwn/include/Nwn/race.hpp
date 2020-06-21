@@ -15,7 +15,7 @@ class AblBlock;
 class Race
 {
 public:
-    explicit Race( const std::string& n, const std::string& c );
+    explicit Race( const std::string& n = "", const std::string& c = "" );
     ~Race();
     Race( const Race& );
 

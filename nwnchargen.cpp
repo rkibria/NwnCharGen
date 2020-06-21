@@ -43,6 +43,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , currentFile{ "character.xml" }
     , currentRules()
 {
+    // TODO load from disk on startup
     currentRules = "nwn2.xml";
 
     ui->setupUi(this);
@@ -225,6 +226,18 @@ void NwnCharGen::on_actionRulesSave_triggered()
     if( !fileName.isNull() ) {
         nwnRules->save( qPrintable( fileName ) );
         currentRules = fileName;
-//        clearDirtyFlag();
+    }
+}
+
+void NwnCharGen::on_actionRulesOpen_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open Rules"),
+                                                    currentRules,
+                                                    tr("Rules files (*.xml)"));
+    if( !fileName.isNull() ) {
+        nwnRules->restore( qPrintable( fileName ) );
+        currentRules = fileName;
+        updateAll();
     }
 }

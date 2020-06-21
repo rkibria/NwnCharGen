@@ -48,4 +48,12 @@ void Rules::save( const char* fileName ) const
     oa << boost::serialization::make_nvp( "rules", *this );
 }
 
+void Rules::restore( const char* fileName )
+{
+    std::ifstream ifs( fileName );
+    assert( ifs.good() );
+    boost::archive::xml_iarchive ia( ifs );
+    ia >> boost::serialization::make_nvp( "rules", *this );
+}
+
 } // namespace Nwn

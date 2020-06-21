@@ -48,6 +48,8 @@ private slots:
 
     void on_actionRulesSave_triggered();
 
+    void on_actionRulesOpen_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 
