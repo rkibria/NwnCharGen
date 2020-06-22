@@ -37,6 +37,7 @@ void RaceDialog::setupRacesWidget()
     ui->treeWidgetRace->setColumnCount( 1 );
     ui->treeWidgetRace->setHeaderHidden( true );
 
+    ui->treeWidgetRace->setSortingEnabled( false );
     std::unordered_map<std::string, QTreeWidgetItem*> classItems;
     for( const auto& race : nwnRules->getRaces() ) {
         const auto& classification = race.getClassification();
@@ -53,6 +54,9 @@ void RaceDialog::setupRacesWidget()
 
         new QTreeWidgetItem( classItem, QStringList( QString( race.getName().c_str() ) ) );
     }
+
+    ui->treeWidgetRace->setSortingEnabled( true );
+    ui->treeWidgetRace->sortByColumn( 0, Qt::AscendingOrder );
 
     ui->treeWidgetRace->expandAll();
 }
