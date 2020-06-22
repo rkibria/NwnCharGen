@@ -21,20 +21,17 @@ add_subdirectory(Nwn)
 qt5_wrap_cpp(MOC_SOURCES
     nwnchargen.h
     racedialog.h
-    rulesracesdialog.h
     )
 
 qt5_wrap_ui(UI_SOURCES
     nwnchargen.ui
     racedialog.ui
-    rulesracesdialog.ui
     )
 
 add_executable(NwnCharGen
     main.cpp
     nwnchargen.cpp
     racedialog.cpp
-    rulesracesdialog.cpp
     ${MOC_SOURCES}
     ${UI_SOURCES}
     )
