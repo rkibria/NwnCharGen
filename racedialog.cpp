@@ -65,8 +65,13 @@ void RaceDialog::setWidgetsChoiceOnly()
 {
     if( isChoiceOnly ) {
         setWindowTitle( tr( "Choose Race" ) );
+
+        ui->pushButtonNew->setVisible( false );
+        ui->pushButtonEdit->setVisible( false );
+        ui->pushButtonDelete->setVisible( false );
+
         QLayoutItem *child;
-        while ((child = ui->horizontalLayoutButtons->takeAt(0)) != 0) {
+        while( ( child = ui->horizontalLayoutButtons->takeAt(0) ) != 0 ) {
             delete child;
         }
     }
