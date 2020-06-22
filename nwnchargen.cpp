@@ -125,8 +125,8 @@ void NwnCharGen::on_buttonRace_clicked()
 {
     RaceDialog rd( nwnRules.get(), true, this );
     if( rd.exec() == QDialog::Accepted ) {
-        if( !rd.raceChoice.isEmpty() ) {
-            nwnChar->setRace( rd.raceChoice.toStdString() );
+        if( !rd.getChoice().isEmpty() ) {
+            nwnChar->setRace( rd.getChoice().toStdString() );
             setDirtyFlag();
             updateSummary();
         }

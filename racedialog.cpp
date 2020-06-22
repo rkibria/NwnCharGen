@@ -13,11 +13,13 @@ using namespace Nwn;
 RaceDialog::RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::RaceDialog ),
-    nwnRules{ rules }
+    nwnRules{ rules },
+    raceChoice(),
+    isChoiceOnly{ choiceOnly }
 {
     ui->setupUi( this );
 
-    setWidgetsChoiceOnly( choiceOnly );
+    setWidgetsChoiceOnly();
     setupRacesWidget();
 }
 
@@ -52,9 +54,9 @@ void RaceDialog::setupRacesWidget()
     ui->treeWidgetRace->expandAll();
 }
 
-void RaceDialog::setWidgetsChoiceOnly( bool choiceOnly )
+void RaceDialog::setWidgetsChoiceOnly()
 {
-    if( choiceOnly ) {
+    if( isChoiceOnly ) {
         setWindowTitle( tr( "Choose Race" ) );
         QLayoutItem *child;
         while ((child = ui->horizontalLayoutButtons->takeAt(0)) != 0) {

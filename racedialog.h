@@ -20,7 +20,7 @@ public:
     explicit RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
     ~RaceDialog();
 
-    QString raceChoice;
+    const QString& getChoice() const { return raceChoice; }
 
 private slots:
     void on_treeWidgetRace_itemSelectionChanged();
@@ -31,8 +31,10 @@ private slots:
 private:
     Ui::RaceDialog *ui;
     Nwn::Rules *nwnRules;
+    QString raceChoice;
+    const bool isChoiceOnly;
 
-    void setWidgetsChoiceOnly( bool choiceOnly );
+    void setWidgetsChoiceOnly();
     void setupRacesWidget();
 };
 
