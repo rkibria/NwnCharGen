@@ -17,17 +17,20 @@ class RaceDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RaceDialog(const Nwn::Rules *rules, bool choiceOnly, QWidget *parent);
+    explicit RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
     ~RaceDialog();
 
     QString raceChoice;
 
 private slots:
     void on_treeWidgetRace_itemSelectionChanged();
+    void on_pushButtonNew_clicked();
+    void on_pushButtonEdit_clicked();
+    void on_pushButtonDelete_clicked();
 
 private:
     Ui::RaceDialog *ui;
-    const Nwn::Rules *nwnRules;
+    Nwn::Rules *nwnRules;
 
     void setWidgetsChoiceOnly( bool choiceOnly );
     void setupRacesWidget();

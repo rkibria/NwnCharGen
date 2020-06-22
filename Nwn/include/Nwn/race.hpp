@@ -20,7 +20,10 @@ public:
     Race( const Race& );
 
     const std::string& getName() const { return name; }
+    void setName( const std::string& n ) { name = n; }
+
     const std::string& getClassification() const { return classification; }
+    void setClassification( const std::string& c ) { classification = c; }
 
     const std::string& getDescription() const { return description; }
     void setDescription( const std::string& d ) { description = d; }

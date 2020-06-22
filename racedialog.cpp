@@ -1,3 +1,5 @@
+#include <QInputDialog>
+
 #include "racedialog.h"
 #include "ui_racedialog.h"
 
@@ -8,7 +10,7 @@
 
 using namespace Nwn;
 
-RaceDialog::RaceDialog( const Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
+RaceDialog::RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::RaceDialog ),
     nwnRules{ rules }
@@ -26,6 +28,7 @@ RaceDialog::~RaceDialog()
 
 void RaceDialog::setupRacesWidget()
 {
+    ui->treeWidgetRace->clear();
     ui->treeWidgetRace->setColumnCount( 1 );
     ui->treeWidgetRace->setHeaderHidden( true );
 
@@ -72,4 +75,24 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
         const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() ).getDescription();
         ui->textEditDescription->setText( QString::fromStdString( description ) );
     }
+}
+
+void RaceDialog::on_pushButtonNew_clicked()
+{
+    bool ok;
+    QString raceName = QInputDialog::getText( this, "New Race", "Name of the race:", QLineEdit::Normal, "", &ok );
+    if ( ok && !raceName.isEmpty() ) {
+        nwnRules->setRace( std::make_unique<Race>( raceName.toStdString(), "Unknown" ) );
+        setupRacesWidget();
+    }
+}
+
+void RaceDialog::on_pushButtonEdit_clicked()
+{
+
+}
+
+void RaceDialog::on_pushButtonDelete_clicked()
+{
+
 }
