@@ -34,8 +34,12 @@ private:
     QString raceChoice;
     const bool isChoiceOnly;
 
+    bool haveChoice() const { return !raceChoice.isEmpty(); }
+
     void setWidgetsChoiceOnly();
     void setupRacesWidget();
+    void updateEditButtons();
+    void updateOkButton();
 };
 
 #endif // RACEDIALOG_H

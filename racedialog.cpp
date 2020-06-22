@@ -21,6 +21,8 @@ RaceDialog::RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
 
     setWidgetsChoiceOnly();
     setupRacesWidget();
+    updateEditButtons();
+    updateOkButton();
 }
 
 RaceDialog::~RaceDialog()
@@ -73,9 +75,14 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
     const auto selection = ui->treeWidgetRace->selectedItems();
     if( selection.size() ) {
         const auto item = selection.first();
+
         raceChoice = item->text( 0 );
+
         const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() ).getDescription();
         ui->textEditDescription->setText( QString::fromStdString( description ) );
+
+        updateEditButtons();
+        updateOkButton();
     }
 }
 
@@ -97,4 +104,19 @@ void RaceDialog::on_pushButtonEdit_clicked()
 void RaceDialog::on_pushButtonDelete_clicked()
 {
 
+}
+
+void RaceDialog::updateEditButtons()
+{
+    if( !isChoiceOnly ) {
+        ui->pushButtonEdit->setEnabled( haveChoice() );
+        ui->pushButtonDelete->setEnabled( haveChoice() );
+    }
+}
+
+void RaceDialog::updateOkButton()
+{
+    if( isChoiceOnly ) {
+        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( haveChoice() );
+    }
 }
