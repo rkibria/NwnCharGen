@@ -1,4 +1,5 @@
 #include <QInputDialog>
+#include <QMessageBox>
 
 #include "racedialog.h"
 #include "ui_racedialog.h"
@@ -103,7 +104,11 @@ void RaceDialog::on_pushButtonEdit_clicked()
 
 void RaceDialog::on_pushButtonDelete_clicked()
 {
-
+    const auto button = QMessageBox::question( this, "Delete", QString( "%1 will be removed. Continue?" ).arg( getChoice() ) );
+    if( button == QMessageBox::Yes ) {
+        nwnRules->removeRace( getChoice().toStdString() );
+        setupRacesWidget();
+    }
 }
 
 void RaceDialog::updateEditButtons()

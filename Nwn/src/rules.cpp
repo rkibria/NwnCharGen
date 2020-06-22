@@ -56,4 +56,11 @@ void Rules::restore( const char* fileName )
     ia >> boost::serialization::make_nvp( "rules", *this );
 }
 
+void Rules::removeRace( const std::string& name )
+{
+    if( isRaceValid( name ) ) {
+        races.erase( name );
+    }
+}
+
 } // namespace Nwn

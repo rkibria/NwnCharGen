@@ -59,6 +59,7 @@ public:
     RacesConstLooper getRaces() const { return RacesConstLooper( races ); }
     const Race& getRaceByName( const std::string& name ) const { return *( races.at( name ) ); }
     bool isRaceValid( const std::string& name ) const { return races.find( name ) != races.end(); }
+    void removeRace( const std::string& name );
 
     /* Character methods */
     AblBlock getAdjustedAbls( const Character& chr ) const;
