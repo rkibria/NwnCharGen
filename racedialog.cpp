@@ -8,20 +8,29 @@
 
 using namespace Nwn;
 
-RaceDialog::RaceDialog( const Nwn::Rules *rules, QWidget *parent ) :
+RaceDialog::RaceDialog( const Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::RaceDialog ),
     nwnRules{ rules }
 {
     ui->setupUi( this );
 
+    setWidgetsChoiceOnly( choiceOnly );
+    setupRacesWidget();
+}
+
+RaceDialog::~RaceDialog()
+{
+    delete ui;
+}
+
+void RaceDialog::setupRacesWidget()
+{
     ui->treeWidgetRace->setColumnCount( 1 );
     ui->treeWidgetRace->setHeaderHidden( true );
 
-    QList<QTreeWidgetItem *> items;
-
     std::unordered_map<std::string, QTreeWidgetItem*> classItems;
-    for( const auto& race : rules->getRaces() ) {
+    for( const auto& race : nwnRules->getRaces() ) {
         const auto& classification = race.getClassification();
 
         QTreeWidgetItem* classItem;
@@ -40,9 +49,18 @@ RaceDialog::RaceDialog( const Nwn::Rules *rules, QWidget *parent ) :
     ui->treeWidgetRace->expandAll();
 }
 
-RaceDialog::~RaceDialog()
+void RaceDialog::setWidgetsChoiceOnly( bool choiceOnly )
 {
-    delete ui;
+    if( choiceOnly ) {
+        setWindowTitle( tr( "Choose Race" ) );
+        QLayoutItem *child;
+        while ((child = ui->horizontalLayoutButtons->takeAt(0)) != 0) {
+            delete child;
+        }
+    }
+    else {
+        ui->buttonBox->setStandardButtons( QDialogButtonBox::Ok );
+    }
 }
 
 void RaceDialog::on_treeWidgetRace_itemSelectionChanged()

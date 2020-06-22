@@ -123,7 +123,7 @@ void NwnCharGen::on_pushButtonChaPlus_clicked() { modAbility( static_cast<int>( 
 
 void NwnCharGen::on_buttonRace_clicked()
 {
-    RaceDialog rd( nwnRules.get(), this );
+    RaceDialog rd( nwnRules.get(), true, this );
     if( rd.exec() == QDialog::Accepted ) {
         if( !rd.raceChoice.isEmpty() ) {
             nwnChar->setRace( rd.raceChoice.toStdString() );
@@ -244,7 +244,7 @@ void NwnCharGen::on_actionRulesOpen_triggered()
 
 void NwnCharGen::on_actionRaces_triggered()
 {
-    RaceDialog rd( nwnRules.get(), this );
+    RaceDialog rd( nwnRules.get(), false, this );
     if( rd.exec() == QDialog::Accepted ) {
     }
 }
