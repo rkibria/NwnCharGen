@@ -4,6 +4,8 @@
 #include "racedialog.h"
 #include "ui_racedialog.h"
 
+#include "raceeditdialog.h"
+
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
 
@@ -108,6 +110,9 @@ void RaceDialog::on_pushButtonNew_clicked()
 
 void RaceDialog::on_pushButtonEdit_clicked()
 {
+    RaceEditDialog rd( this );
+    if( rd.exec() == QDialog::Accepted ) {
+    }
 
 }
 
