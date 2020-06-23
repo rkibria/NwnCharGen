@@ -110,10 +110,9 @@ void RaceDialog::on_pushButtonNew_clicked()
 
 void RaceDialog::on_pushButtonEdit_clicked()
 {
-    RaceEditDialog rd( this );
+    RaceEditDialog rd( nwnRules, getChoice().toStdString(), this );
     if( rd.exec() == QDialog::Accepted ) {
     }
-
 }
 
 void RaceDialog::on_pushButtonDelete_clicked()
