@@ -30,6 +30,10 @@ qt5_wrap_ui(UI_SOURCES
     raceeditdialog.ui
     )
 
+qt5_add_resources(QRC_SOURCES
+    qdarkstyle/style.qrc
+    )
+
 add_executable(NwnCharGen
     main.cpp
     nwnchargen.cpp
@@ -37,10 +41,12 @@ add_executable(NwnCharGen
     raceeditdialog.cpp
     ${MOC_SOURCES}
     ${UI_SOURCES}
+    ${QRC_SOURCES}
     )
 
 unset(MOC_SOURCES)
 unset(UI_SOURCES)
+unset(QRC_SOURCES)
 
 target_link_libraries(NwnCharGen PRIVATE
     Qt5::Widgets
