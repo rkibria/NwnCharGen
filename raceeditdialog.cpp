@@ -63,4 +63,12 @@ void RaceEditDialog::on_buttonBox_accepted()
     raceCopy->setName( ui->lineEditName->text().toStdString() );
     raceCopy->setClassification( ui->lineEditClassification->text().toStdString() );
     raceCopy->setDescription( ui->textEditDescription->toPlainText().toStdString() );
+
+    auto& abls = raceCopy->getAblAdjusts();
+    abls.setAbl( AblScore::Str, ui->spinBoxStr->value() );
+    abls.setAbl( AblScore::Dex, ui->spinBoxDex->value() );
+    abls.setAbl( AblScore::Con, ui->spinBoxCon->value() );
+    abls.setAbl( AblScore::Int, ui->spinBoxInt->value() );
+    abls.setAbl( AblScore::Wis, ui->spinBoxWis->value() );
+    abls.setAbl( AblScore::Cha, ui->spinBoxCha->value() );
 }
