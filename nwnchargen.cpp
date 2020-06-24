@@ -245,6 +245,6 @@ void NwnCharGen::on_actionRulesOpen_triggered()
 void NwnCharGen::on_actionRaces_triggered()
 {
     RaceDialog rd( nwnRules.get(), false, this );
-    if( rd.exec() == QDialog::Accepted ) {
-    }
+    rd.exec();
+    updateAll();
 }

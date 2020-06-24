@@ -5,6 +5,8 @@
 #include <Nwn/race.hpp>
 #include <Nwn/ablblock.hpp>
 
+#include <QMessageBox>
+
 using namespace Nwn;
 
 RaceEditDialog::RaceEditDialog( Nwn::Rules *r, const std::string& n, QWidget *parent ) :
@@ -24,6 +26,24 @@ RaceEditDialog::~RaceEditDialog()
     delete ui;
 }
 
+void RaceEditDialog::done( int r )
+{
+    if( QDialog::Accepted == r ) {
+        if( !ui->lineEditName->text().isEmpty() && !ui->lineEditClassification->text().isEmpty() ) {
+            QDialog::done(r);
+            return;
+        }
+        else {
+            QMessageBox::critical( this, "Error", "Name and classification must not be empty!" );
+            return;
+        }
+    }
+    else {
+        QDialog::done(r);
+        return;
+    }
+}
+
 void RaceEditDialog::updateAll()
 {
     ui->lineEditName->setText( raceCopy->getName().c_str() );
@@ -36,4 +56,11 @@ void RaceEditDialog::updateAll()
     ui->spinBoxInt->setValue( raceCopy->getAblAdjusts().getAbl( AblScore::Int ) );
     ui->spinBoxWis->setValue( raceCopy->getAblAdjusts().getAbl( AblScore::Wis ) );
     ui->spinBoxCha->setValue( raceCopy->getAblAdjusts().getAbl( AblScore::Cha ) );
+}
+
+void RaceEditDialog::on_buttonBox_accepted()
+{
+    raceCopy->setName( ui->lineEditName->text().toStdString() );
+    raceCopy->setClassification( ui->lineEditClassification->text().toStdString() );
+    raceCopy->setDescription( ui->textEditDescription->toPlainText().toStdString() );
 }

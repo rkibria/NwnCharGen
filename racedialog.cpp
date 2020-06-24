@@ -101,10 +101,15 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
 void RaceDialog::on_pushButtonNew_clicked()
 {
     bool ok;
-    QString raceName = QInputDialog::getText( this, "New Race", "Name of the race:", QLineEdit::Normal, "", &ok );
-    if ( ok && !raceName.isEmpty() ) {
-        nwnRules->setRace( std::make_unique<Race>( raceName.toStdString(), "Unknown" ) );
-        setupRacesWidget();
+    QString raceName = QInputDialog::getText( this, "New Race", "Name of the race:\n(initial classification will be NEW)", QLineEdit::Normal, "", &ok );
+    if ( ok ) {
+        if( !raceName.isEmpty() ) {
+            nwnRules->setRace( std::make_unique<Race>( raceName.toStdString(), "NEW" ) );
+            setupRacesWidget();
+        }
+        else {
+            QMessageBox::critical( this, "Error", "Name must not be empty!" );
+        }
     }
 }
 
@@ -112,6 +117,9 @@ void RaceDialog::on_pushButtonEdit_clicked()
 {
     RaceEditDialog rd( nwnRules, getChoice().toStdString(), this );
     if( rd.exec() == QDialog::Accepted ) {
+        nwnRules->removeRace( rd.getOriginalName() );
+        nwnRules->setRace( std::move( rd.getEdited() ) );
+        setupRacesWidget();
     }
 }
 
