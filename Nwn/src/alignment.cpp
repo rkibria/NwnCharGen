@@ -26,7 +26,7 @@ size_t alignmentToIndex( Alignment aln )
     case Alignment::LawfulEvil:     return 6;
     case Alignment::NeutralEvil:    return 7;
     case Alignment::ChaoticEvil:    return 8;
-    default: throw std::invalid_argument( "invalid alignment" );;
+    default: throw std::invalid_argument( "invalid alignment" );
     }
 }
 
