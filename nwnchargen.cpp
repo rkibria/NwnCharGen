@@ -11,6 +11,7 @@
 #include <Nwn/rules.hpp>
 
 #include "racedialog.h"
+#include "levelsmodel.h"
 
 using namespace Nwn;
 
@@ -32,6 +33,13 @@ void addDebugRules( Rules* nwnRules )
     nwnRules->setRace( std::make_unique<Race>( "Drow", "Elf" ) );
 }
 
+void addDebugCharacter( Character* nwnChar )
+{
+    nwnChar->addLevel( "Barbarian" );
+    nwnChar->addLevel( "Barbarian" );
+    nwnChar->addLevel( "Fighter" );
+}
+
 } // namespace
 
 NwnCharGen::NwnCharGen(QWidget *parent)
@@ -45,15 +53,11 @@ NwnCharGen::NwnCharGen(QWidget *parent)
 {
     // TODO load from disk on startup
     currentRules = "nwn2.xml";
+    addDebugRules( nwnRules.get() );
+    addDebugCharacter( nwnChar.get() );
 
     ui->setupUi(this);
-    setCentralWidget(ui->tabWidget);
-
-    for( const auto& aln : allAlignments ) {
-        ui->comboBoxAlignment->addItem( alignmentToStr( aln ).c_str() );
-    }
-
-    addDebugRules( nwnRules.get() );
+    initWidgets();
 
     updateSummary();
     clearDirtyFlag();
@@ -62,6 +66,18 @@ NwnCharGen::NwnCharGen(QWidget *parent)
 NwnCharGen::~NwnCharGen()
 {
     delete ui;
+}
+
+void NwnCharGen::initWidgets()
+{
+    setCentralWidget(ui->tabWidget);
+
+    for( const auto& aln : allAlignments ) {
+        ui->comboBoxAlignment->addItem( alignmentToStr( aln ).c_str() );
+    }
+
+    const auto levelsModel = new LevelsModel( this );
+    ui->tableViewLevels->setModel( levelsModel );
 }
 
 void NwnCharGen::updateAbilityBlock()

@@ -21,6 +21,9 @@ public:
     NwnCharGen(QWidget *parent = nullptr);
     ~NwnCharGen();
 
+    Nwn::Character* getCharacter() { return nwnChar.get(); }
+    Nwn::Rules* getRules() { return nwnRules.get(); }
+
 private slots:
     void on_pushButtonStrMinus_clicked();
     void on_pushButtonStrPlus_clicked();
@@ -34,7 +37,6 @@ private slots:
     void on_pushButtonWisPlus_clicked();
     void on_pushButtonChaMinus_clicked();
     void on_pushButtonChaPlus_clicked();
-
     void on_buttonRace_clicked();
     void on_actionSave_triggered();
     void on_actionOpen_triggered();
@@ -43,13 +45,9 @@ private slots:
     void on_actionExit_triggered();
     void on_actionNew_triggered();
     void on_lineEditName_editingFinished();
-
     void on_textEditDescription_textChanged();
-
     void on_actionRulesSave_triggered();
-
     void on_actionRulesOpen_triggered();
-
     void on_actionRaces_triggered();
 
 private:
@@ -71,6 +69,7 @@ private:
     void clearDirtyFlag();
 
     void modAbility( int abl, bool isInc );
+    void initWidgets();
 };
 
 #endif // NWNCHARGEN_H
