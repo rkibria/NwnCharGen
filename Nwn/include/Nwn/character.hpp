@@ -48,6 +48,11 @@ public:
     void save( const char* fileName ) const;
     void restore( const char* fileName );
 
+    /* Levels */
+    void addLevel( const std::string& chclass );
+    const std::string& getLevel( int lvl ) const;
+    void setLevel( int lvl, const std::string& chclass );
+
 private:
     friend class boost::serialization::access;
 
@@ -68,6 +73,7 @@ private:
     constexpr static const int ablPointBuy = 32;
     constexpr static const int minAblScore = 8;
     constexpr static const int maxAblScore = 18;
+    constexpr static const int maxLevel = 30;
 
     std::string name;
     std::string description;

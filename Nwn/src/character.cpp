@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 #include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
@@ -12,6 +13,7 @@ namespace Nwn {
 const int Character::ablPointBuy;
 const int Character::minAblScore;
 const int Character::maxAblScore;
+const int Character::maxLevel;
 
 Character::Character() :
     abls{ std::make_unique< AblBlock >( minAblScore ) }
@@ -78,6 +80,26 @@ void Character::restore( const char* fileName )
     assert( ifs.good() );
     boost::archive::xml_iarchive ia( ifs );
     ia >> boost::serialization::make_nvp( "character", *this );
+}
+
+void Character::addLevel( const std::string& chclass )
+{
+    if( levels.size() < maxLevel ) {
+        levels.push_back( chclass );
+    }
+    else {
+        throw std::length_error( "max level exceeded" );
+    }
+}
+
+const std::string& Character::getLevel( int lvl ) const
+{
+    return levels[ lvl ];
+}
+
+void Character::setLevel( int lvl, const std::string& chclass )
+{
+    levels[ lvl ] = chclass;
 }
 
 } // namespace Nwn
