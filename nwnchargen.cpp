@@ -49,9 +49,8 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     ui->setupUi(this);
     setCentralWidget(ui->tabWidget);
 
-    for( size_t i = 0; i < alignmentStrings.size(); ++i ) {
-        const auto a = static_cast<Alignment>( i );
-        ui->comboBoxAlignment->addItem( alignmentStrings.left.at( a ).c_str() );
+    for( const auto& aln : allAlignments ) {
+        ui->comboBoxAlignment->addItem( alignmentToStr( aln ).c_str() );
     }
 
     addDebugRules( nwnRules.get() );
@@ -90,7 +89,7 @@ void NwnCharGen::updateSummary()
     ui->lineEditName->setText( nwnChar->getName().c_str() );
     ui->textEditDescription->setText( nwnChar->getDescription().c_str() );
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
-    ui->comboBoxAlignment->setCurrentIndex( static_cast<int>( nwnChar->getAlignment() ) );
+    ui->comboBoxAlignment->setCurrentIndex( alignmentToIndex( nwnChar->getAlignment() ) );
 
     updateAbilityBlock();
 }
@@ -161,9 +160,9 @@ void NwnCharGen::on_actionOpen_triggered()
     }
 }
 
-void NwnCharGen::on_comboBoxAlignment_currentIndexChanged(int index)
+void NwnCharGen::on_comboBoxAlignment_currentIndexChanged( int index )
 {
-    nwnChar->setAlignment( static_cast<Alignment>( index ) );
+    nwnChar->setAlignment( indexToAlignment( index ) );
     setDirtyFlag();
     updateAll();
 }
