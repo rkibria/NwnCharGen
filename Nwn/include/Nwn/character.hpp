@@ -4,11 +4,14 @@
 #include <Nwn/base.hpp>
 
 #include <array>
+#include <vector>
 #include <string>
 #include <memory>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/unique_ptr.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
 
 namespace Nwn {
 
@@ -56,7 +59,8 @@ private:
            & boost::serialization::make_nvp( "race", race )
            & boost::serialization::make_nvp( "alignment", alignment )
            & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
-           & boost::serialization::make_nvp( "abls", abls );
+           & boost::serialization::make_nvp( "abls", abls )
+           & boost::serialization::make_nvp( "levels", levels );
     }
 
     int incCost( int curScore ) const;
@@ -71,6 +75,7 @@ private:
     Alignment alignment = Alignment::LawfulGood;
     int ablPointsRemain = ablPointBuy;
     std::unique_ptr< AblBlock > abls;
+    std::vector< std::string > levels;
 };
 
 } // namespace Nwn
