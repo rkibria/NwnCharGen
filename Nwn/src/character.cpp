@@ -9,21 +9,16 @@
 
 namespace Nwn {
 
-const int Character::ablPointBuy = 32;
-const int Character::minAblScore = 8;
-const int Character::maxAblScore = 18;
+const int Character::ablPointBuy;
+const int Character::minAblScore;
+const int Character::maxAblScore;
 
 Character::Character() :
-    name{},
-    description{},
-    race{},
-    alignment{ Alignment::LawfulGood },
-    ablPointsRemain( ablPointBuy ),
     abls{ std::make_unique< AblBlock >( minAblScore ) }
 {
 }
 
-Character::~Character()
+Character::~Character() noexcept
 {
 }
 

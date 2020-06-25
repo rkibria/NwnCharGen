@@ -18,7 +18,7 @@ class Character
 {
 public:
     explicit Character();
-    ~Character();
+    ~Character() noexcept;
 
     void setName( const std::string n ) { name = n; }
     const std::string& getName() const { return name; }
@@ -61,16 +61,15 @@ private:
 
     int incCost( int curScore ) const;
 
-    static const int ablPointBuy;
-    static const int minAblScore;
-    static const int maxAblScore;
+    constexpr static const int ablPointBuy = 32;
+    constexpr static const int minAblScore = 8;
+    constexpr static const int maxAblScore = 18;
 
     std::string name;
     std::string description;
     std::string race;
-    Alignment alignment;
-
-    int ablPointsRemain;
+    Alignment alignment = Alignment::LawfulGood;
+    int ablPointsRemain = ablPointBuy;
     std::unique_ptr< AblBlock > abls;
 };
 
