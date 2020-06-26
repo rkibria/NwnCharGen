@@ -1,5 +1,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QMap>
 
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
@@ -103,6 +104,22 @@ void NwnCharGen::updateAbilityBlock()
     ui->lineEditChaMod->setText( QString::number( abls.getAblMod( AblScore::Cha ) ) );
 }
 
+void NwnCharGen::updateClasses()
+{
+    QMap<QString, int> curClassLvls;
+    for( int i = 0; i < nwnChar->getNumLevels(); ++i ) {
+        curClassLvls[ nwnChar->getLevel( i ).c_str() ]++;
+    }
+    QString output;
+    auto itr = curClassLvls.constBegin();
+    while( itr != curClassLvls.constEnd() ) {
+        const auto curCls = QString( "%1 (%2) " ).arg( itr.key() ).arg( itr.value() );
+        output += curCls;
+        ++itr;
+    }
+    ui->lineEditClasses->setText( output );
+}
+
 void NwnCharGen::updateSummary()
 {
     ui->lineEditName->setText( nwnChar->getName().c_str() );
@@ -110,6 +127,8 @@ void NwnCharGen::updateSummary()
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
     ui->comboBoxAlignment->setCurrentIndex( alignmentToIndex( nwnChar->getAlignment() ) );
     ui->spinBoxLevels->setValue( nwnChar->getNumLevels() );
+
+    updateClasses();
 
     updateAbilityBlock();
 }
@@ -283,6 +302,8 @@ void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
         for( int i = 0; i < newLvls - curLvls; ++i ) {
             nwnChar->pushLevel( kUnassignedClass );
         }
+        setDirtyFlag();
+        updateAll();
     }
     else if( newLvls < curLvls ) {
         if( QMessageBox::warning( this,
@@ -293,7 +314,11 @@ void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
             for( int i = 0; i < curLvls - newLvls; ++i ) {
                 nwnChar->popLevel();
             }
+            setDirtyFlag();
+            updateAll();
+        }
+        else {
+            ui->spinBoxLevels->setValue( curLvls );
         }
     }
-    updateAll();
 }

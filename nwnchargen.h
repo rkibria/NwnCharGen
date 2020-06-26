@@ -72,6 +72,7 @@ private:
     void modAbility( int abl, bool isInc );
     void initWidgets();
     void updateLevels();
+    void updateClasses();
 };
 
 #endif // NWNCHARGEN_H
