@@ -285,8 +285,14 @@ void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
         }
     }
     else if( newLvls < curLvls ) {
-        for( int i = 0; i < curLvls - newLvls; ++i ) {
-            nwnChar->popLevel();
+        if( QMessageBox::warning( this,
+                                  "Remove levels",
+                                  "Really remove levels? Any settings will be lost.",
+                                  QMessageBox::Ok | QMessageBox::Cancel,
+                                  QMessageBox::Cancel ) == QMessageBox::Ok ) {
+            for( int i = 0; i < curLvls - newLvls; ++i ) {
+                nwnChar->popLevel();
+            }
         }
     }
     updateAll();
