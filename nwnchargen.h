@@ -49,6 +49,7 @@ private slots:
     void on_actionRulesSave_triggered();
     void on_actionRulesOpen_triggered();
     void on_actionRaces_triggered();
+    void on_spinBoxLevels_valueChanged(int arg1);
 
 private:
     Ui::NwnCharGen *ui;
@@ -70,6 +71,7 @@ private:
 
     void modAbility( int abl, bool isInc );
     void initWidgets();
+    void updateLevels();
 };
 
 #endif // NWNCHARGEN_H

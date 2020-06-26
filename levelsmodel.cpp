@@ -43,6 +43,10 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
     if( !index.isValid() || role != Qt::DisplayRole )
         return QVariant();
 
+    if( index.row() >= nwnCharGen->getCharacter()->getNumLevels() ) {
+        return QVariant();
+    }
+
     if( index.column() == 0 ) {
         return index.row() + 1;
     }
@@ -51,4 +55,10 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+void LevelsModel::updateView()
+{
+    emit layoutAboutToBeChanged();
+    emit layoutChanged();
 }

@@ -82,13 +82,23 @@ void Character::restore( const char* fileName )
     ia >> boost::serialization::make_nvp( "character", *this );
 }
 
-void Character::addLevel( const std::string& chclass )
+void Character::pushLevel( const std::string& chclass )
 {
     if( levels.size() < maxLevel ) {
         levels.push_back( chclass );
     }
     else {
         throw std::length_error( "max level exceeded" );
+    }
+}
+
+void Character::popLevel()
+{
+    if( !levels.empty() ) {
+        levels.pop_back();
+    }
+    else {
+        throw std::length_error( "levels already empty" );
     }
 }
 
@@ -99,7 +109,12 @@ const std::string& Character::getLevel( int lvl ) const
 
 void Character::setLevel( int lvl, const std::string& chclass )
 {
-    levels[ lvl ] = chclass;
+    if( lvl >= 0 && static_cast<size_t>( lvl ) < levels.size() ) {
+        levels[ lvl ] = chclass;
+    }
+    else {
+        throw std::length_error( "level not present" );
+    }
 }
 
 } // namespace Nwn

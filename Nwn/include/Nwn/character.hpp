@@ -49,8 +49,9 @@ public:
     void restore( const char* fileName );
 
     /* Levels */
-    size_t getNumLevels() const { return levels.size(); }
-    void addLevel( const std::string& chclass );
+    int getNumLevels() const { return static_cast<int>( levels.size() ); }
+    void pushLevel( const std::string& chclass );
+    void popLevel();
     const std::string& getLevel( int lvl ) const;
     void setLevel( int lvl, const std::string& chclass );
 

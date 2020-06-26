@@ -17,6 +17,8 @@ using namespace Nwn;
 
 namespace {
 
+static constexpr const char* kUnassignedClass = "Unassigned";
+
 void addDebugRules( Rules* nwnRules )
 {
     std::unique_ptr<Race> human = std::make_unique<Race>( "Human", "Human" );
@@ -33,11 +35,11 @@ void addDebugRules( Rules* nwnRules )
     nwnRules->setRace( std::make_unique<Race>( "Drow", "Elf" ) );
 }
 
-void addDebugCharacter( Character* nwnChar )
+void initCharacter( Character* nwnChar )
 {
-    nwnChar->addLevel( "Barbarian" );
-    nwnChar->addLevel( "Barbarian" );
-    nwnChar->addLevel( "Fighter" );
+    for( int i = 0; i < 30; ++i ) {
+        nwnChar->pushLevel( kUnassignedClass );
+    }
 }
 
 } // namespace
@@ -54,12 +56,13 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     // TODO load from disk on startup
     currentRules = "nwn2.xml";
     addDebugRules( nwnRules.get() );
-    addDebugCharacter( nwnChar.get() );
+
+    initCharacter( nwnChar.get() );
 
     ui->setupUi(this);
     initWidgets();
 
-    updateSummary();
+    updateAll();
     clearDirtyFlag();
 }
 
@@ -106,13 +109,22 @@ void NwnCharGen::updateSummary()
     ui->textEditDescription->setText( nwnChar->getDescription().c_str() );
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
     ui->comboBoxAlignment->setCurrentIndex( alignmentToIndex( nwnChar->getAlignment() ) );
+    ui->spinBoxLevels->setValue( nwnChar->getNumLevels() );
 
     updateAbilityBlock();
+}
+
+void NwnCharGen::updateLevels()
+{
+    if( auto levelsModel = static_cast<LevelsModel*>( ui->tableViewLevels->model() ) ) {
+        levelsModel->updateView();
+    }
 }
 
 void NwnCharGen::updateAll()
 {
     updateSummary();
+    updateLevels();
 }
 
 void NwnCharGen::modAbility( int iAbl, bool isInc )
@@ -261,5 +273,21 @@ void NwnCharGen::on_actionRaces_triggered()
 {
     RaceDialog rd( nwnRules.get(), false, this );
     rd.exec();
+    updateAll();
+}
+
+void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
+{
+    const auto curLvls = nwnChar->getNumLevels();
+    if( newLvls > curLvls ) {
+        for( int i = 0; i < newLvls - curLvls; ++i ) {
+            nwnChar->pushLevel( kUnassignedClass );
+        }
+    }
+    else if( newLvls < curLvls ) {
+        for( int i = 0; i < curLvls - newLvls; ++i ) {
+            nwnChar->popLevel();
+        }
+    }
     updateAll();
 }
