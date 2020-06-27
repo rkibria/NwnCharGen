@@ -23,6 +23,7 @@ qt5_wrap_cpp(MOC_SOURCES
     racedialog.h
     raceeditdialog.h
     levelsmodel.h
+    levelsclassdelegate.h
     )
 
 qt5_wrap_ui(UI_SOURCES
@@ -41,6 +42,7 @@ add_executable(NwnCharGen
     racedialog.cpp
     raceeditdialog.cpp
     levelsmodel.cpp
+    levelsclassdelegate.cpp
     ${MOC_SOURCES}
     ${UI_SOURCES}
     ${QRC_SOURCES}

@@ -13,6 +13,7 @@
 
 #include "racedialog.h"
 #include "levelsmodel.h"
+#include "levelsclassdelegate.h"
 
 using namespace Nwn;
 
@@ -82,6 +83,7 @@ void NwnCharGen::initWidgets()
 
     const auto levelsModel = new LevelsModel( this );
     ui->tableViewLevels->setModel( levelsModel );
+    ui->tableViewLevels->setItemDelegateForColumn( 1, new LevelsClassDelegate( ui->tableViewLevels ) );
 }
 
 void NwnCharGen::updateAbilityBlock()
