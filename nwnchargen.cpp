@@ -21,6 +21,8 @@ namespace {
 
 static constexpr const char* kUnassignedClass = "Unassigned";
 
+static constexpr const int kClassesColumn = 1;
+
 void addDebugRules( Rules* nwnRules )
 {
     std::unique_ptr<Race> human = std::make_unique<Race>( "Human", "Human" );
@@ -83,7 +85,7 @@ void NwnCharGen::initWidgets()
 
     const auto levelsModel = new LevelsModel( this );
     ui->tableViewLevels->setModel( levelsModel );
-    ui->tableViewLevels->setItemDelegateForColumn( 1, new LevelsClassDelegate( ui->tableViewLevels ) );
+    ui->tableViewLevels->setItemDelegateForColumn( kClassesColumn, new LevelsClassDelegate( ui->tableViewLevels ) );
 }
 
 void NwnCharGen::updateAbilityBlock()
