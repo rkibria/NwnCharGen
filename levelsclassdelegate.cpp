@@ -39,9 +39,9 @@ bool LevelsClassDelegate::editorEvent(QEvent *event,
     const auto levelsModel = static_cast<LevelsModel*>( model );
     const auto nwnCharGen = levelsModel->getNwnCharGen();
 
-    ChClassDialog rd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
-    if( rd.exec() == QDialog::Accepted ) {
-        nwnCharGen->getCharacter()->setLevel( lvl, "Changed" );
+    ChClassDialog ccd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
+    if( ccd.exec() == QDialog::Accepted ) {
+        nwnCharGen->getCharacter()->setLevel( lvl, ccd.getChoice().toStdString() );
         nwnCharGen->updateAll();
     }
 

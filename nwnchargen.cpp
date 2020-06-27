@@ -20,7 +20,7 @@ using namespace Nwn;
 
 namespace {
 
-static constexpr const char* kUnassignedClass = "Unassigned";
+static constexpr const char* kDefaultClass = "Barbarian";
 
 static constexpr const int kClassesColumn = 1;
 
@@ -51,7 +51,7 @@ void addDebugRules( Rules* nwnRules )
 void initCharacter( Character* nwnChar )
 {
     for( int i = 0; i < 30; ++i ) {
-        nwnChar->pushLevel( kUnassignedClass );
+        nwnChar->pushLevel( kDefaultClass );
     }
 }
 
@@ -313,7 +313,7 @@ void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
     const auto curLvls = nwnChar->getNumLevels();
     if( newLvls > curLvls ) {
         for( int i = 0; i < newLvls - curLvls; ++i ) {
-            nwnChar->pushLevel( kUnassignedClass );
+            nwnChar->pushLevel( kDefaultClass );
         }
         setDirtyFlag();
         updateAll();
