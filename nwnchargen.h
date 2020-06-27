@@ -24,6 +24,8 @@ public:
     Nwn::Character* getCharacter() { return nwnChar.get(); }
     Nwn::Rules* getRules() { return nwnRules.get(); }
 
+    void updateAll();
+
 private slots:
     void on_pushButtonStrMinus_clicked();
     void on_pushButtonStrPlus_clicked();
@@ -63,7 +65,6 @@ private:
 
     void updateAbilityBlock();
     void updateSummary();
-    void updateAll();
     void updateWindowTitle();
 
     void setDirtyFlag();

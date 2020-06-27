@@ -22,6 +22,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void updateView();
+    NwnCharGen* getNwnCharGen() const { return nwnCharGen; }
 
 private:
     NwnCharGen* nwnCharGen;
