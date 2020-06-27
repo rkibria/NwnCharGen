@@ -3,6 +3,7 @@
 #include "levelsclassdelegate.h"
 #include "levelsmodel.h"
 #include "nwnchargen.h"
+#include "chclassdialog.h"
 
 #include <Nwn/character.hpp>
 
@@ -37,8 +38,12 @@ bool LevelsClassDelegate::editorEvent(QEvent *event,
     const auto lvl = index.row();
     const auto levelsModel = static_cast<LevelsModel*>( model );
     const auto nwnCharGen = levelsModel->getNwnCharGen();
-    nwnCharGen->getCharacter()->setLevel( lvl, "Changed" );
-    nwnCharGen->updateAll();
+
+    ChClassDialog rd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
+    if( rd.exec() == QDialog::Accepted ) {
+        nwnCharGen->getCharacter()->setLevel( lvl, "Changed" );
+        nwnCharGen->updateAll();
+    }
 
     return true;
 }
