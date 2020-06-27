@@ -6,6 +6,7 @@
 #include <Nwn/ablblock.hpp>
 #include <Nwn/character.hpp>
 #include <Nwn/race.hpp>
+#include <Nwn/chclass.hpp>
 
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
@@ -20,11 +21,37 @@ Rules::~Rules()
 {
 }
 
+// RACES
+
 void Rules::setRace( std::unique_ptr<Nwn::Race> r )
 {
     assert( !r->getName().empty() );
     races[ r->getName() ] = std::move( r );
 }
+
+void Rules::removeRace( const std::string& name )
+{
+    if( isRaceValid( name ) ) {
+        races.erase( name );
+    }
+}
+
+// CHARACTER CLASSES
+
+void Rules::setChClass( std::unique_ptr< Nwn::ChClass > cc )
+{
+    assert( !cc->getName().empty() );
+    chclasses[ cc->getName() ] = std::move( cc );
+}
+
+void Rules::removeChClass( const std::string& name )
+{
+    if( isChClassValid( name ) ) {
+        chclasses.erase( name );
+    }
+}
+
+// CHARACTER METHODS
 
 AblBlock Rules::getAdjustedAbls( const Character& chr ) const
 {
@@ -40,6 +67,8 @@ AblBlock Rules::getAdjustedAbls( const Character& chr ) const
     return result;
 }
 
+// SERIALIZATION
+
 void Rules::save( const char* fileName ) const
 {
     std::ofstream ofs( fileName );
@@ -54,13 +83,6 @@ void Rules::restore( const char* fileName )
     assert( ifs.good() );
     boost::archive::xml_iarchive ia( ifs );
     ia >> boost::serialization::make_nvp( "rules", *this );
-}
-
-void Rules::removeRace( const std::string& name )
-{
-    if( isRaceValid( name ) ) {
-        races.erase( name );
-    }
 }
 
 } // namespace Nwn
