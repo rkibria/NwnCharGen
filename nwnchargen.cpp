@@ -84,6 +84,32 @@ NwnCharGen::~NwnCharGen()
     delete ui;
 }
 
+void NwnCharGen::initLevelsWidget()
+{
+    const auto levelsModel = new LevelsModel( this );
+    ui->tableViewLevels->setModel( levelsModel );
+    ui->tableViewLevels->setItemDelegateForColumn( kClassesColumn, new LevelsClassDelegate( ui->tableViewLevels ) );
+
+    const auto fm = this->fontMetrics();
+    ui->tableViewLevels->setColumnWidth( LevelsModel::kLevelCol, fm.horizontalAdvance( "30" ) );
+    ui->tableViewLevels->setColumnWidth( LevelsModel::kHpCol, fm.horizontalAdvance( "999" ) );
+    ui->tableViewLevels->setColumnWidth( LevelsModel::kBabCol, fm.horizontalAdvance( "+99" ) );
+
+    const auto ablColWidth = fm.horizontalAdvance( "99" );
+    for( const auto col : LevelsModel::ablCols ) {
+        ui->tableViewLevels->setColumnWidth( col, ablColWidth );
+    }
+
+    const auto hh = ui->tableViewLevels->horizontalHeader();
+    hh->setSectionResizeMode( LevelsModel::kLevelCol, QHeaderView::Fixed );
+    hh->setSectionResizeMode( LevelsModel::kHpCol, QHeaderView::Fixed );
+    hh->setSectionResizeMode( LevelsModel::kBabCol, QHeaderView::Fixed );
+
+    for( const auto col : LevelsModel::ablCols ) {
+        hh->setSectionResizeMode( col, QHeaderView::Fixed );
+    }
+}
+
 void NwnCharGen::initWidgets()
 {
     setCentralWidget(ui->tabWidget);
@@ -92,9 +118,7 @@ void NwnCharGen::initWidgets()
         ui->comboBoxAlignment->addItem( alignmentToStr( aln ).c_str() );
     }
 
-    const auto levelsModel = new LevelsModel( this );
-    ui->tableViewLevels->setModel( levelsModel );
-    ui->tableViewLevels->setItemDelegateForColumn( kClassesColumn, new LevelsClassDelegate( ui->tableViewLevels ) );
+    initLevelsWidget();
 }
 
 void NwnCharGen::updateAbilityBlock()

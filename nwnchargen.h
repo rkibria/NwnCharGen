@@ -74,6 +74,7 @@ private:
     void initWidgets();
     void updateLevels();
     void updateClasses();
+    void initLevelsWidget();
 };
 
 #endif // NWNCHARGEN_H

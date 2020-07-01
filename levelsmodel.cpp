@@ -4,20 +4,20 @@
 #include "Nwn/character.hpp"
 using namespace Nwn;
 
-namespace  {
-    static constexpr const int kLevelCol = 0;
-    static constexpr const int kClassCol = 1;
-    static constexpr const int kHpCol = 2;
-    static constexpr const int kBabCol = 3;
-    static constexpr const int kSTRCol = 4;
-    static constexpr const int kDEXCol = 5;
-    static constexpr const int kCONCol = 6;
-    static constexpr const int kINTCol = 7;
-    static constexpr const int kWISCol = 8;
-    static constexpr const int kCHACol = 9;
+constexpr const int LevelsModel::kLevelCol;
+constexpr const int LevelsModel::kClassCol;
+constexpr const int LevelsModel::kHpCol;
+constexpr const int LevelsModel::kBabCol;
+constexpr const int LevelsModel::kSTRCol;
+constexpr const int LevelsModel::kDEXCol;
+constexpr const int LevelsModel::kCONCol;
+constexpr const int LevelsModel::kINTCol;
+constexpr const int LevelsModel::kWISCol;
+constexpr const int LevelsModel::kCHACol;
 
-    static constexpr const int kColCount = 10;
-}
+constexpr const int LevelsModel::kColCount;
+
+constexpr const std::array<int, 6> LevelsModel::ablCols;
 
 LevelsModel::LevelsModel( QObject *parent )
     : QAbstractTableModel( parent ),
@@ -63,6 +63,10 @@ int LevelsModel::columnCount(const QModelIndex &parent) const
 
 QVariant LevelsModel::data(const QModelIndex &index, int role) const
 {
+    if( index.column() == kLevelCol && role == Qt::TextAlignmentRole) {
+        return Qt::AlignCenter;
+    }
+
     if( !index.isValid() || role != Qt::DisplayRole )
         return QVariant();
 
