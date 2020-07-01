@@ -4,6 +4,21 @@
 #include "Nwn/character.hpp"
 using namespace Nwn;
 
+namespace  {
+    static constexpr const int kLevelCol = 0;
+    static constexpr const int kClassCol = 1;
+    static constexpr const int kHpCol = 2;
+    static constexpr const int kBabCol = 3;
+    static constexpr const int kSTRCol = 4;
+    static constexpr const int kDEXCol = 5;
+    static constexpr const int kCONCol = 6;
+    static constexpr const int kINTCol = 7;
+    static constexpr const int kWISCol = 8;
+    static constexpr const int kCHACol = 9;
+
+    static constexpr const int kColCount = 10;
+}
+
 LevelsModel::LevelsModel( QObject *parent )
     : QAbstractTableModel( parent ),
       nwnCharGen{ static_cast<NwnCharGen*>( parent ) }
@@ -12,11 +27,19 @@ LevelsModel::LevelsModel( QObject *parent )
 
 QVariant LevelsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        if (section == 0) {
-            return QString("Level");
-        } else if (section == 1) {
-            return QString("Class");
+    if( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
+        switch( section ) {
+        case kLevelCol: return QString("Lvl");
+        case kClassCol: return QString("Class");
+        case kHpCol:    return QString("HP");
+        case kBabCol:   return QString("BAB");
+        case kSTRCol:   return QString("STR");
+        case kDEXCol:   return QString("DEX");
+        case kCONCol:   return QString("CON");
+        case kINTCol:   return QString("INT");
+        case kWISCol:   return QString("WIS");
+        case kCHACol:   return QString("CHA");
+        default: return QVariant();
         }
     }
     return QVariant();
@@ -35,7 +58,7 @@ int LevelsModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return 2;
+    return kColCount;
 }
 
 QVariant LevelsModel::data(const QModelIndex &index, int role) const
@@ -47,10 +70,10 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if( index.column() == 0 ) {
+    if( index.column() == kLevelCol ) {
         return index.row() + 1;
     }
-    else if( index.column() == 1 ) {
+    else if( index.column() == kClassCol ) {
         return QVariant( nwnCharGen->getCharacter()->getLevel( index.row() ).c_str() );
     }
 
