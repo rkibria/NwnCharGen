@@ -63,22 +63,24 @@ int LevelsModel::columnCount(const QModelIndex &parent) const
 
 QVariant LevelsModel::data(const QModelIndex &index, int role) const
 {
-    if( index.column() == kLevelCol && role == Qt::TextAlignmentRole) {
-        return Qt::AlignCenter;
-    }
-
+    // Only using display role
     if( !index.isValid() || role != Qt::DisplayRole )
         return QVariant();
 
+    // Row not inside level range
     if( index.row() >= nwnCharGen->getCharacter()->getNumLevels() ) {
         return QVariant();
     }
 
-    if( index.column() == kLevelCol ) {
-        return index.row() + 1;
-    }
-    else if( index.column() == kClassCol ) {
-        return QVariant( nwnCharGen->getCharacter()->getLevel( index.row() ).c_str() );
+    const auto nwnChar = nwnCharGen->getCharacter();
+
+    switch( index.column() ) {
+    case kLevelCol:
+        return ( role == Qt::TextAlignmentRole) ? Qt::AlignCenter : index.row() + 1;
+    case kClassCol:
+        return QVariant( nwnChar->getLevel( index.row() ).c_str() );
+    default:
+        break;
     }
 
     return QVariant();
