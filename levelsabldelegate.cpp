@@ -12,19 +12,6 @@ using namespace Nwn;
 
 namespace {
 
-AblScore getColumnAbl( const QModelIndex &index )
-{
-    switch( index.column() ) {
-    case LevelsModel::kSTRCol: return AblScore::Str;
-    case LevelsModel::kDEXCol: return AblScore::Dex;
-    case LevelsModel::kCONCol: return AblScore::Con;
-    case LevelsModel::kINTCol: return AblScore::Int;
-    case LevelsModel::kWISCol: return AblScore::Wis;
-    case LevelsModel::kCHACol: return AblScore::Cha;
-    default: throw std::invalid_argument( "invalid column" );
-    }
-}
-
 int getCurLevel( const QModelIndex &index )
 {
     return index.row() + 1;
@@ -50,7 +37,7 @@ void LevelsAblDelegate::paint( QPainter *painter, const QStyleOptionViewItem &op
         const auto nwnCharGen = levelsModel->getNwnCharGen();
         const auto nwnChar = nwnCharGen->getCharacter();
         const auto curIncAbl = nwnChar->getAblInc( getAblIncIndex( lvl ) );
-        const auto curAblCol = getColumnAbl( index );
+        const auto curAblCol = LevelsModel::getColumnAbl( index.column() );
 
         if( curIncAbl == curAblCol ) {
             painter->save();
@@ -87,7 +74,7 @@ bool LevelsAblDelegate::editorEvent(QEvent *event,
         return false;
     }
 
-    const auto curAblCol = getColumnAbl( index );
+    const auto curAblCol = LevelsModel::getColumnAbl( index.column() );
 
     const auto levelsModel = static_cast<const LevelsModel*>( model );
     const auto nwnCharGen = levelsModel->getNwnCharGen();

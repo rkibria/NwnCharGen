@@ -5,6 +5,8 @@
 
 #include <QAbstractTableModel>
 
+#include <Nwn/base.hpp>
+
 class NwnCharGen;
 
 class LevelsModel : public QAbstractTableModel
@@ -28,6 +30,8 @@ public:
     static constexpr const std::array<int, 6> ablCols = {
         kSTRCol, kDEXCol, kCONCol, kINTCol, kWISCol, kCHACol
     };
+
+    static Nwn::AblScore getColumnAbl( int col );
 
 public:
     explicit LevelsModel(QObject *parent = nullptr);

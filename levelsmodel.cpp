@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "levelsmodel.h"
 #include "nwnchargen.h"
 
@@ -21,6 +23,19 @@ constexpr const int LevelsModel::kCHACol;
 constexpr const int LevelsModel::kColCount;
 
 constexpr const std::array<int, 6> LevelsModel::ablCols;
+
+AblScore LevelsModel::getColumnAbl( int col )
+{
+    switch( col ) {
+    case kSTRCol: return AblScore::Str;
+    case kDEXCol: return AblScore::Dex;
+    case kCONCol: return AblScore::Con;
+    case kINTCol: return AblScore::Int;
+    case kWISCol: return AblScore::Wis;
+    case kCHACol: return AblScore::Cha;
+    default: throw std::invalid_argument( "invalid column" );
+    }
+}
 
 LevelsModel::LevelsModel( QObject *parent )
     : QAbstractTableModel( parent ),
@@ -80,7 +95,8 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
 
     const auto lvl = index.row();
     if( role == Qt::DisplayRole ) {
-        switch( index.column() ) {
+        const auto col = index.column();
+        switch( col ) {
         case kLevelCol:
             return lvl + 1;
 
@@ -88,17 +104,13 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
             return QVariant( nwnChar->getLevel( index.row() ).c_str() );
 
         case kSTRCol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Str, lvl ) );
         case kDEXCol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Dex, lvl ) );
         case kCONCol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Con, lvl ) );
         case kINTCol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Int, lvl ) );
         case kWISCol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Wis, lvl ) );
         case kCHACol:
-            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Cha, lvl ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, getColumnAbl( col ), lvl ) );
+
         default:
             break;
         }
