@@ -180,12 +180,14 @@ void NwnCharGen::updateAbilityBlock()
     const auto ablModLineEdits = getAblModLineEdits();
     const auto finalAblLineEdits = getFinalAblLineEdits();
     const auto finalAblModLineEdits = getFinalAblModLineEdits();
+    const auto finalLvl = nwnChar->getNumLevels() - 1;
     for( int i = 0; i < 6; ++i ) {
-        const auto score = nwnRules->getAblAtLvl( nwnChar.get(), indexToAbl( i ), 1 );
+        const auto abl = indexToAbl( i );
+        const auto score = nwnRules->getAblAtLvl( nwnChar.get(), abl, 1 );
         ablLineEdits[ i ]->setText( QString::number( score ) );
         ablModLineEdits[ i ]->setText( QString::number( getAblMod( score ) ) );
 
-        const auto finalScore = nwnRules->getAblAtLvl( nwnChar.get(), indexToAbl( i ), nwnChar->getNumLevels() - 1 );
+        const auto finalScore = nwnRules->getAblAtLvl( nwnChar.get(), abl, finalLvl );
         finalAblLineEdits[ i ]->setText( QString::number( finalScore ) );
         finalAblModLineEdits[ i ]->setText( QString::number( getAblMod( finalScore ) ) );
     }
