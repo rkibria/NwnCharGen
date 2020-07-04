@@ -15,14 +15,13 @@
 #include "racedialog.h"
 #include "levelsmodel.h"
 #include "levelsclassdelegate.h"
+#include "levelsabldelegate.h"
 
 using namespace Nwn;
 
 namespace {
 
 static constexpr const char* kDefaultClass = "Barbarian";
-
-static constexpr const int kClassesColumn = 1;
 
 void addDebugRules( Rules* nwnRules )
 {
@@ -88,7 +87,9 @@ void NwnCharGen::initLevelsWidget()
 {
     const auto levelsModel = new LevelsModel( this );
     ui->tableViewLevels->setModel( levelsModel );
-    ui->tableViewLevels->setItemDelegateForColumn( kClassesColumn, new LevelsClassDelegate( ui->tableViewLevels ) );
+    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kClassCol, new LevelsClassDelegate( ui->tableViewLevels ) );
+
+    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kSTRCol, new LevelsAblDelegate( ui->tableViewLevels ) );
 
     const auto fm = this->fontMetrics();
     ui->tableViewLevels->setColumnWidth( LevelsModel::kLevelCol, fm.horizontalAdvance( "30" ) );

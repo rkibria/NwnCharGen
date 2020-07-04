@@ -2,6 +2,8 @@
 #include "nwnchargen.h"
 
 #include "Nwn/character.hpp"
+#include "Nwn/ablblock.hpp"
+
 using namespace Nwn;
 
 constexpr const int LevelsModel::kLevelCol;
@@ -63,9 +65,9 @@ int LevelsModel::columnCount(const QModelIndex &parent) const
 
 QVariant LevelsModel::data(const QModelIndex &index, int role) const
 {
-    // Only using display role
-    if( !index.isValid() || role != Qt::DisplayRole )
+    if( !index.isValid() ) {
         return QVariant();
+    }
 
     // Row not inside level range
     if( index.row() >= nwnCharGen->getCharacter()->getNumLevels() ) {
@@ -74,13 +76,30 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
 
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    switch( index.column() ) {
-    case kLevelCol:
-        return ( role == Qt::TextAlignmentRole) ? Qt::AlignCenter : index.row() + 1;
-    case kClassCol:
-        return QVariant( nwnChar->getLevel( index.row() ).c_str() );
-    default:
-        break;
+    if( role == Qt::DisplayRole ) {
+        switch( index.column() ) {
+        case kLevelCol:
+            return index.row() + 1;
+        case kClassCol:
+            return QVariant( nwnChar->getLevel( index.row() ).c_str() );
+        case kSTRCol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Str ) );
+        case kDEXCol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Dex ) );
+        case kCONCol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Con ) );
+        case kINTCol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Int ) );
+        case kWISCol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Wis ) );
+        case kCHACol:
+            return QVariant( nwnChar->getAbls().getAbl( AblScore::Cha ) );
+        default:
+            break;
+        }
+    }
+    else if( role == Qt::TextAlignmentRole ) {
+        return Qt::AlignCenter;
     }
 
     return QVariant();
