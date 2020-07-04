@@ -17,7 +17,6 @@ public:
 
     void setAbl( AblScore, int );
     int getAbl( AblScore ) const;
-    int getAblMod( AblScore ) const;
     AblBlock& add( const AblBlock& rhs );
 
 private:

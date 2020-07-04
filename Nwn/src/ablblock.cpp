@@ -22,13 +22,6 @@ int AblBlock::getAbl( AblScore abl ) const
     return abls[ static_cast<int>( abl ) ];
 }
 
-int AblBlock::getAblMod( AblScore abl ) const
-{
-    const auto score = getAbl( abl );
-    auto mod = ( score / 2 ) - 5;
-    return mod;
-}
-
 AblBlock& AblBlock::add( const AblBlock& rhs )
 {
     std::transform( abls.begin(), abls.end(), rhs.abls.begin(), abls.begin(), std::plus<int>() );
