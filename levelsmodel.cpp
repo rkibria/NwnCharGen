@@ -3,6 +3,7 @@
 
 #include "Nwn/character.hpp"
 #include "Nwn/ablblock.hpp"
+#include "Nwn/rules.hpp"
 
 using namespace Nwn;
 
@@ -74,26 +75,30 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
+    const auto lvl = index.row();
     if( role == Qt::DisplayRole ) {
         switch( index.column() ) {
         case kLevelCol:
-            return index.row() + 1;
+            return lvl + 1;
+
         case kClassCol:
             return QVariant( nwnChar->getLevel( index.row() ).c_str() );
+
         case kSTRCol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Str ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Str, lvl ) );
         case kDEXCol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Dex ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Dex, lvl ) );
         case kCONCol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Con ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Con, lvl ) );
         case kINTCol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Int ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Int, lvl ) );
         case kWISCol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Wis ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Wis, lvl ) );
         case kCHACol:
-            return QVariant( nwnChar->getAbls().getAbl( AblScore::Cha ) );
+            return QVariant( nwnRules->getAblAtLvl( nwnChar, AblScore::Cha, lvl ) );
         default:
             break;
         }

@@ -128,7 +128,7 @@ void NwnCharGen::updateAbilityBlock()
 {
     ui->lineEditPoints->setText( QString::number( nwnChar->getPointsRemain() ) );
 
-    const auto abls = nwnRules->getAdjustedAbls( *nwnChar );
+    const auto abls = nwnRules->getAdjustedAbls( nwnChar.get() );
     ui->lineEditStrAbs->setText( QString::number( abls.getAbl( AblScore::Str ) ) );
     ui->lineEditDexAbs->setText( QString::number( abls.getAbl( AblScore::Dex ) ) );
     ui->lineEditConAbs->setText( QString::number( abls.getAbl( AblScore::Con ) ) );

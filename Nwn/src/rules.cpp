@@ -53,11 +53,11 @@ void Rules::removeChClass( const std::string& name )
 
 // CHARACTER METHODS
 
-AblBlock Rules::getAdjustedAbls( const Character& chr ) const
+AblBlock Rules::getAdjustedAbls( const Character* chr ) const
 {
-    AblBlock result = chr.getAbls();
+    AblBlock result = chr->getAbls();
 
-    const auto& raceName = chr.getRace();
+    const auto& raceName = chr->getRace();
     if( isRaceValid( raceName ) ) {
         const auto& race = getRaceByName( raceName );
         const auto& raceAblAdjusts = race.getAblAdjusts();
@@ -65,6 +65,61 @@ AblBlock Rules::getAdjustedAbls( const Character& chr ) const
     }
 
     return result;
+}
+
+int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
+{
+    int ablVal = chr->getAbls().getAbl( abl );
+
+    const auto& raceName = chr->getRace();
+    if( isRaceValid( raceName ) ) {
+        const auto& race = getRaceByName( raceName );
+        ablVal += race.getAblAdjusts().getAbl( abl );
+    }
+
+    switch( lvl ) {
+    case 29:
+    case 28:
+    case 27:
+        ablVal += ( chr->getAblInc( 6 ) == abl ) ? 1 : 0;
+    case 26:
+    case 25:
+    case 24:
+    case 23:
+        ablVal += ( chr->getAblInc( 5 ) == abl ) ? 1 : 0;
+    case 22:
+    case 21:
+    case 20:
+    case 19:
+        ablVal += ( chr->getAblInc( 4 ) == abl ) ? 1 : 0;
+    case 18:
+    case 17:
+    case 16:
+    case 15:
+        ablVal += ( chr->getAblInc( 3 ) == abl ) ? 1 : 0;
+    case 14:
+    case 13:
+    case 12:
+    case 11:
+        ablVal += ( chr->getAblInc( 2 ) == abl ) ? 1 : 0;
+    case 10:
+    case 9:
+    case 8:
+    case 7:
+        ablVal += ( chr->getAblInc( 1 ) == abl ) ? 1 : 0;
+    case 6:
+    case 5:
+    case 4:
+    case 3:
+        ablVal += ( chr->getAblInc( 0 ) == abl ) ? 1 : 0;
+    case 2:
+    case 1:
+    case 0:
+    default:
+        break;
+    }
+
+    return ablVal;
 }
 
 // SERIALIZATION
