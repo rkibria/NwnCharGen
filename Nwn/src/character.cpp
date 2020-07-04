@@ -66,6 +66,18 @@ void Character::decAbl( AblScore abl )
     }
 }
 
+AblScore Character::getAblInc( int n ) const
+{
+    assert( n >= 0 && n <= 6 );
+    return ablIncs[ n ];
+}
+
+void Character::setAblInc( int n, AblScore abl )
+{
+    assert( n >= 0 && n <= 6 );
+    ablIncs[ n ] = abl;
+}
+
 void Character::save( const char* fileName ) const
 {
     std::ofstream ofs( fileName );

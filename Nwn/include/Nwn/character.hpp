@@ -40,6 +40,9 @@ public:
     void decAbl( AblScore );
     void incAbl( AblScore );
 
+    AblScore getAblInc( int n ) const;
+    void setAblInc( int n, AblScore abl );
+
     /* Race */
     std::string getRace() const { return race; }
     void setRace( const std::string& r ) { race = r; }
@@ -67,7 +70,8 @@ private:
            & boost::serialization::make_nvp( "alignment", alignment )
            & boost::serialization::make_nvp( "ablPointsRemain", ablPointsRemain )
            & boost::serialization::make_nvp( "abls", abls )
-           & boost::serialization::make_nvp( "levels", levels );
+           & boost::serialization::make_nvp( "levels", levels )
+           & boost::serialization::make_nvp( "ablIncs", ablIncs );
     }
 
     int incCost( int curScore ) const;
@@ -84,6 +88,7 @@ private:
     int ablPointsRemain = ablPointBuy;
     std::unique_ptr< AblBlock > abls;
     std::vector< std::string > levels;
+    std::array< AblScore, 7 > ablIncs;
 };
 
 } // namespace Nwn
