@@ -78,8 +78,11 @@ private:
     void updateLevels();
     void updateClasses();
     void initLevelsWidget();
+
     std::array< QLineEdit*, 6 > getAblLineEdits() const;
     std::array< QLineEdit*, 6 > getAblModLineEdits() const;
+    std::array< QLineEdit*, 6 > getFinalAblLineEdits() const;
+    std::array< QLineEdit*, 6 > getFinalAblModLineEdits() const;
 };
 
 #endif // NWNCHARGEN_H
