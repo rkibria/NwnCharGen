@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <QMouseEvent>
 
 #include "levelsabldelegate.h"
@@ -19,20 +21,35 @@ AblScore getColumnAbl( const QModelIndex &index )
     case LevelsModel::kINTCol: return AblScore::Int;
     case LevelsModel::kWISCol: return AblScore::Wis;
     case LevelsModel::kCHACol: return AblScore::Cha;
-    default: return AblScore::Str;
+    default: throw std::invalid_argument( "invalid column" );
     }
+}
+
+int getCurLevel( const QModelIndex &index )
+{
+    return index.row() + 1;
+}
+
+bool isAblIncLevel( const int lvl )
+{
+    return ( lvl > 1 && lvl % 4 == 0 );
+}
+
+int getAblIncIndex( int lvl )
+{
+    return lvl / 4 - 1;
 }
 
 } // namespace
 
 void LevelsAblDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-    const auto lvl = index.row() + 1;
-    if( lvl > 1 && lvl % 4 == 0 ) {
+    const auto lvl = getCurLevel( index );
+    if( isAblIncLevel( lvl ) ) {
         const auto levelsModel = static_cast<const LevelsModel*>( index.model() );
         const auto nwnCharGen = levelsModel->getNwnCharGen();
         const auto nwnChar = nwnCharGen->getCharacter();
-        const auto curIncAbl = nwnChar->getAblInc( lvl / 4 - 1 );
+        const auto curIncAbl = nwnChar->getAblInc( getAblIncIndex( lvl ) );
         const auto curAblCol = getColumnAbl( index );
 
         if( curIncAbl == curAblCol ) {
@@ -56,6 +73,11 @@ bool LevelsAblDelegate::editorEvent(QEvent *event,
 {
     Q_UNUSED( option );
 
+    const auto lvl = getCurLevel( index );
+    if( !isAblIncLevel( lvl ) ) {
+        return false;
+    }
+
     if ( event->type() != QEvent::MouseButtonPress ) {
         return false;
     }
@@ -63,6 +85,18 @@ bool LevelsAblDelegate::editorEvent(QEvent *event,
     const auto mouseEvent = static_cast<QMouseEvent*>( event );
     if( ! ( mouseEvent->buttons() & Qt::LeftButton ) ) {
         return false;
+    }
+
+    const auto curAblCol = getColumnAbl( index );
+
+    const auto levelsModel = static_cast<const LevelsModel*>( model );
+    const auto nwnCharGen = levelsModel->getNwnCharGen();
+    const auto nwnChar = nwnCharGen->getCharacter();
+    const auto curIncAbl = nwnChar->getAblInc( getAblIncIndex( lvl ) );
+
+    if( curIncAbl != curAblCol ) {
+        nwnChar->setAblInc( getAblIncIndex( lvl ), curAblCol );
+        nwnCharGen->updateAll();
     }
 
     return true;
