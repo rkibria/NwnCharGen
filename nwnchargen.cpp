@@ -89,7 +89,9 @@ void NwnCharGen::initLevelsWidget()
     ui->tableViewLevels->setModel( levelsModel );
     ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kClassCol, new LevelsClassDelegate( ui->tableViewLevels ) );
 
-    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kSTRCol, new LevelsAblDelegate( ui->tableViewLevels ) );
+    for( const auto col : LevelsModel::ablCols ) {
+        ui->tableViewLevels->setItemDelegateForColumn( col, new LevelsAblDelegate( ui->tableViewLevels ) );
+    }
 
     const auto fm = this->fontMetrics();
     ui->tableViewLevels->setColumnWidth( LevelsModel::kLevelCol, fm.horizontalAdvance( "30" ) );
