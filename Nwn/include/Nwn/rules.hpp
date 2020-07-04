@@ -44,7 +44,6 @@ public:
     void removeChClass( const std::string& name );
 
     // CHARACTER METHODS
-    AblBlock getAdjustedAbls( const Character* chr ) const;
     int getAblAtLvl( const Character* chr, AblScore abl, int lvl );
 
     // SERIALIZATION

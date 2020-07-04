@@ -17,6 +17,10 @@ enum class AblScore : int {
     Cha
 };
 
+AblScore indexToAbl( int i );
+
+int getAblMod( int score );
+
 enum class Alignment : int {
     LawfulGood = 1,
     NeutralGood = 2,

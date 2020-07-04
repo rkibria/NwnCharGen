@@ -53,20 +53,6 @@ void Rules::removeChClass( const std::string& name )
 
 // CHARACTER METHODS
 
-AblBlock Rules::getAdjustedAbls( const Character* chr ) const
-{
-    AblBlock result = chr->getAbls();
-
-    const auto& raceName = chr->getRace();
-    if( isRaceValid( raceName ) ) {
-        const auto& race = getRaceByName( raceName );
-        const auto& raceAblAdjusts = race.getAblAdjusts();
-        result.add( raceAblAdjusts );
-    }
-
-    return result;
-}
-
 int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
 {
     int ablVal = chr->getAbls().getAbl( abl );

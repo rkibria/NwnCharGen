@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 #include <memory>
+#include <array>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class NwnCharGen; }
 QT_END_NAMESPACE
+
+class QLineEdit;
 
 namespace Nwn {
     class Character;
@@ -75,6 +78,8 @@ private:
     void updateLevels();
     void updateClasses();
     void initLevelsWidget();
+    std::array< QLineEdit*, 6 > getAblLineEdits() const;
+    std::array< QLineEdit*, 6 > getAblModLineEdits() const;
 };
 
 #endif // NWNCHARGEN_H

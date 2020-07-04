@@ -7,6 +7,7 @@ add_library(Nwn STATIC
     src/rules.cpp
     src/ablblock.cpp
     src/chclass.cpp
+    src/abilities.cpp
     )
 
 target_include_directories(Nwn PUBLIC include)

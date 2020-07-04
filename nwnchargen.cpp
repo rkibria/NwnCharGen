@@ -124,24 +124,41 @@ void NwnCharGen::initWidgets()
     initLevelsWidget();
 }
 
+std::array< QLineEdit*, 6 > NwnCharGen::getAblLineEdits() const
+{
+    return std::array< QLineEdit*, 6 >{
+        ui->lineEditStrAbs,
+        ui->lineEditDexAbs,
+        ui->lineEditConAbs,
+        ui->lineEditIntAbs,
+        ui->lineEditWisAbs,
+        ui->lineEditChaAbs
+    };
+}
+
+std::array< QLineEdit*, 6 > NwnCharGen::getAblModLineEdits() const
+{
+    return std::array< QLineEdit*, 6 >{
+        ui->lineEditStrMod,
+        ui->lineEditDexMod,
+        ui->lineEditConMod,
+        ui->lineEditIntMod,
+        ui->lineEditWisMod,
+        ui->lineEditChaMod
+    };
+}
+
 void NwnCharGen::updateAbilityBlock()
 {
     ui->lineEditPoints->setText( QString::number( nwnChar->getPointsRemain() ) );
 
-    const auto abls = nwnRules->getAdjustedAbls( nwnChar.get() );
-    ui->lineEditStrAbs->setText( QString::number( abls.getAbl( AblScore::Str ) ) );
-    ui->lineEditDexAbs->setText( QString::number( abls.getAbl( AblScore::Dex ) ) );
-    ui->lineEditConAbs->setText( QString::number( abls.getAbl( AblScore::Con ) ) );
-    ui->lineEditIntAbs->setText( QString::number( abls.getAbl( AblScore::Int ) ) );
-    ui->lineEditWisAbs->setText( QString::number( abls.getAbl( AblScore::Wis ) ) );
-    ui->lineEditChaAbs->setText( QString::number( abls.getAbl( AblScore::Cha ) ) );
-
-    ui->lineEditStrMod->setText( QString::number( abls.getAblMod( AblScore::Str ) ) );
-    ui->lineEditDexMod->setText( QString::number( abls.getAblMod( AblScore::Dex ) ) );
-    ui->lineEditConMod->setText( QString::number( abls.getAblMod( AblScore::Con ) ) );
-    ui->lineEditIntMod->setText( QString::number( abls.getAblMod( AblScore::Int ) ) );
-    ui->lineEditWisMod->setText( QString::number( abls.getAblMod( AblScore::Wis ) ) );
-    ui->lineEditChaMod->setText( QString::number( abls.getAblMod( AblScore::Cha ) ) );
+    const auto ablLineEdits = getAblLineEdits();
+    const auto ablModLineEdits = getAblModLineEdits();
+    for( int i = 0; i < 6; ++i ) {
+        const auto score = nwnRules->getAblAtLvl( nwnChar.get(), indexToAbl( i ), 1 );
+        ablLineEdits[ i ]->setText( QString::number( score ) );
+        ablModLineEdits[ i ]->setText( QString::number( getAblMod( score ) ) );
+    }
 }
 
 void NwnCharGen::updateClasses()
