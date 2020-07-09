@@ -22,17 +22,22 @@ public:
     const std::string& getDescription() const { return description; }
     void setDescription( const std::string& d ) { description = d; }
 
+    Dice getHitDie() const { return hitDie; }
+    void setHitDie( Dice d ) { hitDie = d; }
+
 private:
     friend class boost::serialization::access;
 
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ ) {
         ar & boost::serialization::make_nvp( "name", name )
-           & boost::serialization::make_nvp( "description", description );
+           & boost::serialization::make_nvp( "description", description )
+           & boost::serialization::make_nvp( "hitDie", hitDie );
     }
 
     std::string name;
     std::string description;
+    Dice hitDie{ Dice::d4 };
 };
 
 } // namespace Nwn

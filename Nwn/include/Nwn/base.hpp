@@ -68,6 +68,18 @@ static const AlignmentBimap alignmentStrings = boost::assign::list_of< Alignment
 const std::string& alignmentToStr( Alignment aln );
 Alignment strToAlignment( const std::string& txt );
 
+enum class Dice : int {
+    d4 = 4,
+    d6 = 6,
+    d8 = 8,
+    d10 = 10,
+    d12 = 12,
+    d20 = 20
+};
+
+/// Integer equivalent of a dice
+int diceToInt( Dice d );
+
 } // namespace Nwn
 
 #endif // NWNBASE_H

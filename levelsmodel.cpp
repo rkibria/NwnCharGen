@@ -103,6 +103,9 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
         case kClassCol:
             return QVariant( nwnChar->getLevel( index.row() ).c_str() );
 
+        case kHpCol:
+            return QVariant( nwnRules->getHpAtLvl( nwnChar, lvl ) );
+
         case kSTRCol:
         case kDEXCol:
         case kCONCol:

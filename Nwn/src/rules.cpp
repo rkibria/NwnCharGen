@@ -108,6 +108,21 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
     return ablVal;
 }
 
+int Rules::getHpAtLvl( const Character* chr, int lvl )
+{
+    int hp = 0;
+    for( int i = 0; i <= std::min( lvl, chr->getNumLevels() - 1 ); ++i ) {
+        const auto& lvlClass = chr->getLevel( i );
+        if( isChClassValid( lvlClass ) ) {
+            const auto& chClass = getChClassByName( lvlClass );
+            hp += diceToInt( chClass.getHitDie() );
+            const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, i ) );
+            hp += conBonus;
+        }
+    }
+    return hp;
+}
+
 // SERIALIZATION
 
 void Rules::save( const char* fileName ) const
