@@ -111,12 +111,12 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
 int Rules::getHpAtLvl( const Character* chr, int lvl )
 {
     int hp = 0;
+    const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
     for( int i = 0; i <= std::min( lvl, chr->getNumLevels() - 1 ); ++i ) {
         const auto& lvlClass = chr->getLevel( i );
         if( isChClassValid( lvlClass ) ) {
             const auto& chClass = getChClassByName( lvlClass );
             hp += diceToInt( chClass.getHitDie() );
-            const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, i ) );
             hp += conBonus;
         }
     }
