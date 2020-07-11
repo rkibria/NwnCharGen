@@ -14,21 +14,28 @@ class LevelsModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    static constexpr const int kLevelCol = 0;
-    static constexpr const int kClassCol = 1;
-    static constexpr const int kHpCol = 2;
-    static constexpr const int kBabCol = 3;
-    static constexpr const int kSTRCol = 4;
-    static constexpr const int kDEXCol = 5;
-    static constexpr const int kCONCol = 6;
-    static constexpr const int kINTCol = 7;
-    static constexpr const int kWISCol = 8;
-    static constexpr const int kCHACol = 9;
+    enum LevelColumns {
+        kLevelCol,
+        kClassCol,
+        kHpCol,
+        kBabCol,
+        kSTRCol,
+        kDEXCol,
+        kCONCol,
+        kINTCol,
+        kWISCol,
+        kCHACol,
 
-    static constexpr const int kColCount = 10;
+        kColCount
+    };
 
     static constexpr const std::array<int, 6> ablCols = {
-        kSTRCol, kDEXCol, kCONCol, kINTCol, kWISCol, kCHACol
+        LevelColumns::kSTRCol,
+        LevelColumns::kDEXCol,
+        LevelColumns::kCONCol,
+        LevelColumns::kINTCol,
+        LevelColumns::kWISCol,
+        LevelColumns::kCHACol
     };
 
     static Nwn::AblScore getColumnAbl( int col );

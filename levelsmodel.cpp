@@ -9,19 +9,6 @@
 
 using namespace Nwn;
 
-constexpr const int LevelsModel::kLevelCol;
-constexpr const int LevelsModel::kClassCol;
-constexpr const int LevelsModel::kHpCol;
-constexpr const int LevelsModel::kBabCol;
-constexpr const int LevelsModel::kSTRCol;
-constexpr const int LevelsModel::kDEXCol;
-constexpr const int LevelsModel::kCONCol;
-constexpr const int LevelsModel::kINTCol;
-constexpr const int LevelsModel::kWISCol;
-constexpr const int LevelsModel::kCHACol;
-
-constexpr const int LevelsModel::kColCount;
-
 constexpr const std::array<int, 6> LevelsModel::ablCols;
 
 AblScore LevelsModel::getColumnAbl( int col )
