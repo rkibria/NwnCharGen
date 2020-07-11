@@ -80,6 +80,47 @@ enum class Dice : int {
 /// Integer equivalent of a dice
 int diceToInt( Dice d );
 
+enum class BabProgression {
+    low,
+    medium,
+    high
+};
+
+static const std::array<int, 30> mediumBabProgress = {
+    0,
+    1,
+    2,
+    3,
+    3,
+    4,
+    5,
+    6,
+    6,
+    7,
+    8,
+    9,
+    9,
+    10,
+    11,
+    12,
+    12,
+    13,
+    14,
+    15,
+    15,
+    16,
+    17,
+    18,
+    18,
+    19,
+    20,
+    21,
+    21,
+    22
+};
+
+int getBabAtLvl( BabProgression prg, int lvl );
+
 } // namespace Nwn
 
 #endif // NWNBASE_H
