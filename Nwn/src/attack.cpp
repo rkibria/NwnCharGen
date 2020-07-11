@@ -6,7 +6,9 @@ namespace Nwn {
 
 int getBabAtLvl( BabProgression prg, int lvl )
 {
-    assert( lvl >= 0 );
+    if( lvl < 0 ) {
+        return 0;
+    }
     switch (prg) {
     case BabProgression::low: return ( lvl + 1 ) / 2;
     case BabProgression::high: return ( lvl + 1 );

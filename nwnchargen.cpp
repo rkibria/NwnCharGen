@@ -220,6 +220,8 @@ void NwnCharGen::updateSummary()
     ui->lineEditRace->setText( nwnChar->getRace().c_str() );
     ui->comboBoxAlignment->setCurrentIndex( alignmentToIndex( nwnChar->getAlignment() ) );
     ui->spinBoxLevels->setValue( nwnChar->getNumLevels() );
+    ui->lineEditTotalHP->setText( QString("%1").arg( nwnRules->getHpAtLvl( nwnChar.get(), nwnChar->getNumLevels() - 1 ) ) );
+    ui->lineEditTotalBAB->setText( QString("+%1").arg( nwnRules->getBabAtLvl( nwnChar.get(), nwnChar->getNumLevels() - 1 ) ) );
 
     updateClasses();
 
