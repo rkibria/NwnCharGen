@@ -108,11 +108,21 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
     return ablVal;
 }
 
+namespace  {
+
+/// Iteration limit for levels: the lower of level and character's class levels
+int getLvlItrLimit( const Character* chr, int lvl )
+{
+    return std::min( lvl, chr->getNumLevels() - 1 );
+}
+
+} // namespace
+
 int Rules::getHpAtLvl( const Character* chr, int lvl )
 {
     int hp = 0;
     const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
-    for( int i = 0; i <= std::min( lvl, chr->getNumLevels() - 1 ); ++i ) {
+    for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
         const auto& lvlClass = chr->getLevel( i );
         if( isChClassValid( lvlClass ) ) {
             const auto& chClass = getChClassByName( lvlClass );
@@ -121,6 +131,29 @@ int Rules::getHpAtLvl( const Character* chr, int lvl )
         }
     }
     return hp;
+}
+
+int Rules::getBabAtLvl( const Character* chr, int lvl )
+{
+    int lowBabs{ 0 }, medBabs{ 0 }, highBabs{ 0 };
+    for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
+        const auto& lvlClass = chr->getLevel( i );
+        if( isChClassValid( lvlClass ) ) {
+            const auto& chClass = getChClassByName( lvlClass );
+            switch( chClass.getBabProgression() ) {
+            case BabProgression::low: ++lowBabs; break;
+            case BabProgression::medium: ++medBabs; break;
+            case BabProgression::high: ++highBabs; break;
+            default: break;
+            }
+        }
+    }
+
+    int bab = 0;
+    bab += lowBabs > 0 ? Nwn::getBabAtLvl( BabProgression::low, lowBabs - 1 ) : 0;
+    bab += medBabs > 0 ? Nwn::getBabAtLvl( BabProgression::medium, medBabs - 1 ) : 0;
+    bab += highBabs > 0 ? Nwn::getBabAtLvl( BabProgression::high, highBabs - 1 ) : 0;
+    return bab;
 }
 
 // SERIALIZATION
