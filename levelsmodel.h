@@ -25,6 +25,7 @@ public:
         kINTCol,
         kWISCol,
         kCHACol,
+        kSavesCol,
 
         kColCount
     };

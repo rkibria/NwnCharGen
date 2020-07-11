@@ -115,6 +115,9 @@ void NwnCharGen::initLevelsWidget()
     for( const auto col : LevelsModel::ablCols ) {
         hh->setSectionResizeMode( col, QHeaderView::Fixed );
     }
+
+    ui->tableViewLevels->setColumnWidth( LevelsModel::kSavesCol, fm.horizontalAdvance( "99 99 99" ) );
+    hh->setSectionResizeMode( LevelsModel::kSavesCol, QHeaderView::Fixed );
 }
 
 void NwnCharGen::initWidgets()

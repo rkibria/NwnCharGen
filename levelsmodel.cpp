@@ -44,6 +44,7 @@ QVariant LevelsModel::headerData(int section, Qt::Orientation orientation, int r
         case kINTCol:   return QString("INT");
         case kWISCol:   return QString("WIS");
         case kCHACol:   return QString("CHA");
+        case kSavesCol: return QString("Saves");
         default: return QVariant();
         }
     }
@@ -103,6 +104,9 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
         case kWISCol:
         case kCHACol:
             return QVariant( nwnRules->getAblAtLvl( nwnChar, getColumnAbl( col ), lvl ) );
+
+        case kSavesCol:
+            return QVariant( QString( "99 99 99" ) );
 
         default:
             break;
