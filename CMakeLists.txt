@@ -18,6 +18,14 @@ find_package(Boost REQUIRED COMPONENTS serialization)
 
 add_subdirectory(Nwn)
 
+set( NWN2DATALIB_PATH "" CACHE STRING "Path to NWN2DataLib sources" )
+if( IS_DIRECTORY "${NWN2DATALIB_PATH}" )
+    message( STATUS "Adding NWN2DataLib project at ${NWN2DATALIB_PATH}" )
+    add_subdirectory( "${NWN2DATALIB_PATH}" binary_NWN2DataLib )
+else()
+    message( STATUS "Not added NWN2DataLib (${NWN2DATALIB_PATH})" )
+endif()
+
 qt5_wrap_cpp(MOC_SOURCES
     nwnchargen.h
     racedialog.h
