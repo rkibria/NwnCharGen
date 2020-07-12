@@ -22,9 +22,11 @@ int main()
     TwoDAFileReader classes_2da( EXTRACT_PATH "\\2DA_X2\\classes.2da" );
 
     std::string name, descr;
-    int nameRef, descrRef;
+    int nameRef, descrRef, isPlayerClass;
     for( size_t i = 0 ; i < classes_2da.GetRowCount(); ++i ) {
-        if( classes_2da.Get2DAInt( "Name", i, nameRef ) ) {
+        if( classes_2da.Get2DAInt( "Name", i, nameRef )
+                && classes_2da.Get2DAInt( "PlayerClass", i, isPlayerClass )
+                && isPlayerClass ) {
             const auto nameOk = dialog_tlk.GetTalkString( nameRef, name );
             assert( nameOk );
 
