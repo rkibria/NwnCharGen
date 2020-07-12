@@ -14,6 +14,8 @@
 #include <Nwn/chclass.hpp>
 using namespace Nwn;
 
+#include <boost/algorithm/string.hpp>
+
 using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
 static const std::unordered_map<std::string, BabProgression> map_2da_bab {
@@ -21,6 +23,15 @@ static const std::unordered_map<std::string, BabProgression> map_2da_bab {
     { "CLS_ATK_2", BabProgression::medium },
     { "CLS_ATK_1", BabProgression::high }
 };
+
+void loadSavesTable( const std::string& tableName )
+{
+    std::string tablePath = EXTRACT_PATH "\\2DA\\";
+    tablePath += tableName;
+    tablePath += ".2da";
+    TwoDAFileReader cls_savthr_2da( tablePath );
+    std::cout << tablePath << std::endl;
+}
 
 void importClasses( Rules &nwnRules )
 {
@@ -53,6 +64,12 @@ void importClasses( Rules &nwnRules )
             assert( attackOk );
             assert( map_2da_bab.count( attackStr ) == 1 );
             const auto babPrg = map_2da_bab.at( attackStr );
+
+            std::string savesStr;
+            const auto savesOk = classes_2da.Get2DAString( "SavingThrowTable", row, savesStr );
+            assert( savesOk );
+            boost::algorithm::to_lower( savesStr );
+            loadSavesTable( savesStr );
 
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
             chClass->setDescription( descr );

@@ -8,6 +8,11 @@ execute_process(
     WORKING_DIRECTORY "${NWN2_FILES_DIR}"
     )
 
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E tar xv "${NWN2_PATH}/Data/2DA.zip" "2DA/cls_savthr_*.*"
+    WORKING_DIRECTORY "${NWN2_FILES_DIR}"
+    )
+
 add_executable( rulesgen rulesgen.cpp )
 
 target_link_libraries( rulesgen PUBLIC
