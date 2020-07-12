@@ -80,6 +80,9 @@ enum class Dice : int {
 /// Integer equivalent of a dice
 int diceToInt( Dice d );
 
+/// Integer to enum
+Dice intToDice( int i );
+
 enum class BabProgression {
     low,
     medium,
