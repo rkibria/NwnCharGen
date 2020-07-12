@@ -4,42 +4,40 @@
 #include <2DAFileReader.h>
 #include <TlkFileReader.h>
 
+#include <Nwn/base.hpp>
+#include <Nwn/character.hpp>
+#include <Nwn/ablblock.hpp>
+#include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
+#include <Nwn/chclass.hpp>
+using namespace Nwn;
 
 int main()
 {
-    TwoDAFileReader classes_2da( EXTRACT_PATH "\\2DA_X2\\classes.2da" );
-
-    std::cout << "row count: " << classes_2da.GetRowCount() << std::endl;
-    std::cout << "column count: " << classes_2da.GetColumnCount() << std::endl;
-
-    const auto labelColName = "Label";
-    const auto hasCol = classes_2da.HasColumn( labelColName );
-    std::cout << "has column '" << labelColName << "': " << hasCol << std::endl;
-
-    if( !hasCol ) {
-        exit(1);
-    }
-
-    const auto nameColName = "Name";
-    std::string strVal;
-    int intVal;
-    for( size_t i = 0 ; i < classes_2da.GetRowCount(); ++i ) {
-        if( classes_2da.Get2DAString( labelColName, i, strVal ) ) {
-            if( classes_2da.Get2DAInt( nameColName, i, intVal ) ) {
-                std::cout << i << " " << strVal << " " << intVal << std::endl;
-            }
-        }
-    }
+    Rules nwnRules;
 
     using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
-
     TlkFileReader16 dialog_tlk( NWN2_PATH "\\dialog.TLK" );
 
-    for( TlkFileReader16::StrRef ref = 0; ref < 10; ++ref ) {
-        if( dialog_tlk.GetTalkString( ref, strVal ) ) {
-            std::cout << ref << ": " << strVal << std::endl;
+    TwoDAFileReader classes_2da( EXTRACT_PATH "\\2DA_X2\\classes.2da" );
+
+    std::string name, descr;
+    int nameRef, descrRef;
+    for( size_t i = 0 ; i < classes_2da.GetRowCount(); ++i ) {
+        if( classes_2da.Get2DAInt( "Name", i, nameRef ) ) {
+            const auto nameOk = dialog_tlk.GetTalkString( nameRef, name );
+            assert( nameOk );
+
+            const auto descrOk = classes_2da.Get2DAInt( "Description", i, descrRef );
+            assert( descrOk );
+            const auto descrRefOk = dialog_tlk.GetTalkString( descrRef, descr );
+            assert( descrRefOk );
+
+            std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
+            chClass->setDescription( descr );
+            nwnRules.setChClass( std::move( chClass ) );
         }
     }
 
+    nwnRules.save( OUTPUT_PATH "\\nwn2.xml" );
 }

@@ -17,9 +17,11 @@ target_link_libraries( rulesgen PUBLIC
 
 string( REPLACE "/" "\\\\" NWN2_PATH_WIN "${NWN2_PATH}" )
 string( REPLACE "/" "\\\\" NWN2_FILES_DIR_WIN "${NWN2_FILES_DIR}" )
+string( REPLACE "/" "\\\\" OUTPUT_PATH_WIN "${CMAKE_BINARY_DIR}" )
 
 target_compile_definitions( rulesgen
     PRIVATE
     NWN2_PATH="${NWN2_PATH_WIN}"
     EXTRACT_PATH="${NWN2_FILES_DIR_WIN}"
+    OUTPUT_PATH="${OUTPUT_PATH_WIN}"
     )
