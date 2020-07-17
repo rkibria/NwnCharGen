@@ -17,6 +17,7 @@ using namespace Nwn;
 #include "unziphelper.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
@@ -35,12 +36,10 @@ void loadSavesTable( const std::string& tableName )
     TwoDAFileReader cls_savthr_2da( tablePath );
     std::cout << tablePath << std::endl;
 }
+*/
 
-void importClasses( Rules &nwnRules )
+void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReader& classes_2da )
 {
-    TlkFileReader16 dialog_tlk( NWN2_PATH "\\dialog.TLK" );
-    TwoDAFileReader classes_2da( EXTRACT_PATH "\\2DA_X2\\classes.2da" );
-
     for( size_t row = 0 ; row < classes_2da.GetRowCount(); ++row ) {
         int nameRef, isPlayerClass;
         if( classes_2da.Get2DAInt( "Name", row, nameRef )
@@ -49,6 +48,7 @@ void importClasses( Rules &nwnRules )
             std::string name;
             const auto nameOk = dialog_tlk.GetTalkString( nameRef, name );
             assert( nameOk );
+            std::cout << "importing class " << name << std::endl;
 
             int descrRef;
             std::string descr;
@@ -72,7 +72,7 @@ void importClasses( Rules &nwnRules )
             const auto savesOk = classes_2da.Get2DAString( "SavingThrowTable", row, savesStr );
             assert( savesOk );
             boost::algorithm::to_lower( savesStr );
-            loadSavesTable( savesStr );
+//            loadSavesTable( savesStr );
 
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
             chClass->setDescription( descr );
@@ -82,15 +82,16 @@ void importClasses( Rules &nwnRules )
         }
     }
 }
-*/
 
 int main()
 {
+    boost::filesystem::current_path( OUTPUT_PATH );
+    UnzipHelper::extract( NWN2_PATH "\\Data\\2DA_X2.zip", "2DA_X2/classes.2da" );
+
+    TlkFileReader16 dialog_tlk( NWN2_PATH "\\dialog.TLK" );
+    TwoDAFileReader classes_2da( OUTPUT_PATH "\\classes.2da" );
+
     Rules nwnRules;
-
-//    importClasses( nwnRules );
-
-    UnzipHelper::extract( NWN2_PATH "\\Data\\2DA.zip", "2DA/actions.2da" );
-
+    importClasses( nwnRules, dialog_tlk, classes_2da );
     nwnRules.save( OUTPUT_PATH "\\nwn2.xml" );
 }

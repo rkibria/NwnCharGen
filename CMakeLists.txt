@@ -14,7 +14,10 @@ if(WIN32)
     set(Boost_COMPILER "-mgw8")
 endif()
 set(Boost_ARCHITECTURE "-x64")
-find_package(Boost REQUIRED COMPONENTS serialization)
+find_package(Boost REQUIRED COMPONENTS
+    serialization
+    filesystem
+    )
 
 add_subdirectory(Nwn)
 
