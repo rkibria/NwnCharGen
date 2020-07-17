@@ -40,7 +40,10 @@ target_link_libraries( minizip_unzip PUBLIC
 #    WORKING_DIRECTORY "${NWN2_FILES_DIR}"
 #    )
 
-add_executable( rulesgen rulesgen.cpp )
+add_executable( rulesgen
+    rulesgen.cpp
+    unziphelper.cpp
+    )
 
 target_link_libraries( rulesgen PUBLIC
     NWN2DataLib
