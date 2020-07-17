@@ -1,4 +1,31 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
+
+#############################
+
+find_package( ZLIB REQUIRED )
+
+set( MINIZIP_PATH "" CACHE STRING "Path to zlib's contrib/minizip directory" )
+if( NOT IS_DIRECTORY "${MINIZIP_PATH}" )
+    message( FATAL_ERROR "must set MINIZIP_PATH" )
+endif()
+
+project(minizip_unzip LANGUAGES C)
+
+add_library( minizip_unzip STATIC
+    ${MINIZIP_PATH}/iowin32.c
+    ${MINIZIP_PATH}/unzip.c
+    ${MINIZIP_PATH}/ioapi.c
+    )
+
+add_library( minizip::unzip ALIAS minizip_unzip )
+
+target_include_directories( minizip_unzip PUBLIC ${MINIZIP_PATH} )
+
+target_link_libraries( minizip_unzip PUBLIC
+    ZLIB::ZLIB
+    )
+
+#############################
 
 set( NWN2_FILES_DIR "${CMAKE_CURRENT_BINARY_DIR}/nwn2files" )
 file( MAKE_DIRECTORY "${NWN2_FILES_DIR}" )
@@ -18,6 +45,7 @@ add_executable( rulesgen rulesgen.cpp )
 target_link_libraries( rulesgen PUBLIC
     NWN2DataLib
     Nwn
+    minizip::unzip
     )
 
 string( REPLACE "/" "\\\\" NWN2_PATH_WIN "${NWN2_PATH}" )
