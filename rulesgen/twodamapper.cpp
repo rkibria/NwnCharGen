@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <array>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -37,10 +38,22 @@ void TwoDAMapper::initialize( const std::string& nwn2Path )
                 continue;
             }
 
-//            std::cout << zipPath << ": " << path << std::endl;
+            std::vector<std::string> tokens;
+            boost::split( tokens, lowerPath, boost::is_any_of("/.") );
+            assert( tokens.size() == 3 );
+            const auto& twoDAkey = tokens[ 1 ];
+            extractMap[ twoDAkey ] = TwoDAMapValue{ zipPath, path, "" };
         }
+    }
+}
+
+const std::string& TwoDAMapper::getFile( const std::string& twoDAname )
+{
+    assert( extractMap.find( twoDAname ) != extractMap.end() );
+    auto& mapEntry = extractMap.at( twoDAname );
+    if( mapEntry.extractedPath.empty() ) {
 
     }
 
-
+    return mapEntry.extractedPath;
 }

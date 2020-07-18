@@ -15,6 +15,7 @@ struct TwoDAMapValue
     std::string extractedPath;
 };
 
+/// Provides automatically unpacking access to the base game 2da files
 class TwoDAMapper
 {
 public:
@@ -23,7 +24,11 @@ public:
 
     void initialize( const std::string& nwn2Path );
 
+    /// Returns full path to 2da file of that name to load
+    const std::string& getFile( const std::string& twoDAname );
+
 private:
+    /// 2da file name without .2da extension -> map value
     std::unordered_map< std::string, TwoDAMapValue > extractMap;
 };
 
