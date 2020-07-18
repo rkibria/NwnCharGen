@@ -50,7 +50,7 @@
 #include <iowin32.h>
 #endif
 
-#include "unziphelper.h"
+#include <unziphelper/unziphelper.h>
 
 namespace  {
 int do_extract_currentfile( unzFile uf )

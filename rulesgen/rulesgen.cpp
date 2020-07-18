@@ -14,7 +14,7 @@
 #include <Nwn/chclass.hpp>
 using namespace Nwn;
 
-#include "unziphelper.h"
+#include <unziphelper/unziphelper.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
