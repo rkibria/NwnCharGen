@@ -157,9 +157,7 @@ int do_extract_currentfile( unzFile uf )
 
 int do_extract_onefile(unzFile uf, const char* filename)
 {
-    int err = UNZ_OK;
-    if (unzLocateFile(uf,filename,CASESENSITIVITY)!=UNZ_OK)
-    {
+    if (unzLocateFile(uf,filename,CASESENSITIVITY)!=UNZ_OK) {
         printf("file %s not found in the zipfile\n",filename);
         return 2;
     }
@@ -170,18 +168,12 @@ int do_extract_onefile(unzFile uf, const char* filename)
         return 1;
 }
 
-} // namespace
-
-namespace UnzipHelper {
-
-void extract( const char *zipfilename, const char *filename_to_extract )
+unzFile openZipfile( const char *zipfilename )
 {
-    int ret_value=0;
     unzFile uf=NULL;
     char filename_try[MAXFILENAME+16] = "";
 
-    if (zipfilename!=NULL)
-    {
+    if (zipfilename!=NULL) {
 
 #        ifdef USEWIN32IOAPI
         zlib_filefunc64_def ffunc;
@@ -197,8 +189,7 @@ void extract( const char *zipfilename, const char *filename_to_extract )
 #        else
         uf = unzOpen64(zipfilename);
 #        endif
-        if (uf==NULL)
-        {
+        if (uf==NULL) {
             strcat(filename_try,".zip");
 #            ifdef USEWIN32IOAPI
             uf = unzOpen2_64(filename_try,&ffunc);
@@ -208,16 +199,33 @@ void extract( const char *zipfilename, const char *filename_to_extract )
         }
     }
 
-    if (uf==NULL)
-    {
+    if (uf==NULL) {
         printf("Cannot open %s or %s.zip\n",zipfilename,zipfilename);
-        return;
+        return uf;
     }
     printf("%s opened\n",filename_try);
+    return uf;
+}
 
-    ret_value = do_extract_onefile(uf, filename_to_extract);
+} // namespace
 
-    unzClose(uf);
+namespace UnzipHelper {
+
+void extract( const char *zipfilename, const char *filename_to_extract )
+{
+    const auto uf = openZipfile( zipfilename );
+    if( uf != NULL ) {
+        do_extract_onefile( uf, filename_to_extract );
+        unzClose( uf );
+    }
+}
+
+std::vector<std::string> getFileList( const char *zipfilename )
+{
+    std::vector<std::string> files;
+
+
+    return files;
 }
 
 } // namespace UnzipHelper
