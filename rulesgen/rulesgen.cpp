@@ -14,10 +14,7 @@
 #include <Nwn/chclass.hpp>
 using namespace Nwn;
 
-#include <unziphelper/unziphelper.h>
-
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 
 #include "twodamapper.h"
 
@@ -40,7 +37,7 @@ void loadSavesTable( const std::string& tableName )
 }
 */
 
-void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReader& classes_2da )
+void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReader& classes_2da, TwoDAMapper& twodaMapper )
 {
     for( size_t row = 0 ; row < classes_2da.GetRowCount(); ++row ) {
         int nameRef, isPlayerClass;
@@ -91,16 +88,12 @@ int main()
     const auto nwn2Path = std::string( NWN2_PATH );
 
     TwoDAMapper twodaMapper( nwn2Path, outputPath );
-    const auto extracted = twodaMapper.getFile( "classes" );
-
-//    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da" );
-
-//    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da", "C:\\svn" );
 
     TlkFileReader16 dialog_tlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
-//    TwoDAFileReader classes_2da( ( outputPath + "\\classes.2da" ).c_str() );
+    TwoDAFileReader classes_2da( twodaMapper.getFile( "classes" ).c_str() );
 
-//    Rules nwnRules;
-//    importClasses( nwnRules, dialog_tlk, classes_2da );
-//    nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
+    Rules nwnRules;
+    importClasses( nwnRules, dialog_tlk, classes_2da, twodaMapper );
+
+    nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
 }
