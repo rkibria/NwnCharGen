@@ -6,7 +6,7 @@
 
 namespace UnzipHelper {
 
-void extract( const char *zipfilename, const char *filename_to_extract );
+int extract( const char *zipfilename, const char *filename_to_extract );
 
 std::vector<std::string> getFileList( const char *zipfilename );
 

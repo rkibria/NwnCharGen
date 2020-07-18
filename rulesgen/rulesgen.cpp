@@ -85,13 +85,24 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReade
 
 int main()
 {
-    boost::filesystem::current_path( OUTPUT_PATH );
-    UnzipHelper::extract( NWN2_PATH "\\Data\\2DA_X2.zip", "2DA_X2/classes.2da" );
+    const auto outputPath = std::string( OUTPUT_PATH );
+    const auto nwn2Path = std::string( NWN2_PATH );
 
-    TlkFileReader16 dialog_tlk( NWN2_PATH "\\dialog.TLK" );
-    TwoDAFileReader classes_2da( OUTPUT_PATH "\\classes.2da" );
+    boost::filesystem::current_path( outputPath );
 
-    Rules nwnRules;
-    importClasses( nwnRules, dialog_tlk, classes_2da );
-    nwnRules.save( OUTPUT_PATH "\\nwn2.xml" );
+    const auto twoDAfiles = UnzipHelper::getFileList( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str() );
+    for( const auto& path : twoDAfiles ) {
+        if( !path.empty() && path.back() != '/' ) {
+            std::cout << path << std::endl;
+        }
+    }
+
+//    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da" );
+
+//    TlkFileReader16 dialog_tlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
+//    TwoDAFileReader classes_2da( ( outputPath + "\\classes.2da" ).c_str() );
+
+//    Rules nwnRules;
+//    importClasses( nwnRules, dialog_tlk, classes_2da );
+//    nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
 }

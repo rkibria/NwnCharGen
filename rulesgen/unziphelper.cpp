@@ -24,7 +24,6 @@
 #define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -211,20 +210,56 @@ unzFile openZipfile( const char *zipfilename )
 
 namespace UnzipHelper {
 
-void extract( const char *zipfilename, const char *filename_to_extract )
+int extract( const char *zipfilename, const char *filename_to_extract )
 {
     const auto uf = openZipfile( zipfilename );
     if( uf != NULL ) {
-        do_extract_onefile( uf, filename_to_extract );
+        const auto result = do_extract_onefile( uf, filename_to_extract );
         unzClose( uf );
+        return result;
+    }
+    else {
+        return 1;
     }
 }
 
 std::vector<std::string> getFileList( const char *zipfilename )
 {
     std::vector<std::string> files;
+    const auto uf = openZipfile( zipfilename );
+    if( uf == NULL ) {
+        return files;
+    }
 
+    uLong i;
+    unz_global_info64 gi;
+    int err;
 
+    err = unzGetGlobalInfo64(uf,&gi);
+    if (err!=UNZ_OK)
+        printf("error %d with zipfile in unzGetGlobalInfo \n",err);
+
+    for (i=0;i<gi.number_entry;i++) {
+        char filename_inzip[256];
+        unz_file_info64 file_info;
+        err = unzGetCurrentFileInfo64(uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
+        if (err!=UNZ_OK) {
+            printf("error %d with zipfile in unzGetCurrentFileInfo\n",err);
+            break;
+        }
+
+        files.push_back( filename_inzip );
+
+        if ((i+1)<gi.number_entry) {
+            err = unzGoToNextFile(uf);
+            if (err!=UNZ_OK) {
+                printf("error %d with zipfile in unzGoToNextFile\n",err);
+                break;
+            }
+        }
+    }
+
+    unzClose( uf );
     return files;
 }
 
