@@ -26,19 +26,15 @@ static const std::unordered_map<std::string, BabProgression> map_2da_bab {
     { "CLS_ATK_1", BabProgression::high }
 };
 
-/*
-void loadSavesTable( const std::string& tableName )
+void loadSavesTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
-    std::string tablePath = EXTRACT_PATH "\\2DA\\";
-    tablePath += tableName;
-    tablePath += ".2da";
-    TwoDAFileReader cls_savthr_2da( tablePath );
-    std::cout << tablePath << std::endl;
+    TwoDAFileReader cls_savthr_2da( twodaMapper.getFile( tableName ).c_str() );
 }
-*/
 
-void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReader& classes_2da, TwoDAMapper& twodaMapper )
+void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& twodaMapper )
 {
+    TwoDAFileReader classes_2da( twodaMapper.getFile( "classes" ).c_str() );
+
     for( size_t row = 0 ; row < classes_2da.GetRowCount(); ++row ) {
         int nameRef, isPlayerClass;
         if( classes_2da.Get2DAInt( "Name", row, nameRef )
@@ -71,7 +67,7 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAFileReade
             const auto savesOk = classes_2da.Get2DAString( "SavingThrowTable", row, savesStr );
             assert( savesOk );
             boost::algorithm::to_lower( savesStr );
-//            loadSavesTable( savesStr );
+            loadSavesTable( savesStr, twodaMapper );
 
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
             chClass->setDescription( descr );
@@ -88,12 +84,11 @@ int main()
     const auto nwn2Path = std::string( NWN2_PATH );
 
     TwoDAMapper twodaMapper( nwn2Path, outputPath );
-
     TlkFileReader16 dialog_tlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
-    TwoDAFileReader classes_2da( twodaMapper.getFile( "classes" ).c_str() );
 
     Rules nwnRules;
-    importClasses( nwnRules, dialog_tlk, classes_2da, twodaMapper );
+
+    importClasses( nwnRules, dialog_tlk, twodaMapper );
 
     nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
 }
