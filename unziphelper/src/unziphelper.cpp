@@ -53,7 +53,7 @@
 #include <unziphelper/unziphelper.h>
 
 namespace  {
-int do_extract_currentfile( unzFile uf )
+int do_extract_currentfile( unzFile uf, const std::string& outputPath )
 {
     char filename_inzip[256];
     char* filename_withoutpath;
@@ -88,46 +88,34 @@ int do_extract_currentfile( unzFile uf )
         p++;
     }
 
-    if ((*filename_withoutpath)=='\0')
-    {
-    }
-    else
-    {
-        const char* write_filename;
-        int skip=0;
-
-        write_filename = filename_withoutpath;
+    if ( (*filename_withoutpath) != '\0' ) {
+        std::string write_filename = outputPath.empty() ?
+                    filename_withoutpath
+                  : ( outputPath + "\\" + filename_withoutpath ) ;
 
         err = unzOpenCurrentFilePassword(uf, nullptr);
-        if (err!=UNZ_OK)
-        {
+        if (err!=UNZ_OK) {
             printf("error %d with zipfile in unzOpenCurrentFilePassword\n",err);
         }
 
-        if ((skip==0) && (err==UNZ_OK))
-        {
-            fout=FOPEN_FUNC(write_filename,"wb");
-            if (fout==NULL)
-            {
-                printf("error opening %s\n",write_filename);
+        if ( err==UNZ_OK ) {
+            fout=FOPEN_FUNC( write_filename.c_str(), "wb" );
+            if (fout==NULL) {
+                printf( "error opening %s\n", write_filename.c_str() );
             }
         }
 
-        if (fout!=NULL)
-        {
-            printf(" extracting: %s\n",write_filename);
+        if (fout!=NULL) {
+            printf( " extracting: %s\n", write_filename.c_str() );
 
-            do
-            {
+            do {
                 err = unzReadCurrentFile(uf,buf,size_buf);
-                if (err<0)
-                {
+                if (err<0) {
                     printf("error %d with zipfile in unzReadCurrentFile\n",err);
                     break;
                 }
                 if (err>0)
-                    if (fwrite(buf,err,1,fout)!=1)
-                    {
+                    if (fwrite(buf,err,1,fout)!=1) {
                         printf("error in writing extracted file\n");
                         err=UNZ_ERRNO;
                         break;
@@ -138,11 +126,9 @@ int do_extract_currentfile( unzFile uf )
                     fclose(fout);
         }
 
-        if (err==UNZ_OK)
-        {
+        if (err==UNZ_OK) {
             err = unzCloseCurrentFile (uf);
-            if (err!=UNZ_OK)
-            {
+            if (err!=UNZ_OK) {
                 printf("error %d with zipfile in unzCloseCurrentFile\n",err);
             }
         }
@@ -154,14 +140,14 @@ int do_extract_currentfile( unzFile uf )
     return err;
 }
 
-int do_extract_onefile(unzFile uf, const char* filename)
+int do_extract_onefile( unzFile uf, const char* filename, const std::string& outputPath )
 {
     if (unzLocateFile(uf,filename,CASESENSITIVITY)!=UNZ_OK) {
         printf("file %s not found in the zipfile\n",filename);
         return 2;
     }
 
-    if (do_extract_currentfile(uf) == UNZ_OK)
+    if (do_extract_currentfile( uf, outputPath ) == UNZ_OK)
         return 0;
     else
         return 1;
@@ -210,11 +196,11 @@ unzFile openZipfile( const char *zipfilename )
 
 namespace UnzipHelper {
 
-int extract( const char *zipfilename, const char *filename_to_extract )
+int extract( const char *zipfilename, const char *filename_to_extract, const std::string& outputPath )
 {
     const auto uf = openZipfile( zipfilename );
     if( uf != NULL ) {
-        const auto result = do_extract_onefile( uf, filename_to_extract );
+        const auto result = do_extract_onefile( uf, filename_to_extract, outputPath );
         unzClose( uf );
         return result;
     }
