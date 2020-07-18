@@ -90,14 +90,14 @@ int main()
     const auto outputPath = std::string( OUTPUT_PATH );
     const auto nwn2Path = std::string( NWN2_PATH );
 
-    boost::filesystem::current_path( outputPath );
-
-    TwoDAMapper twodaMapper;
-    twodaMapper.initialize( nwn2Path );
+    TwoDAMapper twodaMapper( nwn2Path, outputPath );
+    const auto extracted = twodaMapper.getFile( "classes" );
 
 //    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da" );
 
-//    TlkFileReader16 dialog_tlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
+//    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da", "C:\\svn" );
+
+    TlkFileReader16 dialog_tlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
 //    TwoDAFileReader classes_2da( ( outputPath + "\\classes.2da" ).c_str() );
 
 //    Rules nwnRules;

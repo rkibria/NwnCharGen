@@ -9,16 +9,18 @@
 
 #include <unziphelper/unziphelper.h>
 
-TwoDAMapper::TwoDAMapper()
+TwoDAMapper::TwoDAMapper( const std::string& nwn2Path_, const std::string& outputPath_ )
+    : nwn2Path{ nwn2Path_ },
+      outputPath{ outputPath_ }
 {
-
+    initialize();
 }
 
 TwoDAMapper::~TwoDAMapper()
 {
 }
 
-void TwoDAMapper::initialize( const std::string& nwn2Path )
+void TwoDAMapper::initialize()
 {
     const std::array< std::string, 3 > twoDAzips = {
         nwn2Path + "\\Data\\2DA.zip",
@@ -52,7 +54,8 @@ const std::string& TwoDAMapper::getFile( const std::string& twoDAname )
     assert( extractMap.find( twoDAname ) != extractMap.end() );
     auto& mapEntry = extractMap.at( twoDAname );
     if( mapEntry.extractedPath.empty() ) {
-
+        UnzipHelper::extract( mapEntry.zipFile.c_str(), mapEntry.zipPath.c_str(), outputPath );
+        mapEntry.extractedPath = outputPath + "\\" + twoDAname + ".2da";
     }
 
     return mapEntry.extractedPath;

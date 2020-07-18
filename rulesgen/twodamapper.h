@@ -19,15 +19,18 @@ struct TwoDAMapValue
 class TwoDAMapper
 {
 public:
-    TwoDAMapper();
+    TwoDAMapper( const std::string& nwn2Path, const std::string& outputPath );
     ~TwoDAMapper();
-
-    void initialize( const std::string& nwn2Path );
 
     /// Returns full path to 2da file of that name to load
     const std::string& getFile( const std::string& twoDAname );
 
 private:
+    void initialize();
+
+    std::string nwn2Path;
+    std::string outputPath;
+
     /// 2da file name without .2da extension -> map value
     std::unordered_map< std::string, TwoDAMapValue > extractMap;
 };
