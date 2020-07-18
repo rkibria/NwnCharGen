@@ -19,6 +19,8 @@ using namespace Nwn;
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include "twodamapper.h"
+
 using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
 static const std::unordered_map<std::string, BabProgression> map_2da_bab {
@@ -90,12 +92,8 @@ int main()
 
     boost::filesystem::current_path( outputPath );
 
-    const auto twoDAfiles = UnzipHelper::getFileList( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str() );
-    for( const auto& path : twoDAfiles ) {
-        if( !path.empty() && path.back() != '/' ) {
-            std::cout << path << std::endl;
-        }
-    }
+    TwoDAMapper twodaMapper;
+    twodaMapper.initialize( nwn2Path );
 
 //    UnzipHelper::extract( ( nwn2Path + "\\Data\\2DA_X2.zip" ).c_str(), "2DA_X2/classes.2da" );
 
