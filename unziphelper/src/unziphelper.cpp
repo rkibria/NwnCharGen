@@ -59,30 +59,19 @@ int do_extract_currentfile( unzFile uf, const std::string& outputPath )
     char* filename_withoutpath;
     char* p;
     int err=UNZ_OK;
-    FILE *fout=NULL;
-    void* buf;
-    uInt size_buf;
+    FILE *fout = NULL;
 
     unz_file_info64 file_info;
-    err = unzGetCurrentFileInfo64(uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
+    err = unzGetCurrentFileInfo64( uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0 );
 
-    if (err!=UNZ_OK)
-    {
+    if (err!=UNZ_OK) {
         printf("error %d with zipfile in unzGetCurrentFileInfo\n",err);
         return err;
     }
 
-    size_buf = WRITEBUFFERSIZE;
-    buf = (void*)malloc(size_buf);
-    if (buf==NULL)
-    {
-        printf("Error allocating memory\n");
-        return UNZ_INTERNALERROR;
-    }
-
+    std::vector<char> buf( WRITEBUFFERSIZE );
     p = filename_withoutpath = filename_inzip;
-    while ((*p) != '\0')
-    {
+    while ((*p) != '\0') {
         if (((*p)=='/') || ((*p)=='\\'))
             filename_withoutpath = p+1;
         p++;
@@ -105,17 +94,17 @@ int do_extract_currentfile( unzFile uf, const std::string& outputPath )
             }
         }
 
-        if (fout!=NULL) {
+        if ( fout != NULL ) {
             printf( " extracting: %s\n", write_filename.c_str() );
 
             do {
-                err = unzReadCurrentFile(uf,buf,size_buf);
+                err = unzReadCurrentFile( uf, buf.data(), buf.size() );
                 if (err<0) {
                     printf("error %d with zipfile in unzReadCurrentFile\n",err);
                     break;
                 }
                 if (err>0)
-                    if (fwrite(buf,err,1,fout)!=1) {
+                    if ( fwrite( buf.data(), err, 1, fout ) != 1 ) {
                         printf("error in writing extracted file\n");
                         err=UNZ_ERRNO;
                         break;
@@ -136,7 +125,6 @@ int do_extract_currentfile( unzFile uf, const std::string& outputPath )
             unzCloseCurrentFile(uf); /* don't lose the error */
     }
 
-    free(buf);
     return err;
 }
 
