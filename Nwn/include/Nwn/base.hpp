@@ -5,6 +5,7 @@
 
 #include <boost/bimap.hpp>
 #include <boost/assign.hpp>
+#include <boost/serialization/nvp.hpp>
 
 namespace Nwn {
 
@@ -83,11 +84,18 @@ int diceToInt( Dice d );
 /// Integer to enum
 Dice intToDice( int i );
 
-enum class SavingThrow : int {
-    Fort,
-    Ref,
-    Will,
-    NumSavingThrows
+struct SavingThrows
+{
+    template<class Archive>
+    void serialize( Archive & ar, const unsigned int /* file_version */ ) {
+        ar & boost::serialization::make_nvp( "Fort", Fort )
+           & boost::serialization::make_nvp( "Ref", Ref )
+           & boost::serialization::make_nvp( "Will", Will );
+    }
+
+    int Fort { 0 };
+    int Ref  { 0 };
+    int Will { 0 };
 };
 
 } // namespace Nwn

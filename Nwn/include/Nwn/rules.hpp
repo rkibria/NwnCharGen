@@ -47,6 +47,7 @@ public:
     int getAblAtLvl( const Character* chr, AblScore abl, int lvl );
     int getHpAtLvl( const Character* chr, int lvl );
     int getBabAtLvl( const Character* chr, int lvl );
+    SavingThrows getSavesAtLvl( const Character* chr, int lvl );
 
     // SERIALIZATION
     void save( const char* fileName ) const;

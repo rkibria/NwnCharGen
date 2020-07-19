@@ -22,9 +22,9 @@ using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
 namespace  {
 
-const SavesArray& loadSavesTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+const std::vector< SavingThrows >& loadSavesTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
-    static std::unordered_map< std::string, SavesArray > savesTables;
+    static std::unordered_map< std::string, std::vector< SavingThrows > > savesTables;
 
     constexpr const auto colLevel = "Level";
     constexpr const auto colFort = "FortSave";
@@ -34,8 +34,7 @@ const SavesArray& loadSavesTable( const std::string& tableName, TwoDAMapper& two
     if( savesTables.count( lowerName ) == 0 ) {
         TwoDAFileReader cls_savthr_2da( twodaMapper.getFile( lowerName ).c_str() );
         const auto nRows = cls_savthr_2da.GetRowCount();
-        savesTables.emplace( lowerName,
-                             SavesArray{ std::vector<int>(nRows), std::vector<int>(nRows), std::vector<int>(nRows) } );
+        savesTables.emplace( lowerName, std::vector< SavingThrows >( nRows ) );
         auto& saves = savesTables.at( lowerName );
         for( size_t row = 0 ; row < nRows; ++row ) {
             int level;
@@ -55,9 +54,10 @@ const SavesArray& loadSavesTable( const std::string& tableName, TwoDAMapper& two
             assert( willOk );
 
             const auto lvl = level - 1;
-            saves[ static_cast< int >( SavingThrow::Fort ) ][ lvl ] = fort;
-            saves[ static_cast< int >( SavingThrow::Ref ) ][ lvl ] = ref;
-            saves[ static_cast< int >( SavingThrow::Will ) ][ lvl ] = will;
+            auto& s = saves[ lvl ];
+            s.Fort = fort;
+            s.Ref = ref;
+            s.Will = will;
         }
     }
     assert( savesTables.count( lowerName ) == 1 );

@@ -150,6 +150,12 @@ int Rules::getBabAtLvl( const Character* chr, int lvl )
     return bab;
 }
 
+SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
+{
+    const auto chclassCounts = chr->getChClassCountsAtLvl( lvl );
+    return SavingThrows();
+}
+
 // SERIALIZATION
 
 void Rules::save( const char* fileName ) const

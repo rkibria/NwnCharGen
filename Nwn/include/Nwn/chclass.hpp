@@ -13,8 +13,6 @@
 
 namespace Nwn {
 
-using SavesArray = std::array< std::vector< int >, static_cast< size_t >( SavingThrow::NumSavingThrows ) >;
-
 class ChClass
 {
 public:
@@ -36,11 +34,8 @@ public:
         return ( static_cast< size_t >( lvl ) < babProgression.size() ) ? babProgression[ lvl ] : 0;
     }
 
-    void setSaves( const SavesArray& values ) { saves = values; }
-    int getSaveAtLvl( SavingThrow sav, int lvl )
-    {
-        return saves[ static_cast< size_t >( sav ) ][ lvl ];
-    }
+    void setSaves( const std::vector< SavingThrows >& values ) { saves = values; }
+    const SavingThrows& getSavesAtLvl( int lvl ) const { return saves[ lvl ]; }
 
 private:
     friend class boost::serialization::access;
@@ -58,7 +53,7 @@ private:
     std::string description;
     Dice hitDie{ Dice::d4 };
     std::vector< int > babProgression;
-    SavesArray saves;
+    std::vector< SavingThrows > saves;
 };
 
 } // namespace Nwn
