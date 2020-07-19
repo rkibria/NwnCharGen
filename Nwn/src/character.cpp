@@ -129,4 +129,19 @@ void Character::setLevel( int lvl, const std::string& chclass )
     }
 }
 
+std::map< std::string, int > Character::getChClassCountsAtLvl( int lvl ) const
+{
+    std::map< std::string, int > chclassCounts;
+    for( int i = 0; i <= std::min( lvl, getNumLevels() - 1 ); ++i ) {
+        const auto& lvlClass = getLevel( i );
+        if( chclassCounts.count( lvlClass ) == 0 ) {
+            chclassCounts[ lvlClass ] = 1;
+        }
+        else {
+            ++chclassCounts[ lvlClass ];
+        }
+    }
+    return chclassCounts;
+}
+
 } // namespace Nwn

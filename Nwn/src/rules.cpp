@@ -135,24 +135,18 @@ int Rules::getHpAtLvl( const Character* chr, int lvl )
 
 int Rules::getBabAtLvl( const Character* chr, int lvl )
 {
-    int lowBabs{ 0 }, medBabs{ 0 }, highBabs{ 0 };
-    for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
-        const auto& lvlClass = chr->getLevel( i );
-        if( isChClassValid( lvlClass ) ) {
-            const auto& chClass = getChClassByName( lvlClass );
-            switch( chClass.getBabProgression() ) {
-            case BabProgression::low: ++lowBabs; break;
-            case BabProgression::medium: ++medBabs; break;
-            case BabProgression::high: ++highBabs; break;
-            default: break;
-            }
+    const auto chclassLevels = chr->getChClassCountsAtLvl( lvl );
+    int bab = 0;
+    for( auto itr = chclassLevels.cbegin(); itr != chclassLevels.cend(); ++itr ) {
+        const auto& chClassName = itr->first;
+        const auto lvls = itr->second;
+        assert( ! chClassName.empty() );
+        assert( lvls > 0 );
+        if( isChClassValid( chClassName ) ) {
+            const auto& chClass = getChClassByName( chClassName );
+            bab += chClass.getBabAtLvl( lvls - 1 );
         }
     }
-
-    int bab = 0;
-    bab += lowBabs > 0 ? Nwn::getBabAtLvl( BabProgression::low, lowBabs - 1 ) : 0;
-    bab += medBabs > 0 ? Nwn::getBabAtLvl( BabProgression::medium, medBabs - 1 ) : 0;
-    bab += highBabs > 0 ? Nwn::getBabAtLvl( BabProgression::high, highBabs - 1 ) : 0;
     return bab;
 }
 

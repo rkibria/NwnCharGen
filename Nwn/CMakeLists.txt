@@ -4,7 +4,6 @@ add_library(Nwn STATIC
     src/abilities.cpp
     src/ablblock.cpp
     src/alignment.cpp
-    src/attack.cpp
     src/character.cpp
     src/chclass.cpp
     src/dice.cpp

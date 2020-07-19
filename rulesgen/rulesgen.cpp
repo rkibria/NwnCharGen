@@ -20,15 +20,34 @@ using namespace Nwn;
 
 using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
-static const std::unordered_map<std::string, BabProgression> map_2da_bab {
-    { "CLS_ATK_3", BabProgression::low },
-    { "CLS_ATK_2", BabProgression::medium },
-    { "CLS_ATK_1", BabProgression::high }
-};
+namespace  {
 
 void loadSavesTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
     TwoDAFileReader cls_savthr_2da( twodaMapper.getFile( tableName ).c_str() );
+}
+
+const std::vector<int>& loadAttackTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+{
+    static std::unordered_map< std::string, std::vector<int> > attackTables;
+
+    constexpr const auto colName = "BAB";
+    const auto lowerName = boost::to_lower_copy( tableName );
+    if( attackTables.count( lowerName ) == 0 ) {
+        TwoDAFileReader attack_2da( twodaMapper.getFile( lowerName ).c_str() );
+        assert( attack_2da.HasColumn( colName ) );
+        assert( attack_2da.GetRowCount() >= Character::maxLevel );
+        std::vector<int> prg( Character::maxLevel );
+        for( size_t row = 0 ; row < Character::maxLevel; ++row ) {
+            int bab;
+            const auto babOk = attack_2da.Get2DAInt( colName, row, bab );
+            assert( babOk );
+            prg[ row ] = bab;
+        }
+        attackTables[ lowerName ] = prg;
+    }
+    assert( attackTables.count( lowerName ) == 1 );
+    return attackTables[ lowerName ];
 }
 
 void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& twodaMapper )
@@ -60,8 +79,7 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& t
             std::string attackStr;
             const auto attackOk = classes_2da.Get2DAString( "AttackBonusTable", row, attackStr );
             assert( attackOk );
-            assert( map_2da_bab.count( attackStr ) == 1 );
-            const auto babPrg = map_2da_bab.at( attackStr );
+            const auto& prg = loadAttackTable( attackStr, twodaMapper );
 
             std::string savesStr;
             const auto savesOk = classes_2da.Get2DAString( "SavingThrowTable", row, savesStr );
@@ -72,11 +90,13 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& t
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
             chClass->setDescription( descr );
             chClass->setHitDie( hitDie );
-            chClass->setBabProgression( babPrg );
+            chClass->setBabProgression( prg );
             nwnRules.setChClass( std::move( chClass ) );
         }
     }
 }
+
+} // namespace
 
 int main()
 {

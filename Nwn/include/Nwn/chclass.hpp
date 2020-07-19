@@ -6,6 +6,7 @@
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace Nwn {
 
@@ -25,8 +26,10 @@ public:
     Dice getHitDie() const { return hitDie; }
     void setHitDie( Dice d ) { hitDie = d; }
 
-    BabProgression getBabProgression() const { return babProgression; }
-    void setBabProgression( BabProgression prg ) { babProgression = prg; }
+    void setBabProgression( const std::vector<int>& prg ) { babProgression = prg; }
+    int getBabAtLvl( int lvl ) const {
+        return ( static_cast< size_t >( lvl ) < babProgression.size() ) ? babProgression[ lvl ] : 0;
+    }
 
 private:
     friend class boost::serialization::access;
@@ -42,7 +45,7 @@ private:
     std::string name;
     std::string description;
     Dice hitDie{ Dice::d4 };
-    BabProgression babProgression{ BabProgression::low };
+    std::vector<int> babProgression;
 };
 
 } // namespace Nwn
