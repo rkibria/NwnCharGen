@@ -1,6 +1,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QMap>
+#include <QStringBuilder>
 
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
@@ -202,16 +203,11 @@ void NwnCharGen::updateAbilityBlock()
 
 void NwnCharGen::updateClasses()
 {
-    QMap<QString, int> curClassLvls;
-    for( int i = 0; i < nwnChar->getNumLevels(); ++i ) {
-        curClassLvls[ nwnChar->getLevel( i ).c_str() ]++;
-    }
+    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( nwnChar->getNumLevels() - 1 );
     QString output;
-    auto itr = curClassLvls.constBegin();
-    while( itr != curClassLvls.constEnd() ) {
-        const auto curCls = QString( "%1 (%2) " ).arg( itr.key() ).arg( itr.value() );
-        output += curCls;
-        ++itr;
+    for( auto itr = curClassLvls.cbegin(); itr != curClassLvls.cend(); ++itr ) {
+        const auto curCls = QString( "%1 (%2) " ).arg( itr->first.c_str() ).arg( itr->second );
+        output = output % curCls;
     }
     ui->lineEditClasses->setText( output );
 }
