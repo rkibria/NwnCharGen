@@ -3,12 +3,17 @@
 
 #include <Nwn/base.hpp>
 #include <string>
+#include <vector>
+#include <array>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
+#include <boost/serialization/array.hpp>
 
 namespace Nwn {
+
+using SavesArray = std::array< std::vector< int >, static_cast< size_t >( SavingThrow::NumSavingThrows ) >;
 
 class ChClass
 {
@@ -31,6 +36,12 @@ public:
         return ( static_cast< size_t >( lvl ) < babProgression.size() ) ? babProgression[ lvl ] : 0;
     }
 
+    void setSaves( const SavesArray& values ) { saves = values; }
+    int getSaveAtLvl( SavingThrow sav, int lvl )
+    {
+        return saves[ static_cast< size_t >( sav ) ][ lvl ];
+    }
+
 private:
     friend class boost::serialization::access;
 
@@ -39,13 +50,15 @@ private:
         ar & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "description", description )
            & boost::serialization::make_nvp( "hitDie", hitDie )
-           & boost::serialization::make_nvp( "babProgression", babProgression );
+           & boost::serialization::make_nvp( "babProgression", babProgression )
+           & boost::serialization::make_nvp( "saves", saves );
     }
 
     std::string name;
     std::string description;
     Dice hitDie{ Dice::d4 };
-    std::vector<int> babProgression;
+    std::vector< int > babProgression;
+    SavesArray saves;
 };
 
 } // namespace Nwn

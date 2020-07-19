@@ -83,6 +83,13 @@ int diceToInt( Dice d );
 /// Integer to enum
 Dice intToDice( int i );
 
+enum class SavingThrow : int {
+    Fort,
+    Ref,
+    Will,
+    NumSavingThrows
+};
+
 } // namespace Nwn
 
 #endif // NWNBASE_H
