@@ -105,8 +105,10 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
         case kCHACol:
             return QVariant( nwnRules->getAblAtLvl( nwnChar, getColumnAbl( col ), lvl ) );
 
-        case kSavesCol:
-            return QVariant( QString( "99 99 99" ) );
+        case kSavesCol: {
+                const auto saves = nwnRules->getSavesAtLvl( nwnChar, lvl );
+                return QVariant( QString( "%1 - %2 - %3" ).arg( saves.Fort ).arg( saves.Ref ).arg( saves.Will ) );
+            }
 
         default:
             break;

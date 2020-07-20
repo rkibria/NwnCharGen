@@ -35,7 +35,10 @@ public:
     }
 
     void setSaves( const std::vector< SavingThrows >& values ) { saves = values; }
-    const SavingThrows& getSavesAtLvl( int lvl ) const { return saves[ lvl ]; }
+    const SavingThrows& getSavesAtLvl( int lvl ) const {
+        const static SavingThrows nullSaves;
+        return ( static_cast< size_t >( lvl ) < saves.size() ) ? saves[ lvl ] : nullSaves;
+    }
 
 private:
     friend class boost::serialization::access;
