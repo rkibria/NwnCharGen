@@ -168,6 +168,21 @@ void importRaces( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& two
 
             std::unique_ptr< Race > race = std::make_unique< Race >( name, baseRaceStr );
             race->setDescription( descr );
+
+            const auto readAblMod = [ &racialsubtypes_2da, &race, row ]( AblScore abl, const char* colName ) {
+                int ablMod;
+                const auto ablModOk = racialsubtypes_2da.Get2DAInt( colName, row, ablMod );
+                assert( ablModOk );
+                race->getAblAdjusts().setAbl( abl, ablMod );
+            };
+
+            readAblMod( AblScore::Str, "StrAdjust" );
+            readAblMod( AblScore::Dex, "DexAdjust" );
+            readAblMod( AblScore::Con, "ConAdjust" );
+            readAblMod( AblScore::Int, "IntAdjust" );
+            readAblMod( AblScore::Wis, "WisAdjust" );
+            readAblMod( AblScore::Cha, "ChaAdjust" );
+
             nwnRules.setRace( std::move( race ) );
         }
     }
