@@ -134,6 +134,45 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& t
     }
 }
 
+void importRaces( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& twodaMapper )
+{
+    TwoDAFileReader racialtypes_2da( twodaMapper.getFile( "racialtypes" ).c_str() );
+    TwoDAFileReader racialsubtypes_2da( twodaMapper.getFile( "racialsubtypes" ).c_str() );
+
+    for( size_t row = 0 ; row < racialsubtypes_2da.GetRowCount(); ++row ) {
+        int nameRef, isPlayerRace;
+        if( racialsubtypes_2da.Get2DAInt( "Name", row, nameRef )
+                && racialsubtypes_2da.Get2DAInt( "PlayerRace", row, isPlayerRace )
+                && isPlayerRace ) {
+            std::string name;
+            const auto nameOk = dialog_tlk.GetTalkString( nameRef, name );
+            assert( nameOk );
+            std::cout << "importing race " << name << std::endl;
+
+            int baseRaceRow;
+            const auto baseRaceOk = racialsubtypes_2da.Get2DAInt( "BaseRace", row, baseRaceRow );
+            assert( baseRaceOk );
+            int baseRaceRef;
+            const auto baseRaceIntOk = racialtypes_2da.Get2DAInt( "Name", baseRaceRow, baseRaceRef );
+            assert( baseRaceIntOk );
+            std::string baseRaceStr;
+            const auto baseRaceStrOk = dialog_tlk.GetTalkString( baseRaceRef, baseRaceStr );
+            assert( baseRaceStrOk );
+
+            int descrRef;
+            std::string descr;
+            const auto descrOk = racialsubtypes_2da.Get2DAInt( "Description", row, descrRef );
+            assert( descrOk );
+            const auto descrRefOk = dialog_tlk.GetTalkString( descrRef, descr );
+            assert( descrRefOk );
+
+            std::unique_ptr< Race > race = std::make_unique< Race >( name, baseRaceStr );
+            race->setDescription( descr );
+            nwnRules.setRace( std::move( race ) );
+        }
+    }
+}
+
 } // namespace
 
 int main()
@@ -147,6 +186,7 @@ int main()
     Rules nwnRules;
 
     importClasses( nwnRules, dialog_tlk, twodaMapper );
+    importRaces( nwnRules, dialog_tlk, twodaMapper );
 
     nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
 }
