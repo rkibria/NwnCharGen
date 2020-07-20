@@ -93,6 +93,13 @@ struct SavingThrows
            & boost::serialization::make_nvp( "Will", Will );
     }
 
+    SavingThrows& operator+=( const SavingThrows& rhs ) {
+        this->Fort += rhs.Fort;
+        this->Ref += rhs.Ref;
+        this->Will += rhs.Will;
+        return *this;
+    }
+
     int Fort { 0 };
     int Ref  { 0 };
     int Will { 0 };

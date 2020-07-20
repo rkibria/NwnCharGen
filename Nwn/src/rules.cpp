@@ -153,7 +153,19 @@ int Rules::getBabAtLvl( const Character* chr, int lvl )
 SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
 {
     const auto chclassCounts = chr->getChClassCountsAtLvl( lvl );
-    return SavingThrows();
+    SavingThrows sav;
+    for( auto itr = chclassCounts.cbegin(); itr != chclassCounts.cend(); ++itr ) {
+        const auto& chClassName = itr->first;
+        const auto lvls = itr->second;
+        assert( ! chClassName.empty() );
+        assert( lvls > 0 );
+        if( isChClassValid( chClassName ) ) {
+            const auto& chClass = getChClassByName( chClassName );
+            const auto& chClassSaves = chClass.getSavesAtLvl( lvls - 1 );
+            sav += chClassSaves;
+        }
+    }
+    return sav;
 }
 
 // SERIALIZATION
