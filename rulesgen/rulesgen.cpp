@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <stdexcept>
+#include <sstream>
 
 #include <Precomp.h>
 #include <2DAFileReader.h>
@@ -21,6 +22,19 @@ using namespace Nwn;
 using TlkFileReader16 = TlkFileReader<NWN::ResRef16>;
 
 namespace  {
+
+std::string translateToNwn2Tags( const std::string& text )
+{
+    std::stringstream inStrm( text );
+    std::stringstream outStrm;
+
+    std::string line;
+    while( std::getline( inStrm, line, '\n' ) ){
+        outStrm << line << " <br>";
+    }
+
+    return outStrm.str();
+}
 
 const std::vector< SavingThrows >& loadSavesTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
@@ -125,7 +139,7 @@ void importClasses( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& t
             const auto& saves = loadSavesTable( savesStr, twodaMapper );
 
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
-            chClass->setDescription( descr );
+            chClass->setDescription( translateToNwn2Tags( descr ) );
             chClass->setHitDie( hitDie );
             chClass->setBabProgression( prg );
             chClass->setSaves( saves );
@@ -167,7 +181,7 @@ void importRaces( Rules &nwnRules, TlkFileReader16& dialog_tlk, TwoDAMapper& two
             assert( descrRefOk );
 
             std::unique_ptr< Race > race = std::make_unique< Race >( name, baseRaceStr );
-            race->setDescription( descr );
+            race->setDescription( translateToNwn2Tags( descr ) );
 
             const auto readAblMod = [ &racialsubtypes_2da, &race, row ]( AblScore abl, const char* colName ) {
                 int ablMod;
