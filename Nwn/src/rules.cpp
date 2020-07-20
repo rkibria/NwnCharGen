@@ -165,6 +165,10 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
             sav += chClassSaves;
         }
     }
+
+    sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
+    sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl ) );
+    sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl ) );
     return sav;
 }
 

@@ -107,7 +107,7 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
 
         case kSavesCol: {
                 const auto saves = nwnRules->getSavesAtLvl( nwnChar, lvl );
-                return QVariant( QString( "%1 - %2 - %3" ).arg( saves.Fort ).arg( saves.Ref ).arg( saves.Will ) );
+                return QVariant( QString( "%1 / %2 / %3" ).arg( saves.Fort ).arg( saves.Ref ).arg( saves.Will ) );
             }
 
         default:
