@@ -3,6 +3,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <fstream>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -49,7 +50,7 @@ void TwoDAMapper::initialize()
             boost::split( tokens, lowerPath, boost::is_any_of("/.") );
             assert( tokens.size() == 3 );
             const auto& twoDAkey = tokens[ 1 ];
-            extractMap[ twoDAkey ] = TwoDAMapValue{ zipPath, path, "" };
+            extractMap[ twoDAkey ] = TwoDAMapValue{ ExtractionMethod::unzip, zipPath, path, "", {} };
         }
     }
 }
@@ -59,8 +60,20 @@ const std::string& TwoDAMapper::getFile( const std::string& twoDAname )
     assert( extractMap.find( twoDAname ) != extractMap.end() );
     auto& mapEntry = extractMap.at( twoDAname );
     if( mapEntry.extractedPath.empty() ) {
-        UnzipHelper::extract( mapEntry.zipFile.c_str(), mapEntry.zipPath.c_str(), outputPath );
-        mapEntry.extractedPath = outputPath + "\\" + twoDAname + ".2da";
+        switch (mapEntry.extMtd) {
+        case ExtractionMethod::unzip:
+            UnzipHelper::extract( mapEntry.zipFile.c_str(), mapEntry.zipPath.c_str(), outputPath );
+            mapEntry.extractedPath = outputPath + "\\" + twoDAname + ".2da";
+            break;
+        case ExtractionMethod::stored: {
+                mapEntry.extractedPath = outputPath + "\\" + twoDAname + ".2da";
+                std::ofstream outFile( mapEntry.extractedPath );
+                outFile.write( mapEntry.text.data(), mapEntry.text.size() );
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     return mapEntry.extractedPath;
@@ -90,12 +103,10 @@ void TwoDAMapper::readHak( const std::string& hakPath )
         const auto closeOk = hakFile.CloseFile( hndl );
         assert( closeOk );
 
-        std::cout << i << ": "
-                  << resRef.RefStr
-                  << " type " << hakFile.ResTypeToExt( resType )
-                  << " sz " << fSize
-                  << "\n";
-    }
+        const std::string twoDAkey = boost::to_lower_copy( std::string( resRef.RefStr ) );
+        extractMap[ twoDAkey ] = TwoDAMapValue{ ExtractionMethod::stored, "", "", "", std::move( buf ) };
 
+        std::cout << "read 2da in hak: " << twoDAkey << "\n";
+    }
 
 }

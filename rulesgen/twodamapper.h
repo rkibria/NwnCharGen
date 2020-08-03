@@ -5,14 +5,24 @@
 #include <string>
 #include <unordered_map>
 
+enum class ExtractionMethod
+{
+    unzip,
+    stored
+};
+
 struct TwoDAMapValue
 {
+    /// How the data can be retrieved
+    ExtractionMethod extMtd{ ExtractionMethod::unzip };
     /// Containing zip file
     std::string zipFile;
     /// Relative path inside containing zip file
     std::string zipPath;
     /// Path where extracted, empty if not yet extracted
     std::string extractedPath;
+    /// Storage for 2da file contents
+    std::vector<char> text;
 };
 
 /// Provides automatically unpacking access to the base game 2da files
