@@ -25,6 +25,9 @@ public:
     /// Returns full path to 2da file of that name to load
     const std::string& getFile( const std::string& twoDAname );
 
+    /// Load all .2da files from a hak file
+    void readHak( const std::string& hakPath );
+
 private:
     void initialize();
 

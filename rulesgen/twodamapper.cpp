@@ -9,6 +9,11 @@
 
 #include <unziphelper/unziphelper.h>
 
+#include <Precomp.h>
+#include <ErfFileReader.h>
+
+using ErfFileReader32 = ErfFileReader< NWN::ResRef32 >;
+
 TwoDAMapper::TwoDAMapper( const std::string& nwn2Path_, const std::string& outputPath_ )
     : nwn2Path{ nwn2Path_ },
       outputPath{ outputPath_ }
@@ -59,4 +64,38 @@ const std::string& TwoDAMapper::getFile( const std::string& twoDAname )
     }
 
     return mapEntry.extractedPath;
+}
+
+void TwoDAMapper::readHak( const std::string& hakPath )
+{
+    ErfFileReader32 hakFile( hakPath.c_str() );
+
+    const auto count = hakFile.GetEncapsulatedFileCount();
+    NWN::ResRef32 resRef;
+    ResType  resType;
+
+    for( FileId i = 0; i < count; ++i ) {
+        const auto ok = hakFile.GetEncapsulatedFileEntry( i, resRef, resType );
+        assert(ok);
+
+        if( resType != NWN::Res2DA )
+            continue;
+
+        const auto hndl = hakFile.OpenFile( resRef, resType );
+        const auto fSize = hakFile.GetEncapsulatedFileSize( hndl );
+        std::vector<char> buf( fSize );
+        size_t bytesRead;
+        const auto readOk = hakFile.ReadEncapsulatedFile( hndl, 0, fSize, &bytesRead, buf.data() );
+        assert( readOk && bytesRead == fSize );
+        const auto closeOk = hakFile.CloseFile( hndl );
+        assert( closeOk );
+
+        std::cout << i << ": "
+                  << resRef.RefStr
+                  << " type " << hakFile.ResTypeToExt( resType )
+                  << " sz " << fSize
+                  << "\n";
+    }
+
+
 }
