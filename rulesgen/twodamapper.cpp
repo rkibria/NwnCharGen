@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <fstream>
+#include <exception>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -57,7 +58,12 @@ void TwoDAMapper::initialize()
 
 const std::string& TwoDAMapper::getFile( const std::string& twoDAname )
 {
-    assert( extractMap.find( twoDAname ) != extractMap.end() );
+    static const std::string empty = "";
+    if( extractMap.find( twoDAname ) == extractMap.end() ) {
+        std::cerr << "WARNING: 2da file " << twoDAname << " not cached\n";
+        return empty;
+    }
+
     auto& mapEntry = extractMap.at( twoDAname );
     if( mapEntry.extractedPath.empty() ) {
         switch (mapEntry.extMtd) {

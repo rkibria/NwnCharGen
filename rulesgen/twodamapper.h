@@ -25,17 +25,18 @@ struct TwoDAMapValue
     std::vector<char> text;
 };
 
-/// Provides automatically unpacking access to the base game 2da files
+/// Provides automatically unpacking access to the base game 2da files (from zip) and extra .haks
 class TwoDAMapper
 {
 public:
+    /// Read all base game 2da paths, store extraction path
     TwoDAMapper( const std::string& nwn2Path, const std::string& outputPath );
     ~TwoDAMapper();
 
     /// Returns full path to 2da file of that name to load
     const std::string& getFile( const std::string& twoDAname );
 
-    /// Load all .2da files from a hak file
+    /// Load all .2da files from a hak file, may override same name base game 2das
     void readHak( const std::string& hakPath );
 
 private:
