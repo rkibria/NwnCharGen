@@ -45,6 +45,7 @@ QVariant LevelsModel::headerData(int section, Qt::Orientation orientation, int r
         case kWISCol:   return QString("WIS");
         case kCHACol:   return QString("CHA");
         case kSavesCol: return QString("Saves");
+        case kFeatsGainedCol: return QString("Gained");
         default: return QVariant();
         }
     }

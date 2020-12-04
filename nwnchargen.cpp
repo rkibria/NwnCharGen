@@ -17,6 +17,7 @@
 #include "levelsmodel.h"
 #include "levelsclassdelegate.h"
 #include "levelsabldelegate.h"
+#include "featsgaineddelegate.h"
 
 using namespace Nwn;
 
@@ -97,6 +98,8 @@ void NwnCharGen::initLevelsWidget()
     for( const auto col : LevelsModel::ablCols ) {
         ui->tableViewLevels->setItemDelegateForColumn( col, new LevelsAblDelegate( ui->tableViewLevels ) );
     }
+
+    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kFeatsGainedCol, new FeatsGainedDelegate( ui->tableViewLevels ) );
 
     const auto fm = this->fontMetrics();
     ui->tableViewLevels->setColumnWidth( LevelsModel::kLevelCol, fm.horizontalAdvance( "30" ) );
