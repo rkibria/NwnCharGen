@@ -41,7 +41,7 @@ qt5_wrap_cpp(MOC_SOURCES
     levelsclassdelegate.h
     levelsabldelegate.h
     chclassdialog.h
-    featsgaineddelegate.h
+    # featsgaineddelegate.h
     )
 
 qt5_wrap_ui(UI_SOURCES
@@ -64,7 +64,7 @@ add_executable(NwnCharGen
     levelsclassdelegate.cpp
     chclassdialog.cpp
     levelsabldelegate.cpp
-    featsgaineddelegate.cpp
+    # featsgaineddelegate.cpp
 
     ${MOC_SOURCES}
     ${UI_SOURCES}

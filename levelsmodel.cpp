@@ -111,6 +111,8 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
                 return QVariant( QString( "%1 / %2 / %3" ).arg( saves.Fort ).arg( saves.Ref ).arg( saves.Will ) );
             }
 
+        case kFeatsGainedCol:
+            return QVariant( "- something\n- another line 2" );
         default:
             break;
         }
