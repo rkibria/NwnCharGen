@@ -9,6 +9,7 @@ add_library(Nwn STATIC
     src/dice.cpp
     src/race.cpp
     src/rules.cpp
+    src/feat.cpp
     )
 
 target_include_directories(Nwn PUBLIC include)
