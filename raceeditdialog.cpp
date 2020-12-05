@@ -14,7 +14,7 @@ RaceEditDialog::RaceEditDialog( Nwn::Rules *r, const std::string& n, QWidget *pa
     ui(new Ui::RaceEditDialog),
     nwnRules{ r },
     raceName{ n },
-    raceCopy{ std::make_unique<Race>( nwnRules->getRaceByName( raceName ) ) }
+    raceCopy{ std::make_unique<Race>( *( nwnRules->getRaceByName( raceName ) ) ) }
 {
     ui->setupUi(this);
 

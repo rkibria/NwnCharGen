@@ -90,7 +90,7 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
 
         raceChoice = item->text( 0 );
 
-        const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() ).getDescription();
+        const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() )->getDescription();
         ui->textEditDescription->setHtml( QString::fromStdString( description ) );
 
         updateEditButtons();

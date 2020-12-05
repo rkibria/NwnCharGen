@@ -32,8 +32,8 @@ public:
     // RACES
     void setRace( std::unique_ptr< Nwn::Race > r );
     ConstMapLooper< Race, RaceContainer > getRaces() const { return ConstMapLooper< Race, RaceContainer >( races ); }
-    const Race& getRaceByName( const std::string& name ) const { return *( races.at( name ) ); }
-    bool isRaceValid( const std::string& name ) const { return races.find( name ) != races.end(); }
+    const Race* getRaceByName( const std::string& name ) const;
+    bool isRaceValid( const std::string& name ) const;
     void removeRace( const std::string& name );
 
     // CHARACTER CLASSES

@@ -24,6 +24,19 @@ Rules::~Rules()
 
 // RACES
 
+const Race* Rules::getRaceByName( const std::string& name ) const
+{
+    if( races.find( name ) != races.end() ) {
+        return races.at( name ).get();
+    }
+    return nullptr;
+}
+
+bool Rules::isRaceValid( const std::string& name ) const
+{
+    return races.find( name ) != races.end();
+}
+
 void Rules::setRace( std::unique_ptr< Nwn::Race > r )
 {
     assert( !r->getName().empty() );
@@ -75,8 +88,8 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
 
     const auto& raceName = chr->getRace();
     if( isRaceValid( raceName ) ) {
-        const auto& race = getRaceByName( raceName );
-        ablVal += race.getAblAdjusts().getAbl( abl );
+        const auto race = getRaceByName( raceName );
+        ablVal += race->getAblAdjusts().getAbl( abl );
     }
 
     switch( lvl ) {
