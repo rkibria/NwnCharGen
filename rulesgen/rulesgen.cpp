@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <set>
+#include <map>
 
 #include <Precomp.h>
 #include <2DAFileReader.h>
@@ -157,6 +158,50 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     return feats;
 }
 
+std::unique_ptr< std::map< int, std::set<int> > > loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+{
+    auto feats = std::make_unique< std::map< int, std::set<int> > >();
+
+    constexpr const auto colFeatIndex = "FeatIndex";
+    constexpr const auto colList = "List";
+    constexpr const auto colGrantedOnLvl = "GrantedOnLevel";
+    const auto lowerName = boost::to_lower_copy( tableName );
+
+    TwoDAFileReader class_feat_2da( twodaMapper.getFile( lowerName ).c_str() );
+    assert( class_feat_2da.HasColumn( colFeatIndex ) );
+    assert( class_feat_2da.HasColumn( colList ) );
+    assert( class_feat_2da.HasColumn( colGrantedOnLvl ) );
+
+    for( size_t row = 0 ; row < class_feat_2da.GetRowCount(); ++row ) {
+        int feat;
+        const auto featOk = class_feat_2da.Get2DAInt( colFeatIndex, row, feat );
+        if( !featOk ) {
+            continue;
+        }
+        int list;
+        const auto listOk = class_feat_2da.Get2DAInt( colList, row, list );
+        if( !listOk ) {
+            continue;
+        }
+        int granted;
+        const auto grantedOk = class_feat_2da.Get2DAInt( colGrantedOnLvl, row, granted );
+        if( !grantedOk ) {
+            continue;
+        }
+
+        constexpr const int kAutomaticallyGranted = 3;
+        if( list == kAutomaticallyGranted ) {
+            const auto grantedLvl = granted - 1;
+            if( (*feats).find( grantedLvl ) == (*feats).end() ) {
+                (*feats)[ grantedLvl ] = std::set<int>();
+            }
+            (*feats)[ grantedLvl ].insert( feat );
+        }
+    }
+
+    return feats;
+}
+
 void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
 {
     TwoDAFileReader classes_2da( twodaMapper.getFile( "classes" ).c_str() );
@@ -200,6 +245,13 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             if( saves.empty() ) {
                 std::cerr << "importClasses: skipping class " << name << ", saves table not found" << std::endl;
                 continue;
+            }
+
+            std::string featsStr;
+            const auto featsOk = classes_2da.Get2DAString( "FeatsTable", row, featsStr );
+            if( featsOk ) {
+                boost::algorithm::to_lower( featsStr );
+                auto feats = loadClassFeatsTable( featsStr, twodaMapper );
             }
 
             std::cout << "importing class " << name << std::endl;
