@@ -4,9 +4,11 @@
 #include <Nwn/base.hpp>
 #include <string>
 #include <memory>
+#include <set>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/unique_ptr.hpp>
+#include <boost/serialization/set.hpp>
 
 namespace Nwn {
 
@@ -31,6 +33,9 @@ public:
     AblBlock& getAblAdjusts();
     const AblBlock& getAblAdjusts() const;
 
+    const std::set<int>& getFeats() const { return *feats; }
+    void setFeats( std::unique_ptr< std::set<int> > f ) { feats = std::move( f ); }
+
 private:
     friend class boost::serialization::access;
 
@@ -40,14 +45,17 @@ private:
         ar & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "classification", classification )
            & boost::serialization::make_nvp( "description", description )
-           & boost::serialization::make_nvp( "ablAdjusts", ablAdjusts );
+           & boost::serialization::make_nvp( "ablAdjusts", ablAdjusts )
+           & boost::serialization::make_nvp( "feats", feats );
     }
 
     std::string name;
     std::string classification;
     std::string description;
 
-    std::unique_ptr<AblBlock> ablAdjusts;
+    std::unique_ptr< AblBlock > ablAdjusts;
+
+    std::unique_ptr< std::set<int> > feats;
 };
 
 } // namespace Nwn

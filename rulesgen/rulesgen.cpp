@@ -136,9 +136,9 @@ const std::vector<int>& loadAttackTable( const std::string& tableName, TwoDAMapp
     return attackTables.at( lowerName );
 }
 
-std::set<int> loadRacialFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
-    std::set<int> feats;
+    auto feats = std::make_unique< std::set<int> >();
 
     constexpr const auto colName = "FeatIndex";
     const auto lowerName = boost::to_lower_copy( tableName );
@@ -150,7 +150,7 @@ std::set<int> loadRacialFeatsTable( const std::string& tableName, TwoDAMapper& t
         int feat;
         const auto featOk = racial_feat_2da.Get2DAInt( colName, row, feat );
         assert( featOk );
-        feats.insert( feat );
+        (*feats).insert( feat );
     }
 
     return feats;
@@ -277,11 +277,8 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
             boost::algorithm::to_lower( featsStr );
-            const auto& feats = loadRacialFeatsTable( featsStr, twodaMapper );
-            if( feats.empty() ) {
-                std::cerr << "importRaces: skipping class " << name << ", feats table not found" << std::endl;
-                continue;
-            }
+            auto feats = loadRacialFeatsTable( featsStr, twodaMapper );
+            race->setFeats( std::move( feats ) );
 
             std::cout << "importing race " << name << std::endl;
             nwnRules.setRace( std::move( race ) );

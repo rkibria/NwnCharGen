@@ -24,7 +24,7 @@ Rules::~Rules()
 
 // RACES
 
-void Rules::setRace( std::unique_ptr<Nwn::Race> r )
+void Rules::setRace( std::unique_ptr< Nwn::Race > r )
 {
     assert( !r->getName().empty() );
     races[ r->getName() ] = std::move( r );
