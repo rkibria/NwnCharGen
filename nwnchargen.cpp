@@ -238,6 +238,7 @@ void NwnCharGen::updateLevels()
     if( auto levelsModel = static_cast<LevelsModel*>( ui->tableViewLevels->model() ) ) {
         levelsModel->updateView();
     }
+    ui->tableViewLevels->resizeRowsToContents();
 }
 
 void NwnCharGen::updateAll()
@@ -274,7 +275,7 @@ void NwnCharGen::on_buttonRace_clicked()
         if( !rd.getChoice().isEmpty() ) {
             nwnChar->setRace( rd.getChoice().toStdString() );
             setDirtyFlag();
-            updateSummary();
+            updateAll();
         }
     }
 }
