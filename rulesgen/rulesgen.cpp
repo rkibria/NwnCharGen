@@ -272,13 +272,11 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
 
             std::string featsStr;
             const auto featsOk = racialtypes_2da.Get2DAString( "FeatsTable", row, featsStr );
-            if( !featsOk ) {
-                std::cerr << "importRaces: skipping class " << name << ", feats table not found" << std::endl;
-                continue;
+            if( featsOk ) {
+                boost::algorithm::to_lower( featsStr );
+                auto feats = loadRacialFeatsTable( featsStr, twodaMapper );
+                race->setFeats( std::move( feats ) );
             }
-            boost::algorithm::to_lower( featsStr );
-            auto feats = loadRacialFeatsTable( featsStr, twodaMapper );
-            race->setFeats( std::move( feats ) );
 
             std::cout << "importing race " << name << std::endl;
             nwnRules.setRace( std::move( race ) );
