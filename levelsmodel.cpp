@@ -29,12 +29,12 @@ QString getFormattedFeats( const Nwn::Character* nwnChar,
         for( const auto id : feats ) {
             const auto feat = nwnRules->getFeat( id );
             if( feat ) {
-                out << QString( "- %1" ).arg( feat->getName().c_str() );
+                out << QString( "- %1\n" ).arg( feat->getName().c_str() );
             }
         }
     }
 
-    return out.join("\n");
+    return out.join("");
 }
 
 } // namespace

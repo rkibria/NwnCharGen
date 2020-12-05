@@ -149,8 +149,9 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     for( size_t row = 0 ; row < racial_feat_2da.GetRowCount(); ++row ) {
         int feat;
         const auto featOk = racial_feat_2da.Get2DAInt( colName, row, feat );
-        assert( featOk );
-        (*feats).insert( feat );
+        if( featOk ) {
+            (*feats).insert( feat );
+        }
     }
 
     return feats;
@@ -271,7 +272,7 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
             }
 
             std::string featsStr;
-            const auto featsOk = racialtypes_2da.Get2DAString( "FeatsTable", row, featsStr );
+            const auto featsOk = racialsubtypes_2da.Get2DAString( "FeatsTable", row, featsStr );
             if( featsOk ) {
                 boost::algorithm::to_lower( featsStr );
                 auto feats = loadRacialFeatsTable( featsStr, twodaMapper );
