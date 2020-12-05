@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <sstream>
+#include <set>
 
 #include <Precomp.h>
 #include <2DAFileReader.h>
@@ -135,6 +136,26 @@ const std::vector<int>& loadAttackTable( const std::string& tableName, TwoDAMapp
     return attackTables.at( lowerName );
 }
 
+std::set<int> loadRacialFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+{
+    std::set<int> feats;
+
+    constexpr const auto colName = "FeatIndex";
+    const auto lowerName = boost::to_lower_copy( tableName );
+
+    TwoDAFileReader racial_feat_2da( twodaMapper.getFile( lowerName ).c_str() );
+    assert( racial_feat_2da.HasColumn( colName ) );
+
+    for( size_t row = 0 ; row < racial_feat_2da.GetRowCount(); ++row ) {
+        int feat;
+        const auto featOk = racial_feat_2da.Get2DAInt( colName, row, feat );
+        assert( featOk );
+        feats.insert( feat );
+    }
+
+    return feats;
+}
+
 void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
 {
     TwoDAFileReader classes_2da( twodaMapper.getFile( "classes" ).c_str() );
@@ -246,6 +267,19 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                    && readAblMod( AblScore::Wis, "WisAdjust" )
                    && readAblMod( AblScore::Cha, "ChaAdjust" ) ) ) {
                 std::cerr << "importRaces: skipping " << name << ", could not read ability mod" << std::endl;
+                continue;
+            }
+
+            std::string featsStr;
+            const auto featsOk = racialtypes_2da.Get2DAString( "FeatsTable", row, featsStr );
+            if( !featsOk ) {
+                std::cerr << "importRaces: skipping class " << name << ", feats table not found" << std::endl;
+                continue;
+            }
+            boost::algorithm::to_lower( featsStr );
+            const auto& feats = loadRacialFeatsTable( featsStr, twodaMapper );
+            if( feats.empty() ) {
+                std::cerr << "importRaces: skipping class " << name << ", feats table not found" << std::endl;
                 continue;
             }
 
