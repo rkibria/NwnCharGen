@@ -50,13 +50,13 @@ public:
     void setFeat( std::unique_ptr< Nwn::Feat > f );
 
     // CHARACTER METHODS
-    int getAblAtLvl( const Character* chr, AblScore abl, int lvl );
-    int getHpAtLvl( const Character* chr, int lvl );
-    int getBabAtLvl( const Character* chr, int lvl );
-    SavingThrows getSavesAtLvl( const Character* chr, int lvl );
+    int getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const;
+    int getHpAtLvl( const Character* chr, int lvl ) const;
+    int getBabAtLvl( const Character* chr, int lvl ) const;
+    SavingThrows getSavesAtLvl( const Character* chr, int lvl ) const;
 
     /// Only at that level, not including earlier ones
-    std::set< int > getFeatsGainedAtLvl( const Character* chr, int lvl );
+    std::set< int > getFeatsGainedAtLvl( const Character* chr, int lvl ) const;
 
     // SERIALIZATION
     void save( const char* fileName ) const;

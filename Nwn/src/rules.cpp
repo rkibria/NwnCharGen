@@ -95,7 +95,7 @@ void Rules::setFeat( std::unique_ptr< Nwn::Feat > f )
 
 // CHARACTER METHODS
 
-int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl )
+int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
 {
     int ablVal = chr->getAbls().getAbl( abl );
 
@@ -160,7 +160,7 @@ int getLvlItrLimit( const Character* chr, int lvl )
 
 } // namespace
 
-int Rules::getHpAtLvl( const Character* chr, int lvl )
+int Rules::getHpAtLvl( const Character* chr, int lvl ) const
 {
     int hp = 0;
     const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
@@ -175,7 +175,7 @@ int Rules::getHpAtLvl( const Character* chr, int lvl )
     return hp;
 }
 
-int Rules::getBabAtLvl( const Character* chr, int lvl )
+int Rules::getBabAtLvl( const Character* chr, int lvl ) const
 {
     const auto chclassLevels = chr->getChClassCountsAtLvl( lvl );
     int bab = 0;
@@ -192,7 +192,7 @@ int Rules::getBabAtLvl( const Character* chr, int lvl )
     return bab;
 }
 
-SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
+SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl ) const
 {
     const auto chclassCounts = chr->getChClassCountsAtLvl( lvl );
     SavingThrows sav;
@@ -214,7 +214,7 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
     return sav;
 }
 
-std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl )
+std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl ) const
 {
     std::set< int > feats;
 

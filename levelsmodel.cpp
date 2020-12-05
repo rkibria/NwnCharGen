@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <sstream>
 
 #include "levelsmodel.h"
 #include "nwnchargen.h"
@@ -10,6 +11,20 @@
 using namespace Nwn;
 
 constexpr const std::array<int, 6> LevelsModel::ablCols;
+
+namespace {
+
+std::string getFormattedFeats( const Nwn::Character* nwnChar,
+                               const Nwn::Rules* nwnRules,
+                               int lvl )
+{
+    std::stringstream outStrm;
+    const auto feats = nwnRules->getFeatsGainedAtLvl( nwnChar, lvl );
+
+    return outStrm.str();
+}
+
+} // namespace
 
 AblScore LevelsModel::getColumnAbl( int col )
 {
