@@ -55,6 +55,9 @@ public:
     int getBabAtLvl( const Character* chr, int lvl );
     SavingThrows getSavesAtLvl( const Character* chr, int lvl );
 
+    /// Only at that level, not including earlier ones
+    std::set< int > getFeatsGainedAtLvl( const Character* chr, int lvl );
+
     // SERIALIZATION
     void save( const char* fileName ) const;
     void restore( const char* fileName );

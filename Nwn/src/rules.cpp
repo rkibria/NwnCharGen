@@ -214,6 +214,22 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
     return sav;
 }
 
+std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl )
+{
+    std::set< int > feats;
+
+    if( lvl == 0 ) {
+        // Racial feats
+        const auto race = getRaceByName( chr->getRace() );
+        if( race ) {
+            const auto racialFeats = race->getFeats();
+            feats.insert( racialFeats.begin(), racialFeats.end() );
+        }
+    }
+
+    return feats;
+}
+
 // SERIALIZATION
 
 void Rules::save( const char* fileName ) const

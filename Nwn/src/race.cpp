@@ -6,7 +6,8 @@ namespace Nwn {
 Race::Race( const std::string& n, const std::string& c ) :
     name{ n },
     classification{ c },
-    ablAdjusts{ std::make_unique<AblBlock>() }
+    ablAdjusts{ std::make_unique<AblBlock>() },
+    feats{ std::make_unique< std::set< int > >() }
 {
 }
 

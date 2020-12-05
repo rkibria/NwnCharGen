@@ -55,7 +55,7 @@ private:
 
     std::unique_ptr< AblBlock > ablAdjusts;
 
-    std::unique_ptr< std::set<int> > feats;
+    std::unique_ptr< std::set< int > > feats;
 };
 
 } // namespace Nwn
