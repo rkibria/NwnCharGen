@@ -41,8 +41,8 @@ public:
     ConstMapLooper< ChClass, ChClassContainer > getChClasses() const {
         return ConstMapLooper< ChClass, ChClassContainer >( chclasses );
     }
-    const ChClass& getChClassByName( const std::string& name ) const { return *( chclasses.at( name ) ); }
-    bool isChClassValid( const std::string& name ) const { return chclasses.find( name ) != chclasses.end(); }
+    const ChClass* getChClassByName( const std::string& name ) const;
+    bool isChClassValid( const std::string& name ) const;
     void removeChClass( const std::string& name );
 
     // FEATS

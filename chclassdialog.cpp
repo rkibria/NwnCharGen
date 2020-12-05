@@ -46,7 +46,7 @@ void ChClassDialog::on_listWidgetChClasses_itemSelectionChanged()
 
         chClassChoice = item->text();
 
-        const auto& description = nwnRules->getChClassByName( chClassChoice.toStdString() ).getDescription();
+        const auto& description = nwnRules->getChClassByName( chClassChoice.toStdString() )->getDescription();
         ui->textEditChClassDescription->setHtml( QString::fromStdString( description ) );
 
         updateOkButton();

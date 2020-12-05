@@ -52,6 +52,19 @@ void Rules::removeRace( const std::string& name )
 
 // CHARACTER CLASSES
 
+const ChClass* Rules::getChClassByName( const std::string& name ) const
+{
+    if( chclasses.find( name ) != chclasses.end() ) {
+        return chclasses.at( name ).get();
+    }
+    return nullptr;
+}
+
+bool Rules::isChClassValid( const std::string& name ) const
+{
+    return chclasses.find( name ) != chclasses.end();
+}
+
 void Rules::setChClass( std::unique_ptr< Nwn::ChClass > cc )
 {
     assert( !cc->getName().empty() );
@@ -154,8 +167,8 @@ int Rules::getHpAtLvl( const Character* chr, int lvl )
     for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
         const auto& lvlClass = chr->getLevel( i );
         if( isChClassValid( lvlClass ) ) {
-            const auto& chClass = getChClassByName( lvlClass );
-            hp += diceToInt( chClass.getHitDie() );
+            const auto chClass = getChClassByName( lvlClass );
+            hp += diceToInt( chClass->getHitDie() );
             hp += conBonus;
         }
     }
@@ -172,8 +185,8 @@ int Rules::getBabAtLvl( const Character* chr, int lvl )
         assert( ! chClassName.empty() );
         assert( lvls > 0 );
         if( isChClassValid( chClassName ) ) {
-            const auto& chClass = getChClassByName( chClassName );
-            bab += chClass.getBabAtLvl( lvls - 1 );
+            const auto chClass = getChClassByName( chClassName );
+            bab += chClass->getBabAtLvl( lvls - 1 );
         }
     }
     return bab;
@@ -189,8 +202,8 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl )
         assert( ! chClassName.empty() );
         assert( lvls > 0 );
         if( isChClassValid( chClassName ) ) {
-            const auto& chClass = getChClassByName( chClassName );
-            const auto& chClassSaves = chClass.getSavesAtLvl( lvls - 1 );
+            const auto chClass = getChClassByName( chClassName );
+            const auto& chClassSaves = chClass->getSavesAtLvl( lvls - 1 );
             sav += chClassSaves;
         }
     }
