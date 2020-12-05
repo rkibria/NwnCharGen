@@ -112,13 +112,14 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
             }
 
         case kFeatsGainedCol:
-            return QVariant( "- something\n- another line 2" );
+            return index.row() == 0 ? QVariant( "\n- Militia\n- Tower Shield Proficiency\n- Weapon Proficiency (Martial)\n- Shield Proficiency\n- Armor Proficiency (Heavy)\n- Armor Proficiency (Medium)\n- Armor Proficiency (Light)\n- Weapon Proficiency (Simple)" ) : QVariant();
+
         default:
             break;
         }
     }
     else if( role == Qt::TextAlignmentRole ) {
-        return Qt::AlignCenter;
+        return (index.column() == kFeatsGainedCol) ? Qt::AlignLeft : Qt::AlignCenter;
     }
 
     return QVariant();
