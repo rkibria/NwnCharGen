@@ -13,6 +13,7 @@
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
 #include <Nwn/chclass.hpp>
+#include <Nwn/feat.hpp>
 using namespace Nwn;
 
 #include <boost/algorithm/string.hpp>
@@ -281,8 +282,11 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
 
+            std::unique_ptr< Feat > feat = std::make_unique< Feat >( row, name );
+            feat->setDescription( translateToNwn2Tags( descr ) );
+
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
-            // nwnRules.setRace( std::move( race ) );
+            nwnRules.setFeat( std::move( feat ) );
         }
     }
 }
@@ -307,8 +311,8 @@ int main()
 
     Rules nwnRules;
 
-//    importClasses( nwnRules, tlkSw, twodaMapper );
-//    importRaces( nwnRules, tlkSw, twodaMapper );
+    importClasses( nwnRules, tlkSw, twodaMapper );
+    importRaces( nwnRules, tlkSw, twodaMapper );
     importFeats( nwnRules, tlkSw, twodaMapper );
 
     nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );

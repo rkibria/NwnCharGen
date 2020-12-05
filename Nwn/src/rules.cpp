@@ -7,6 +7,7 @@
 #include <Nwn/character.hpp>
 #include <Nwn/race.hpp>
 #include <Nwn/chclass.hpp>
+#include <Nwn/feat.hpp>
 
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
@@ -49,6 +50,13 @@ void Rules::removeChClass( const std::string& name )
     if( isChClassValid( name ) ) {
         chclasses.erase( name );
     }
+}
+
+// FEATS
+
+void Rules::setFeat( std::unique_ptr< Nwn::Feat > f )
+{
+    feats[ f->getId()] = std::move( f );
 }
 
 // CHARACTER METHODS

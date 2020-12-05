@@ -17,9 +17,11 @@ class Race;
 class Character;
 class AblBlock;
 class ChClass;
+class Feat;
 
 using RaceContainer = std::unordered_map< std::string, std::unique_ptr< Race > >;
 using ChClassContainer = std::unordered_map< std::string, std::unique_ptr< ChClass > >;
+using FeatContainer = std::unordered_map< int, std::unique_ptr< Feat > >;
 
 class Rules
 {
@@ -43,6 +45,9 @@ public:
     bool isChClassValid( const std::string& name ) const { return chclasses.find( name ) != chclasses.end(); }
     void removeChClass( const std::string& name );
 
+    // FEATS
+    void setFeat( std::unique_ptr< Nwn::Feat > f );
+
     // CHARACTER METHODS
     int getAblAtLvl( const Character* chr, AblScore abl, int lvl );
     int getHpAtLvl( const Character* chr, int lvl );
@@ -59,11 +64,13 @@ private:
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ ) {
         ar & boost::serialization::make_nvp( "races", races )
-           & boost::serialization::make_nvp( "chclasses", chclasses );
+           & boost::serialization::make_nvp( "chclasses", chclasses )
+           & boost::serialization::make_nvp( "feats", feats );
     }
 
     RaceContainer races;
     ChClassContainer chclasses;
+    FeatContainer feats;
 };
 
 } // namespace Nwn
