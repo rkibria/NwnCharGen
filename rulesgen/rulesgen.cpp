@@ -158,9 +158,9 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     return feats;
 }
 
-std::unique_ptr< std::map< int, std::set<int> > > loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+std::unique_ptr< FeatsPerLevelMap > loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
-    auto feats = std::make_unique< std::map< int, std::set<int> > >();
+    auto feats = std::make_unique< FeatsPerLevelMap >();
 
     constexpr const auto colFeatIndex = "FeatIndex";
     constexpr const auto colList = "List";
@@ -249,9 +249,10 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
 
             std::string featsStr;
             const auto featsOk = classes_2da.Get2DAString( "FeatsTable", row, featsStr );
+            auto featsPerLvl = std::make_unique< FeatsPerLevelMap >();
             if( featsOk ) {
                 boost::algorithm::to_lower( featsStr );
-                auto feats = loadClassFeatsTable( featsStr, twodaMapper );
+                featsPerLvl = loadClassFeatsTable( featsStr, twodaMapper );
             }
 
             std::cout << "importing class " << name << std::endl;
@@ -260,6 +261,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setHitDie( hitDie );
             chClass->setBabProgression( prg );
             chClass->setSaves( saves );
+            chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
             nwnRules.setChClass( std::move( chClass ) );
         }
     }

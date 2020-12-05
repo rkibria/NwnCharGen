@@ -5,13 +5,21 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <memory>
+#include <map>
+#include <set>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/unique_ptr.hpp>
 
 namespace Nwn {
+
+using FeatsPerLevelMap = std::map< int, std::set< int > >;
 
 class ChClass
 {
@@ -40,6 +48,9 @@ public:
         return ( static_cast< size_t >( lvl ) < saves.size() ) ? saves[ lvl ] : nullSaves;
     }
 
+    void setFeatsPerLvl( std::unique_ptr< FeatsPerLevelMap > fpl );
+    const FeatsPerLevelMap& getFeatsPerLvl() const;
+
 private:
     friend class boost::serialization::access;
 
@@ -49,7 +60,8 @@ private:
            & boost::serialization::make_nvp( "description", description )
            & boost::serialization::make_nvp( "hitDie", hitDie )
            & boost::serialization::make_nvp( "babProgression", babProgression )
-           & boost::serialization::make_nvp( "saves", saves );
+           & boost::serialization::make_nvp( "saves", saves )
+           & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl );
     }
 
     std::string name;
@@ -57,6 +69,7 @@ private:
     Dice hitDie{ Dice::d4 };
     std::vector< int > babProgression;
     std::vector< SavingThrows > saves;
+    std::unique_ptr< FeatsPerLevelMap > featsPerLvl;
 };
 
 } // namespace Nwn
