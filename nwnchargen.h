@@ -29,6 +29,10 @@ public:
 
     void updateAll();
 
+public slots:
+    void customMenuRequested( const QPoint &pos );
+    void menuOverwriteFollowing();
+
 private slots:
     void on_pushButtonStrMinus_clicked();
     void on_pushButtonStrPlus_clicked();

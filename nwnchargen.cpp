@@ -122,6 +122,11 @@ void NwnCharGen::initLevelsWidget()
     ui->tableViewLevels->setColumnWidth( LevelsModel::kSavesCol, fm.horizontalAdvance( "99" ) * 6 );
     hh->setSectionResizeMode( LevelsModel::kSavesCol, QHeaderView::Fixed );
 
+    ui->tableViewLevels->setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( ui->tableViewLevels,
+             SIGNAL( customContextMenuRequested( QPoint ) ),
+             SLOT( customMenuRequested( QPoint ) ) );
+
     ui->tableViewLevels->setWordWrap(true);
     ui->tableViewLevels->setTextElideMode(Qt::ElideMiddle);
     ui->tableViewLevels->resizeRowsToContents();
@@ -421,5 +426,28 @@ void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
         else {
             ui->spinBoxLevels->setValue( curLvls );
         }
+    }
+}
+
+void NwnCharGen::menuOverwriteFollowing()
+{
+    const auto lvl = ui->tableViewLevels->selectionModel()->currentIndex().row();
+    const auto curChclass = nwnChar->getLevel( lvl );
+    for( int i = lvl + 1; i < nwnChar->getNumLevels(); ++i ) {
+        nwnChar->setLevel( i, curChclass );
+    }
+    setDirtyFlag();
+    updateAll();
+}
+
+void NwnCharGen::customMenuRequested( const QPoint &pos )
+{
+    const auto index = ui->tableViewLevels->indexAt( pos );
+    if( index.column() == 1 ) {
+        auto menu = new QMenu( this );
+        auto overwriteFollowingAct = new QAction( "Overwrite following levels with this class", this );
+        connect( overwriteFollowingAct, &QAction::triggered, this, &NwnCharGen::menuOverwriteFollowing );
+        menu->addAction( overwriteFollowingAct );
+        menu->popup( ui->tableViewLevels->viewport()->mapToGlobal( pos ) );
     }
 }
