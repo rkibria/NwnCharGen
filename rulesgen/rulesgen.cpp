@@ -254,6 +254,39 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
     }
 }
 
+void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
+{
+    TwoDAFileReader feat_2da( twodaMapper.getFile( "feat" ).c_str() );
+
+    for( size_t row = 0 ; row < feat_2da.GetRowCount(); ++row ) {
+        int featRef;
+        if( feat_2da.Get2DAInt( "FEAT", row, featRef )) {
+            std::string name;
+            const auto nameOk = tlkSw.GetTalkString( featRef, name );
+            if( !nameOk || name.empty() ) {
+                std::cerr << "importFeats: skipping row " << row << std::endl;
+                continue;
+            }
+
+            int descrRef;
+            std::string descr;
+            const auto descrOk = feat_2da.Get2DAInt( "DESCRIPTION", row, descrRef );
+            if( !descrOk ) {
+                std::cerr << "importFeats: skipping row " << row << ", could not read description ref" << std::endl;
+                continue;
+            }
+            const auto descrRefOk = tlkSw.GetTalkString( descrRef, descr );
+            if( !descrRefOk ) {
+                std::cerr << "importFeats: skipping row " << row << ", could not read description" << std::endl;
+                continue;
+            }
+
+            std::cout << "importing feat ID " << row << ": " << name << std::endl;
+            // nwnRules.setRace( std::move( race ) );
+        }
+    }
+}
+
 } // namespace
 
 int main()
@@ -274,8 +307,9 @@ int main()
 
     Rules nwnRules;
 
-    importClasses( nwnRules, tlkSw, twodaMapper );
-    importRaces( nwnRules, tlkSw, twodaMapper );
+//    importClasses( nwnRules, tlkSw, twodaMapper );
+//    importRaces( nwnRules, tlkSw, twodaMapper );
+    importFeats( nwnRules, tlkSw, twodaMapper );
 
     nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
 }
