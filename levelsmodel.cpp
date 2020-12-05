@@ -1,12 +1,15 @@
 #include <stdexcept>
 #include <sstream>
 
+#include <QStringList>
+
 #include "levelsmodel.h"
 #include "nwnchargen.h"
 
 #include "Nwn/character.hpp"
 #include "Nwn/ablblock.hpp"
 #include "Nwn/rules.hpp"
+#include "Nwn/feat.hpp"
 
 using namespace Nwn;
 
@@ -14,14 +17,24 @@ constexpr const std::array<int, 6> LevelsModel::ablCols;
 
 namespace {
 
-std::string getFormattedFeats( const Nwn::Character* nwnChar,
+QString getFormattedFeats( const Nwn::Character* nwnChar,
                                const Nwn::Rules* nwnRules,
                                int lvl )
 {
-    std::stringstream outStrm;
+    QStringList out;
     const auto feats = nwnRules->getFeatsGainedAtLvl( nwnChar, lvl );
+    if( !feats.empty() ) {
+        out << "\n";
 
-    return outStrm.str();
+        for( const auto id : feats ) {
+            const auto feat = nwnRules->getFeat( id );
+            if( feat ) {
+                out << QString( "- %1" ).arg( feat->getName().c_str() );
+            }
+        }
+    }
+
+    return out.join("\n");
 }
 
 } // namespace
@@ -127,7 +140,7 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
             }
 
         case kFeatsGainedCol:
-            return index.row() == 0 ? QVariant( "\n- Militia\n- Tower Shield Proficiency\n- Weapon Proficiency (Martial)\n- Shield Proficiency\n- Armor Proficiency (Heavy)\n- Armor Proficiency (Medium)\n- Armor Proficiency (Light)\n- Weapon Proficiency (Simple)" ) : QVariant();
+            return QVariant( getFormattedFeats( nwnChar, nwnRules, index.row() ) );
 
         default:
             break;
