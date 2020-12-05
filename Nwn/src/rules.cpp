@@ -227,6 +227,18 @@ std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl ) cons
         }
     }
 
+    const auto chclassLevels = chr->getChClassCountsAtLvl( lvl );
+    const auto& curLvlClass = chr->getLevel( lvl );
+    const auto chclass = getChClassByName( curLvlClass );
+    if( chclass ) {
+        const auto gainedLvlInClass = chclassLevels.at( curLvlClass );
+        const auto& featsPerLvl = chclass->getFeatsPerLvl();
+        if( featsPerLvl.find( gainedLvlInClass ) != featsPerLvl.end() ) {
+            const auto& featsAtLvl = featsPerLvl.at( gainedLvlInClass );
+            feats.insert( featsAtLvl.begin(), featsAtLvl.end() );
+        }
+    }
+
     return feats;
 }
 
