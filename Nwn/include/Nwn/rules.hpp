@@ -46,6 +46,7 @@ public:
     void removeChClass( const std::string& name );
 
     // FEATS
+    const Nwn::Feat* getFeat( int id ) const;
     void setFeat( std::unique_ptr< Nwn::Feat > f );
 
     // CHARACTER METHODS

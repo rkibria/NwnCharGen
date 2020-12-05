@@ -54,9 +54,17 @@ void Rules::removeChClass( const std::string& name )
 
 // FEATS
 
+const Nwn::Feat* Rules::getFeat( int id ) const
+{
+    if( feats.find( id ) != feats.end() ) {
+        return feats.at( id ).get();
+    }
+    return nullptr;
+}
+
 void Rules::setFeat( std::unique_ptr< Nwn::Feat > f )
 {
-    feats[ f->getId()] = std::move( f );
+    feats[ f->getId() ] = std::move( f );
 }
 
 // CHARACTER METHODS
