@@ -143,6 +143,9 @@
                </item>
                <item row="0" column="1">
                 <widget class="QLineEdit" name="lineEditTotalHP">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -169,6 +172,9 @@
                </item>
                <item row="1" column="1">
                 <widget class="QLineEdit" name="lineEditTotalBAB">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -221,7 +227,10 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit_6">
+                <widget class="QLineEdit" name="lineEditFortitude">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -247,7 +256,10 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="lineEdit_7">
+                <widget class="QLineEdit" name="lineEditReflex">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -273,7 +285,10 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QLineEdit" name="lineEdit_8">
+                <widget class="QLineEdit" name="lineEditWill">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1194,6 +1209,9 @@
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuRules">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Rules</string>
     </property>

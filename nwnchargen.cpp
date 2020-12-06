@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QMap>
 #include <QStringBuilder>
+#include <QDir>
 
 #include "nwnchargen.h"
 #include "./ui_nwnchargen.h"
@@ -71,9 +72,12 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , currentFile{ "character.xml" }
     , currentRules()
 {
-    // TODO load from disk on startup
-    currentRules = "nwn2.xml";
-    addDebugRules( nwnRules.get() );
+//    currentRules = "nwn2.xml";
+//    addDebugRules( nwnRules.get() );
+
+    const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + "scod.xml" );
+    nwnRules->restore( qPrintable( fileName ) );
+    currentRules = fileName;
 
     initCharacter( nwnChar.get() );
 
@@ -236,6 +240,11 @@ void NwnCharGen::updateSummary()
     ui->lineEditTotalHP->setText( QString("%1").arg( nwnRules->getHpAtLvl( nwnChar.get(), nwnChar->getNumLevels() - 1 ) ) );
     ui->lineEditTotalBAB->setText( QString("+%1").arg( nwnRules->getBabAtLvl( nwnChar.get(), nwnChar->getNumLevels() - 1 ) ) );
 
+    const auto saves = nwnRules->getSavesAtLvl( nwnChar.get(), nwnChar->getNumLevels() - 1 );
+    ui->lineEditFortitude->setText( QString("%1").arg( saves.Fort ) );
+    ui->lineEditReflex->setText( QString("%1").arg( saves.Ref ) );
+    ui->lineEditWill->setText( QString("%1").arg( saves.Will ) );
+
     updateClasses();
 
     updateAbilityBlock();
@@ -326,7 +335,7 @@ void NwnCharGen::on_comboBoxAlignment_currentIndexChanged( int index )
 
 void NwnCharGen::on_actionAbout_triggered()
 {
-    QMessageBox::about( this, "NwnCharGen", "A character builder for Neverwinter Nights 2" );
+    QMessageBox::about( this, "NwnCharGen", "Version 06-12-2020alpha1\nA character builder for Neverwinter Nights 2" );
 }
 
 void NwnCharGen::on_actionExit_triggered()
