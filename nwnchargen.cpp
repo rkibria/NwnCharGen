@@ -443,7 +443,7 @@ void NwnCharGen::menuOverwriteFollowing()
 void NwnCharGen::customMenuRequested( const QPoint &pos )
 {
     const auto index = ui->tableViewLevels->indexAt( pos );
-    if( index.column() == 1 ) {
+    if( index.column() == LevelsModel::kClassCol ) {
         auto menu = new QMenu( this );
         auto overwriteFollowingAct = new QAction( "Overwrite following levels with this class", this );
         connect( overwriteFollowingAct, &QAction::triggered, this, &NwnCharGen::menuOverwriteFollowing );
