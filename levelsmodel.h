@@ -26,6 +26,7 @@ public:
         kWISCol,
         kCHACol,
         kSavesCol,
+        kFeatChoiceCol,
         kFeatsGainedCol,
 
         kColCount

@@ -1,9 +1,9 @@
-#ifndef FEATSGAINEDDELEGATE_H
-#define FEATSGAINEDDELEGATE_H
+#ifndef FEATCHOICEDELEGATE_H
+#define FEATCHOICEDELEGATE_H
 
 #include <QtWidgets>
 
-class FeatsGainedDelegate : public QStyledItemDelegate
+class FeatChoiceDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
@@ -13,4 +13,4 @@ public:
                const QModelIndex &index) const override;
 };
 
-#endif // FEATSGAINEDDELEGATE_H
+#endif // FEATCHOICEDELEGATE_H

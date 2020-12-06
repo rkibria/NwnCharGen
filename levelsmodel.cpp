@@ -73,6 +73,7 @@ QVariant LevelsModel::headerData(int section, Qt::Orientation orientation, int r
         case kWISCol:   return QString("WIS");
         case kCHACol:   return QString("CHA");
         case kSavesCol: return QString("Saves");
+        case kFeatChoiceCol: return QString("Feats");
         case kFeatsGainedCol: return QString("Gained");
         default: return QVariant();
         }
@@ -138,6 +139,9 @@ QVariant LevelsModel::data(const QModelIndex &index, int role) const
                 const auto saves = nwnRules->getSavesAtLvl( nwnChar, lvl );
                 return QVariant( QString( "%1 / %2 / %3" ).arg( saves.Fort ).arg( saves.Ref ).arg( saves.Will ) );
             }
+
+        case kFeatChoiceCol:
+            return QVariant();
 
         case kFeatsGainedCol:
             return QVariant( getFormattedFeats( nwnChar, nwnRules, index.row() ) );

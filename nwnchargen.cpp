@@ -17,6 +17,7 @@
 #include "levelsmodel.h"
 #include "levelsclassdelegate.h"
 #include "levelsabldelegate.h"
+#include "featchoicedelegate.h"
 
 using namespace Nwn;
 
@@ -98,7 +99,7 @@ void NwnCharGen::initLevelsWidget()
         ui->tableViewLevels->setItemDelegateForColumn( col, new LevelsAblDelegate( ui->tableViewLevels ) );
     }
 
-//    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kFeatsGainedCol, new FeatsGainedDelegate( ui->tableViewLevels ) );
+    ui->tableViewLevels->setItemDelegateForColumn( LevelsModel::kFeatChoiceCol, new FeatChoiceDelegate( ui->tableViewLevels ) );
 
     const auto fm = this->fontMetrics();
     ui->tableViewLevels->setColumnWidth( LevelsModel::kLevelCol, fm.horizontalAdvance( "30" ) );
@@ -127,8 +128,10 @@ void NwnCharGen::initLevelsWidget()
              SIGNAL( customContextMenuRequested( QPoint ) ),
              SLOT( customMenuRequested( QPoint ) ) );
 
-    ui->tableViewLevels->setWordWrap(true);
-    ui->tableViewLevels->setTextElideMode(Qt::ElideMiddle);
+    ui->tableViewLevels->setWordWrap( true );
+    ui->tableViewLevels->setTextElideMode( Qt::ElideMiddle );
+
+    ui->tableViewLevels->resizeColumnToContents( LevelsModel::kFeatsGainedCol );
     ui->tableViewLevels->resizeRowsToContents();
 }
 
@@ -243,6 +246,7 @@ void NwnCharGen::updateLevels()
     if( auto levelsModel = static_cast<LevelsModel*>( ui->tableViewLevels->model() ) ) {
         levelsModel->updateView();
     }
+    ui->tableViewLevels->resizeColumnToContents( LevelsModel::kFeatsGainedCol );
     ui->tableViewLevels->resizeRowsToContents();
 }
 
