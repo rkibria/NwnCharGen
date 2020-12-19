@@ -19,6 +19,10 @@ find_package(Boost REQUIRED COMPONENTS
     filesystem
     )
 
+# work around "cc1plus.exe: out of memory"
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56746
+add_compile_options(-save-temps -ftrack-macro-expansion=0)
+
 add_subdirectory(Nwn)
 
 set( NWN2DATALIB_PATH "" CACHE STRING "Path to NWN2DataLib sources" )
