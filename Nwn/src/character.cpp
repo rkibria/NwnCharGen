@@ -16,7 +16,8 @@ const int Character::maxAblScore;
 const int Character::maxLevel;
 
 Character::Character() :
-    abls{ std::make_unique< AblBlock >( minAblScore ) }
+    abls{ std::make_unique< AblBlock >( minAblScore ) },
+    featChoices{ maxLevel }
 {
 }
 
@@ -142,6 +143,12 @@ std::map< std::string, int > Character::getChClassCountsAtLvl( int lvl ) const
         }
     }
     return chclassCounts;
+}
+
+const std::vector<int>& Character::getFeatChoicesAtLvl(int lvl) const
+{
+    assert( lvl < maxLevel );
+    return featChoices[ lvl ];
 }
 
 } // namespace Nwn

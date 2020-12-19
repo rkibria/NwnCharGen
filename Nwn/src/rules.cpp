@@ -242,6 +242,28 @@ std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl ) cons
     return feats;
 }
 
+int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
+{
+    int total = 0;
+
+    switch( lvl ) {
+    case 0: ++total; break;
+    case 2: ++total; break;
+    case 5: ++total; break;
+    case 8: ++total; break;
+    case 11: ++total; break;
+    case 14: ++total; break;
+    case 17: ++total; break;
+    case 20: ++total; break;
+    case 22: ++total; break;
+    case 24: ++total; break;
+    case 26: ++total; break;
+    case 28: ++total; break;
+    }
+
+    return total * 2; // TODO DEBUG
+}
+
 // SERIALIZATION
 
 void Rules::save( const char* fileName ) const
