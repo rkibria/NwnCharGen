@@ -377,8 +377,16 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
 
+            int allClassesCanUse;
+            const auto allClassesCanUseOk = feat_2da.Get2DAInt( "ALLCLASSESCANUSE", row, allClassesCanUse );
+            if( !allClassesCanUseOk ) {
+                std::cerr << "importFeats: skipping row " << row << ", could not read ALLCLASSESCANUSE" << std::endl;
+                continue;
+            }
+
             std::unique_ptr< Feat > feat = std::make_unique< Feat >( row, name );
             feat->setDescription( translateToNwn2Tags( descr ) );
+            feat->setAllClassesCanUse( allClassesCanUse ? true : false );
 
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
             nwnRules.setFeat( std::move( feat ) );

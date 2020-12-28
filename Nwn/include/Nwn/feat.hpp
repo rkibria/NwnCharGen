@@ -14,7 +14,7 @@ class AblBlock;
 class Feat
 {
 public:
-    explicit Feat( int id = 0, const std::string& n = "" );
+    explicit Feat( int id = -1, const std::string& n = "" );
     ~Feat();
 
     int getId() const { return id; }
@@ -26,6 +26,9 @@ public:
     const std::string& getDescription() const { return description; }
     void setDescription( const std::string& d ) { description = d; }
 
+    void setAllClassesCanUse(bool e) { allClassesCanUse = e; }
+    const bool getAllClassesCanUse() const { return allClassesCanUse; }
+
 private:
     friend class boost::serialization::access;
 
@@ -34,12 +37,14 @@ private:
     {
         ar & boost::serialization::make_nvp( "id", id )
            & boost::serialization::make_nvp( "name", name )
-           & boost::serialization::make_nvp( "description", description );
+           & boost::serialization::make_nvp( "description", description )
+           & boost::serialization::make_nvp( "allClassesCanUse", allClassesCanUse );
     }
 
-    int id;
+    int id = -1;
     std::string name;
     std::string description;
+    bool allClassesCanUse = false;
 };
 
 } // namespace Nwn
