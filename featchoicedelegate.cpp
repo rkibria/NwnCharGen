@@ -4,6 +4,7 @@
 #include "featchoicedelegate.h"
 #include "levelsmodel.h"
 #include "nwnchargen.h"
+#include "featdialog.h"
 
 #include <Nwn/rules.hpp>
 #include <Nwn/character.hpp>
@@ -86,6 +87,10 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
     }
 
     std::cout << selectedIndex << "\n";
+
+    FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
+    if( ftd.exec() == QDialog::Accepted ) {
+    }
 
     return true;
 }
