@@ -47,3 +47,16 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->expandAll();
 }
+
+void FeatDialog::on_treeWidgetFeat_itemSelectionChanged()
+{
+    const auto selection = ui->treeWidgetFeat->selectedItems();
+    if( selection.size() ) {
+        const auto item = selection.first();
+        const auto featId = item->type();
+
+        const auto& description = nwnRules->getFeat( featId )->getDescription();
+        ui->textEditDescription->setHtml( QString::fromStdString( description ) );
+    }
+
+}

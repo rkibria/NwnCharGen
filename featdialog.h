@@ -20,6 +20,9 @@ public:
     explicit FeatDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
     ~FeatDialog();
 
+private slots:
+    void on_treeWidgetFeat_itemSelectionChanged();
+
 private:
     Ui::FeatDialog *ui;
     Nwn::Rules *nwnRules;
