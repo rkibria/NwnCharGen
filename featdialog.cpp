@@ -4,7 +4,7 @@
 #include "featdialog.h"
 #include "ui_featdialog.h"
 
-#include <Nwn/race.hpp>
+#include <Nwn/feat.hpp>
 #include <Nwn/rules.hpp>
 
 #include <unordered_map>
@@ -28,4 +28,17 @@ FeatDialog::~FeatDialog()
 
 void FeatDialog::setupWidget()
 {
+    ui->treeWidgetFeat->clear();
+    ui->treeWidgetFeat->setColumnCount( 1 );
+    ui->treeWidgetFeat->setHeaderHidden( true );
+
+    ui->treeWidgetFeat->setSortingEnabled( false );
+    for( const auto& feat : nwnRules->getFeats() ) {
+        new QTreeWidgetItem( ui->treeWidgetFeat, QStringList( QString( feat.getName().c_str() ) ) );
+    }
+
+    ui->treeWidgetFeat->setSortingEnabled( true );
+    ui->treeWidgetFeat->sortByColumn( 0, Qt::AscendingOrder );
+
+    ui->treeWidgetFeat->expandAll();
 }

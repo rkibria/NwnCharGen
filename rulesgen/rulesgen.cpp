@@ -366,6 +366,17 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
 
+            int removed;
+            const auto removedOk = feat_2da.Get2DAInt( "REMOVED", row, removed );
+            if( !removedOk ) {
+                std::cerr << "importFeats: skipping row " << row << ", could not read REMOVED" << std::endl;
+                continue;
+            }
+            if( removed ) {
+                std::cout << "importFeats: skipping row " << row << ", REMOVED=1" << std::endl;
+                continue;
+            }
+
             std::unique_ptr< Feat > feat = std::make_unique< Feat >( row, name );
             feat->setDescription( translateToNwn2Tags( descr ) );
 

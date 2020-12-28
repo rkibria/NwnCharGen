@@ -48,6 +48,7 @@ public:
     // FEATS
     const Nwn::Feat* getFeat( int id ) const;
     void setFeat( std::unique_ptr< Nwn::Feat > f );
+    ConstMapLooper< Feat, FeatContainer > getFeats() const { return ConstMapLooper< Feat, FeatContainer >( feats ); }
 
     // CHARACTER METHODS
     int getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const;
