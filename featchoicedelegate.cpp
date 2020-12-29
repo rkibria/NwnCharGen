@@ -32,6 +32,7 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
         painter->setRenderHint(QPainter::Qt4CompatiblePainting, true);
         QPen pen( option.palette.highlight().color() );
         painter->setPen( pen );
+        QPen textPen( option.palette.text().color() );
         QRect rect = option.rect;
         rect.setHeight(heightPerFeatBox);
         static const std::string unassignedText = "Select Feat";
@@ -45,7 +46,16 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
             }
 
             painter->drawRoundedRect( rect.adjusted( 3, 3, -3, -3 ), 5.0, 5.0 );
+
+            if( text != &unassignedText ) {
+                painter->save();
+                painter->setPen( textPen );
+            }
             painter->drawText( rect, Qt::AlignCenter, text->c_str() );
+            if( text != &unassignedText ) {
+                painter->restore();
+            }
+
             rect.moveTop( rect.top() + heightPerFeatBox );
         }
         painter->restore();
