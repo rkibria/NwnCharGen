@@ -55,6 +55,8 @@ void FeatDialog::on_treeWidgetFeat_itemSelectionChanged()
         const auto item = selection.first();
         const auto featId = item->type();
 
+        featChoice = featId;
+
         const auto& description = nwnRules->getFeat( featId )->getDescription();
         ui->textEditDescription->setHtml( QString::fromStdString( description ) );
     }

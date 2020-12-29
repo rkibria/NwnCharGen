@@ -20,12 +20,15 @@ public:
     explicit FeatDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
     ~FeatDialog();
 
+    int getFeatChoice() const { return featChoice; }
+
 private slots:
     void on_treeWidgetFeat_itemSelectionChanged();
 
 private:
     Ui::FeatDialog *ui;
     Nwn::Rules *nwnRules;
+    int featChoice = -1;
 
     void setupWidget();
 };

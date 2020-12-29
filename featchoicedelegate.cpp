@@ -93,13 +93,15 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
 
     const auto pos = mouseEvent->pos();
     const auto y = pos.y() - option.rect.y();
-    const auto selectedIndex = static_cast<int>(y / heightPerFeatBox);
+    const auto selectedIndex = static_cast<int>( y / heightPerFeatBox );
     if( selectedIndex >= numFeatChoices ) {
         return true;
     }
 
     FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
+        nwnCharGen->getCharacter()->setFeatChoiceAtLvl( lvl, selectedIndex, ftd.getFeatChoice() );
+        nwnCharGen->updateAll();
     }
 
     return true;
