@@ -27,9 +27,9 @@ void ChClass::setBonusFeats( std::unique_ptr< std::vector< bool > > bf )
     bonusFeats = std::move( bf );
 }
 
-const std::vector< bool >& ChClass::getBonusFeats() const
+bool ChClass::getBonusFeat( int lvl ) const
 {
-    return *bonusFeats;
+    return (*bonusFeats)[ lvl ];
 }
 
 } // namespace Nwn

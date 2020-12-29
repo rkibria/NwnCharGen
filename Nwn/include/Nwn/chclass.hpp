@@ -52,7 +52,7 @@ public:
     const FeatsPerLevelMap& getFeatsPerLvl() const;
 
     void setBonusFeats( std::unique_ptr< std::vector< bool > > bf );
-    const std::vector< bool >& getBonusFeats() const;
+    bool getBonusFeat( int lvl ) const;
 
 private:
     friend class boost::serialization::access;
