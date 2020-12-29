@@ -261,6 +261,14 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
     case 28: ++total; break;
     }
 
+    const auto race = getRaceByName( chr->getRace() );
+    if( race ) {
+        const auto& racialFeats = race->getFeats();
+        if( racialFeats.count( FEAT_ID_QUICK_TO_MASTER ) == 1 ) {
+            ++total;
+        }
+    }
+
     return total;
 }
 
