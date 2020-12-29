@@ -274,7 +274,8 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
     const auto& classAtLvl = chr->getLevel( lvl );
     const auto chClass = getChClassByName( classAtLvl );
     if( chClass ) {
-        total += chClass->getBonusFeat( lvl ) ? 1 : 0;
+        const auto chClassLvls = chr->getChClassCountsAtLvl( lvl );
+        total += chClass->getBonusFeat( chClassLvls.at( classAtLvl ) - 1 ) ? 1 : 0;
     }
 
     return total;

@@ -34,9 +34,9 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->setSortingEnabled( false );
     for( const auto& feat : nwnRules->getFeats() ) {
-        if( !feat.getAllClassesCanUse() ) {
-            continue;
-        }
+//        if( !feat.getAllClassesCanUse() ) {
+//            continue;
+//        }
         new QTreeWidgetItem( ui->treeWidgetFeat,
                              QStringList( QString( feat.getName().c_str() ) ),
                              feat.getId() );
