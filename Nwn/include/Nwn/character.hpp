@@ -7,18 +7,20 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/unique_ptr.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/unordered_map.hpp>
 
 namespace Nwn {
 
 class AblBlock;
 
 /// Feat choices per level
-using FeatChoiceContainer = std::vector< std::vector< int > >;
+using FeatChoiceContainer = std::unordered_map< int, std::unique_ptr< std::vector< int > > >;
 
 class Character
 {
@@ -66,7 +68,8 @@ public:
     std::map< std::string, int > getChClassCountsAtLvl( int lvl ) const;
 
     /* Feats */
-    const std::vector<int>& getFeatChoicesAtLvl(int lvl) const;
+    const std::vector<int>& getFeatChoicesAtLvl( int lvl ) const;
+    void setFeatChoiceAtLvl( int lvl, int index, int featId );
 
 private:
     friend class boost::serialization::access;

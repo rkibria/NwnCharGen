@@ -4,6 +4,7 @@
 
 #include <Nwn/character.hpp>
 #include <Nwn/ablblock.hpp>
+#include <Nwn/feat.hpp>
 
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
@@ -16,8 +17,7 @@ const int Character::maxAblScore;
 const int Character::maxLevel;
 
 Character::Character() :
-    abls{ std::make_unique< AblBlock >( minAblScore ) },
-    featChoices{ maxLevel }
+    abls{ std::make_unique< AblBlock >( minAblScore ) }
 {
 }
 
@@ -117,11 +117,13 @@ void Character::popLevel()
 
 const std::string& Character::getLevel( int lvl ) const
 {
+    assert( lvl < maxLevel );
     return levels[ lvl ];
 }
 
 void Character::setLevel( int lvl, const std::string& chclass )
 {
+    assert( lvl < maxLevel );
     if( lvl >= 0 && static_cast<size_t>( lvl ) < levels.size() ) {
         levels[ lvl ] = chclass;
     }
@@ -132,6 +134,7 @@ void Character::setLevel( int lvl, const std::string& chclass )
 
 std::map< std::string, int > Character::getChClassCountsAtLvl( int lvl ) const
 {
+    assert( lvl < maxLevel );
     std::map< std::string, int > chclassCounts;
     for( int i = 0; i <= std::min( lvl, getNumLevels() - 1 ); ++i ) {
         const auto& lvlClass = getLevel( i );
@@ -145,10 +148,32 @@ std::map< std::string, int > Character::getChClassCountsAtLvl( int lvl ) const
     return chclassCounts;
 }
 
-const std::vector<int>& Character::getFeatChoicesAtLvl(int lvl) const
+const std::vector< int >& Character::getFeatChoicesAtLvl( int lvl ) const
+{
+    static const std::vector< int > emptyReturn;
+
+    assert( lvl < maxLevel );
+    const auto choicesItr = featChoices.find( lvl );
+    if( choicesItr != featChoices.end() ) {
+        return *( ( *choicesItr ).second );
+    }
+    return emptyReturn;
+}
+
+void Character::setFeatChoiceAtLvl( int lvl, int index, int featId )
 {
     assert( lvl < maxLevel );
-    return featChoices[ lvl ];
+    const auto choicesItr = featChoices.find( lvl );
+    if( choicesItr == featChoices.end() ) {
+        featChoices[ lvl ] = std::make_unique< std::vector< int > >();
+    }
+
+    auto& choices = *( featChoices[ lvl ] );
+    const auto i = static_cast< size_t >( index );
+    if( i >= choices.size() ) {
+        choices.resize( i + 1, INVALID_FEAT_ID );
+    }
+    choices[ i ] = featId;
 }
 
 } // namespace Nwn

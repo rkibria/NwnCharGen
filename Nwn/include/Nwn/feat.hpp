@@ -9,6 +9,8 @@
 
 namespace Nwn {
 
+static constexpr int INVALID_FEAT_ID = -1;
+
 class AblBlock;
 
 class Feat
@@ -41,7 +43,7 @@ private:
            & boost::serialization::make_nvp( "allClassesCanUse", allClassesCanUse );
     }
 
-    int id = -1;
+    int id = INVALID_FEAT_ID;
     std::string name;
     std::string description;
     bool allClassesCanUse = false;

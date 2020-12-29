@@ -261,7 +261,7 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
     case 28: ++total; break;
     }
 
-    return total * 2; // TODO DEBUG
+    return total;
 }
 
 // SERIALIZATION

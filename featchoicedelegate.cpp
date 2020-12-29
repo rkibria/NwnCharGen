@@ -8,6 +8,7 @@
 
 #include <Nwn/rules.hpp>
 #include <Nwn/character.hpp>
+#include <Nwn/feat.hpp>
 
 namespace {
 constexpr int heightPerFeatBox = 25;
@@ -25,15 +26,26 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
     const auto numFeatChoices = nwnRules->getNumFeatChoicesAtLvl( nwnChar, lvl );
 
     if( numFeatChoices ) {
+        const auto& choices = nwnChar->getFeatChoicesAtLvl( lvl );
+
         painter->save();
         painter->setRenderHint(QPainter::Qt4CompatiblePainting, true);
         QPen pen( option.palette.highlight().color() );
         painter->setPen( pen );
         QRect rect = option.rect;
         rect.setHeight(heightPerFeatBox);
+        static const std::string unassignedText = "Select Feat";
         for( int i = 0; i < numFeatChoices; ++i ) {
+            auto text = &unassignedText;
+
+            const auto featId = ( i < choices.size() ) ? choices[ i ] : Nwn::INVALID_FEAT_ID;
+            const auto feat = nwnRules->getFeat( featId );
+            if( feat ) {
+                text = &feat->getName();
+            }
+
             painter->drawRoundedRect( rect.adjusted( 3, 3, -3, -3 ), 5.0, 5.0 );
-            painter->drawText( rect, Qt::AlignCenter, "Select Feat" );
+            painter->drawText( rect, Qt::AlignCenter, text->c_str() );
             rect.moveTop( rect.top() + heightPerFeatBox );
         }
         painter->restore();
@@ -85,8 +97,6 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
     if( selectedIndex >= numFeatChoices ) {
         return true;
     }
-
-    std::cout << selectedIndex << "\n";
 
     FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
