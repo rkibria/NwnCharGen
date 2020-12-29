@@ -51,6 +51,9 @@ public:
     void setFeatsPerLvl( std::unique_ptr< FeatsPerLevelMap > fpl );
     const FeatsPerLevelMap& getFeatsPerLvl() const;
 
+    void setBonusFeats( std::unique_ptr< std::vector< bool > > bf );
+    const std::vector< bool >& getBonusFeats() const;
+
 private:
     friend class boost::serialization::access;
 
@@ -61,7 +64,8 @@ private:
            & boost::serialization::make_nvp( "hitDie", hitDie )
            & boost::serialization::make_nvp( "babProgression", babProgression )
            & boost::serialization::make_nvp( "saves", saves )
-           & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl );
+           & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl )
+           & boost::serialization::make_nvp( "bonusFeats", bonusFeats );
     }
 
     std::string name;
@@ -70,6 +74,7 @@ private:
     std::vector< int > babProgression;
     std::vector< SavingThrows > saves;
     std::unique_ptr< FeatsPerLevelMap > featsPerLvl;
+    std::unique_ptr< std::vector< bool > > bonusFeats;
 };
 
 } // namespace Nwn

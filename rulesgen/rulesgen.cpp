@@ -158,6 +158,35 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     return feats;
 }
 
+std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+{
+    auto bonusFeats = std::make_unique< std::vector< bool > >();
+    bonusFeats->resize( Character::maxLevel );
+
+    constexpr const auto colBonus = "Bonus";
+
+    const auto& filePath = twodaMapper.getFile( tableName );
+    if( !filePath.empty() ) {
+        TwoDAFileReader class_bfeat_2da( filePath.c_str() );
+        assert( class_bfeat_2da.HasColumn( colBonus ) );
+
+        for( size_t row = 0 ; row < class_bfeat_2da.GetRowCount(); ++row ) {
+            if( row >= Character::maxLevel ) {
+                break;
+            }
+
+            int isBonus;
+            const auto featOk = class_bfeat_2da.Get2DAInt( colBonus, row, isBonus );
+            if( !featOk ) {
+                continue;
+            }
+            (*bonusFeats)[ row ] = isBonus;
+        }
+    }
+
+    return bonusFeats;
+}
+
 std::unique_ptr< FeatsPerLevelMap > loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
     auto feats = std::make_unique< FeatsPerLevelMap >();
@@ -165,9 +194,8 @@ std::unique_ptr< FeatsPerLevelMap > loadClassFeatsTable( const std::string& tabl
     constexpr const auto colFeatIndex = "FeatIndex";
     constexpr const auto colList = "List";
     constexpr const auto colGrantedOnLvl = "GrantedOnLevel";
-    const auto lowerName = boost::to_lower_copy( tableName );
 
-    TwoDAFileReader class_feat_2da( twodaMapper.getFile( lowerName ).c_str() );
+    TwoDAFileReader class_feat_2da( twodaMapper.getFile( tableName ).c_str() );
     assert( class_feat_2da.HasColumn( colFeatIndex ) );
     assert( class_feat_2da.HasColumn( colList ) );
     assert( class_feat_2da.HasColumn( colGrantedOnLvl ) );
@@ -255,6 +283,14 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
                 featsPerLvl = loadClassFeatsTable( featsStr, twodaMapper );
             }
 
+            std::string bonusfeatsStr;
+            const auto bonusfeatsOk = classes_2da.Get2DAString( "BonusFeatsTable", row, bonusfeatsStr );
+            auto bonusFeats = std::make_unique< std::vector< bool > >();
+            if( bonusfeatsOk ) {
+                boost::algorithm::to_lower( bonusfeatsStr );
+                bonusFeats = loadBonusFeatsTable( bonusfeatsStr, twodaMapper );
+            }
+
             std::cout << "importing class " << name << std::endl;
             std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
             chClass->setDescription( translateToNwn2Tags( descr ) );
@@ -262,6 +298,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setBabProgression( prg );
             chClass->setSaves( saves );
             chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
+            chClass->setBonusFeats( std::move( bonusFeats ) );
             nwnRules.setChClass( std::move( chClass ) );
         }
     }

@@ -22,4 +22,14 @@ const FeatsPerLevelMap& ChClass::getFeatsPerLvl() const
     return *featsPerLvl;
 }
 
+void ChClass::setBonusFeats( std::unique_ptr< std::vector< bool > > bf )
+{
+    bonusFeats = std::move( bf );
+}
+
+const std::vector< bool >& ChClass::getBonusFeats() const
+{
+    return *bonusFeats;
+}
+
 } // namespace Nwn
