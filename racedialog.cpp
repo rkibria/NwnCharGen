@@ -12,12 +12,11 @@
 
 using namespace Nwn;
 
-RaceDialog::RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
+RaceDialog::RaceDialog( Nwn::Rules *rules, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::RaceDialog ),
     nwnRules{ rules },
-    raceChoice(),
-    isChoiceOnly{ choiceOnly }
+    raceChoice()
 {
     ui->setupUi( this );
 
@@ -63,16 +62,11 @@ void RaceDialog::setupRacesWidget()
 
 void RaceDialog::setWidgetsChoiceOnly()
 {
-    if( isChoiceOnly ) {
-        setWindowTitle( tr( "Choose Race" ) );
+    setWindowTitle( tr( "Choose Race" ) );
 
-        QLayoutItem *child;
-        while( ( child = ui->horizontalLayoutButtons->takeAt(0) ) != 0 ) {
-            delete child;
-        }
-    }
-    else {
-        ui->buttonBox->setStandardButtons( QDialogButtonBox::Ok );
+    QLayoutItem *child;
+    while( ( child = ui->horizontalLayoutButtons->takeAt(0) ) != 0 ) {
+        delete child;
     }
 }
 
@@ -93,7 +87,5 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
 
 void RaceDialog::updateOkButton()
 {
-    if( isChoiceOnly ) {
-        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( haveChoice() );
-    }
+    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( haveChoice() );
 }

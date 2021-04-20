@@ -55,13 +55,8 @@ private slots:
     void on_actionNew_triggered();
     void on_lineEditName_editingFinished();
     void on_textEditDescription_textChanged();
-    void on_actionRulesSave_triggered();
-    void on_actionRulesOpen_triggered();
-    void on_actionRaces_triggered();
     void on_spinBoxLevels_valueChanged(int arg1);
-
     void on_actionNWN2_base_game_triggered();
-
     void on_actionSigil_City_of_Doors_triggered();
 
 private:
@@ -86,6 +81,8 @@ private:
     void updateLevels();
     void updateClasses();
     void initLevelsWidget();
+
+    void loadRules( const char* rules, const char* rulesDescr );
 
     std::array< QLineEdit*, 6 > getAblLineEdits() const;
     std::array< QLineEdit*, 6 > getAblModLineEdits() const;

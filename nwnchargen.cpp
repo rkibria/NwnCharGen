@@ -26,33 +26,10 @@ namespace {
 
 static constexpr const char* kDefaultClass = "Barbarian";
 
-void addDebugRules( Rules* nwnRules )
-{
-    std::unique_ptr<Race> human = std::make_unique<Race>( 1, "Human", "Human" );
-    human->setDescription("Humans are the most adaptable of the common races. Short generations and a penchant for migration and conquest mean they are very physically diverse as well. Skin shades range from nearly black to very pale, hair from black to blond, and facial hair (for men) from sparse to thick. Humans are often unorthodox in their dress, sporting unusual hairstyles, fanciful clothes, tattoos, and the like.");
-    nwnRules->setRace( std::move( human ) );
-
-    std::unique_ptr<Race> goldDwarf = std::make_unique<Race>( 2, "Gold Dwarf", "Dwarf" );
-    goldDwarf->setDescription("The gold dwarves maintained their great kingdom in the Great Rift and managed to survive terrible wars against evil humanoids. While they practiced some magic, they never acquired the hubris that caused the downfall of some human nations. Confident and secure in their remote home, the gold dwarves gained a reputation for haughtiness and pride. Since the Thunder Blessing, many young gold dwarves have left the Great Rift and are exploring the rest of the region. The folk of other lands have learned that while some gold dwarves are aloof and suspicious, for the most part they are forthright warriors and shrewd traders.");
-    goldDwarf->getAblAdjusts().setAbl( AblScore::Con, 2 );
-    goldDwarf->getAblAdjusts().setAbl( AblScore::Dex, -2 );
-    nwnRules->setRace( std::move( goldDwarf ) );
-
-    nwnRules->setRace( std::make_unique<Race>( 3, "Gray Dwarf", "Dwarf" ) );
-    nwnRules->setRace( std::make_unique<Race>( 4, "Drow", "Elf" ) );
-
-    std::unique_ptr< ChClass > barbarian = std::make_unique< ChClass >( 1, "Barbarian" );
-    barbarian->setDescription( "Barbarians are brave, even reckless warriors whose great strength and heartiness makes them well suited for adventure. Where the fighter would rely on training and discipline, the barbarian enters a berserker state that makes him stronger, tougher, and more determined but less concerned with his health. These spectacular rages leave him winded, and he only has the energy for a few a day, but those usually suffice. He also knows the wild and runs at great speed." );
-    barbarian->setHitDie( Dice::d12 );
-//    barbarian->setBabProgression( BabProgression::high );
-    nwnRules->setChClass( std::move( barbarian ) );
-
-    std::unique_ptr< ChClass > cleric = std::make_unique< ChClass >( 2, "Cleric" );
-    cleric->setDescription( "Clerics are masters of divine magic, which is especially good at healing. Even an inexperienced Cleric can bring people back from the brink of death, and an experienced Cleric can bring back people who have crossed over that brink. As channelers of divine energy, clerics can affect undead creatures. A Cleric can turn away or even destroy undead. Clerics have some combat training. They can use simple weapons, and they are trained in the use of armor, since armor does not interfere with divine spells the way it does with arcane spells." );
-    cleric->setHitDie( Dice::d8 );
-//    cleric->setBabProgression( BabProgression::medium );
-    nwnRules->setChClass( std::move( cleric ) );
-}
+static constexpr const char* kNwn2BaseRulesFile = "nwn2.xml";
+static constexpr const char* kNwn2BaseRules = "NWN2 base game";
+static constexpr const char* kScodRulesFile = "scod.xml";
+static constexpr const char* kScodRules = "Sigil City of Doors";
 
 void initCharacter( Character* nwnChar )
 {
@@ -72,14 +49,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , currentFile{ "character.xml" }
     , currentRules()
 {
-//    currentRules = "nwn2.xml";
-//    addDebugRules( nwnRules.get() );
-
-    const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + "scod.xml" );
-    nwnRules->restore( qPrintable( fileName ) );
-    currentRules = fileName;
-
-    initCharacter( nwnChar.get() );
+    loadRules( kNwn2BaseRulesFile, kNwn2BaseRules );
 
     ui->setupUi(this);
     initWidgets();
@@ -288,7 +258,7 @@ void NwnCharGen::on_pushButtonChaPlus_clicked() { modAbility( static_cast<int>( 
 
 void NwnCharGen::on_buttonRace_clicked()
 {
-    RaceDialog rd( nwnRules.get(), true, this );
+    RaceDialog rd( nwnRules.get(), this );
     if( rd.exec() == QDialog::Accepted ) {
         if( !rd.getChoice().isEmpty() ) {
             nwnChar->setRace( rd.getChoice().toStdString() );
@@ -385,38 +355,6 @@ void NwnCharGen::on_textEditDescription_textChanged()
     setDirtyFlag();
 }
 
-void NwnCharGen::on_actionRulesSave_triggered()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                                    tr("Save Rules"),
-                                                    currentRules,
-                                                    tr("Rules files (*.xml)"));
-    if( !fileName.isNull() ) {
-        nwnRules->save( qPrintable( fileName ) );
-        currentRules = fileName;
-    }
-}
-
-void NwnCharGen::on_actionRulesOpen_triggered()
-{
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open Rules"),
-                                                    currentRules,
-                                                    tr("Rules files (*.xml)"));
-    if( !fileName.isNull() ) {
-        nwnRules->restore( qPrintable( fileName ) );
-        currentRules = fileName;
-        updateAll();
-    }
-}
-
-void NwnCharGen::on_actionRaces_triggered()
-{
-    RaceDialog rd( nwnRules.get(), false, this );
-    rd.exec();
-    updateAll();
-}
-
 void NwnCharGen::on_spinBoxLevels_valueChanged( int newLvls )
 {
     const auto curLvls = nwnChar->getNumLevels();
@@ -468,12 +406,35 @@ void NwnCharGen::customMenuRequested( const QPoint &pos )
     }
 }
 
+void NwnCharGen::loadRules( const char* rules, const char* rulesDescr )
+{
+    const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + rules );
+    nwnRules->restore( qPrintable( fileName ) );
+    currentRules = rulesDescr;
+    nwnChar = std::make_unique<Character>();
+    initCharacter( nwnChar.get() );
+}
+
 void NwnCharGen::on_actionNWN2_base_game_triggered()
 {
-
+    if( QMessageBox::warning( this,
+                              "Load NWN2 base game rules",
+                              "Load rules? Current character will be reset.",
+                              QMessageBox::Ok | QMessageBox::Cancel,
+                              QMessageBox::Cancel ) == QMessageBox::Ok ) {
+        loadRules( kNwn2BaseRulesFile, kNwn2BaseRules );
+        updateAll();
+    }
 }
 
 void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
 {
-
+    if( QMessageBox::warning( this,
+                              "Load Sigil City of Doors rules",
+                              "Load rules? Current character will be reset.",
+                              QMessageBox::Ok | QMessageBox::Cancel,
+                              QMessageBox::Cancel ) == QMessageBox::Ok ) {
+        loadRules( kScodRulesFile, kScodRules );
+        updateAll();
+    }
 }

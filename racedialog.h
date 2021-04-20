@@ -17,7 +17,7 @@ class RaceDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
+    explicit RaceDialog( Nwn::Rules *rules, QWidget *parent );
     ~RaceDialog();
 
     const QString& getChoice() const { return raceChoice; }
@@ -29,7 +29,6 @@ private:
     Ui::RaceDialog *ui;
     Nwn::Rules *nwnRules;
     QString raceChoice;
-    const bool isChoiceOnly;
 
     bool haveChoice() const { return !raceChoice.isEmpty(); }
 
