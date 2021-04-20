@@ -467,3 +467,13 @@ void NwnCharGen::customMenuRequested( const QPoint &pos )
         menu->popup( ui->tableViewLevels->viewport()->mapToGlobal( pos ) );
     }
 }
+
+void NwnCharGen::on_actionNWN2_base_game_triggered()
+{
+
+}
+
+void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
+{
+
+}

@@ -675,7 +675,7 @@
                  <item row="0" column="5">
                   <widget class="QLabel" name="label_2">
                    <property name="text">
-                    <string> </string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1190,7 +1190,7 @@
      <x>0</x>
      <y>0</y>
      <width>1044</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1210,21 +1210,15 @@
    </widget>
    <widget class="QMenu" name="menuRules">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>Rules</string>
     </property>
-    <addaction name="actionRulesNew"/>
-    <addaction name="actionRulesOpen"/>
-    <addaction name="actionRulesSave"/>
-    <addaction name="actionRulesSave_As"/>
-    <addaction name="actionRulesImport"/>
     <addaction name="separator"/>
-    <addaction name="actionRaces"/>
-    <addaction name="actionClasses"/>
     <addaction name="separator"/>
-    <addaction name="actionRule_Stack"/>
+    <addaction name="actionNWN2_base_game"/>
+    <addaction name="actionSigil_City_of_Doors"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuRules"/>
@@ -1268,44 +1262,14 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionRulesNew">
+  <action name="actionNWN2_base_game">
    <property name="text">
-    <string>New</string>
+    <string>NWN2 base game</string>
    </property>
   </action>
-  <action name="actionRulesOpen">
+  <action name="actionSigil_City_of_Doors">
    <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
-  <action name="actionRulesSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionRulesSave_As">
-   <property name="text">
-    <string>Save As</string>
-   </property>
-  </action>
-  <action name="actionRulesImport">
-   <property name="text">
-    <string>Import</string>
-   </property>
-  </action>
-  <action name="actionRaces">
-   <property name="text">
-    <string>Races...</string>
-   </property>
-  </action>
-  <action name="actionClasses">
-   <property name="text">
-    <string>Classes...</string>
-   </property>
-  </action>
-  <action name="actionRule_Stack">
-   <property name="text">
-    <string>Rule Stack...</string>
+    <string>Sigil City of Doors</string>
    </property>
   </action>
  </widget>

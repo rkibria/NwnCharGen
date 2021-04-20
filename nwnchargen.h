@@ -60,6 +60,10 @@ private slots:
     void on_actionRaces_triggered();
     void on_spinBoxLevels_valueChanged(int arg1);
 
+    void on_actionNWN2_base_game_triggered();
+
+    void on_actionSigil_City_of_Doors_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 
