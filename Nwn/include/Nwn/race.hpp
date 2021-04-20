@@ -12,14 +12,19 @@
 
 namespace Nwn {
 
+static constexpr int INVALID_RACE_ID = -1;
+
 class AblBlock;
 
 class Race
 {
 public:
-    explicit Race( const std::string& n = "", const std::string& c = "" );
+    explicit Race( int id = -1, const std::string& n = "", const std::string& c = "" );
     ~Race();
     Race( const Race& );
+
+    int getId() const { return id; }
+    void setId( int id ) { this->id = id; }
 
     const std::string& getName() const { return name; }
     void setName( const std::string& n ) { name = n; }
@@ -49,6 +54,7 @@ private:
            & boost::serialization::make_nvp( "feats", feats );
     }
 
+    int id = INVALID_RACE_ID;
     std::string name;
     std::string classification;
     std::string description;

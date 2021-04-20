@@ -1,10 +1,9 @@
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QPushButton>
 
 #include "racedialog.h"
 #include "ui_racedialog.h"
-
-#include "raceeditdialog.h"
 
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
@@ -24,7 +23,6 @@ RaceDialog::RaceDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
 
     setWidgetsChoiceOnly();
     setupRacesWidget();
-    updateEditButtons();
     updateOkButton();
 }
 
@@ -68,10 +66,6 @@ void RaceDialog::setWidgetsChoiceOnly()
     if( isChoiceOnly ) {
         setWindowTitle( tr( "Choose Race" ) );
 
-        ui->pushButtonNew->setVisible( false );
-        ui->pushButtonEdit->setVisible( false );
-        ui->pushButtonDelete->setVisible( false );
-
         QLayoutItem *child;
         while( ( child = ui->horizontalLayoutButtons->takeAt(0) ) != 0 ) {
             delete child;
@@ -93,50 +87,7 @@ void RaceDialog::on_treeWidgetRace_itemSelectionChanged()
         const auto& description = nwnRules->getRaceByName( raceChoice.toStdString() )->getDescription();
         ui->textEditDescription->setHtml( QString::fromStdString( description ) );
 
-        updateEditButtons();
         updateOkButton();
-    }
-}
-
-void RaceDialog::on_pushButtonNew_clicked()
-{
-    bool ok;
-    QString raceName = QInputDialog::getText( this, "New Race", "Name of the race:\n(initial classification will be NEW)", QLineEdit::Normal, "", &ok );
-    if ( ok ) {
-        if( !raceName.isEmpty() ) {
-            nwnRules->setRace( std::make_unique<Race>( raceName.toStdString(), "NEW" ) );
-            setupRacesWidget();
-        }
-        else {
-            QMessageBox::critical( this, "Error", "Name must not be empty!" );
-        }
-    }
-}
-
-void RaceDialog::on_pushButtonEdit_clicked()
-{
-    RaceEditDialog rd( nwnRules, getChoice().toStdString(), this );
-    if( rd.exec() == QDialog::Accepted ) {
-        nwnRules->removeRace( rd.getOriginalName() );
-        nwnRules->setRace( std::move( rd.getEdited() ) );
-        setupRacesWidget();
-    }
-}
-
-void RaceDialog::on_pushButtonDelete_clicked()
-{
-    const auto button = QMessageBox::question( this, "Delete", QString( "%1 will be removed. Continue?" ).arg( getChoice() ) );
-    if( button == QMessageBox::Yes ) {
-        nwnRules->removeRace( getChoice().toStdString() );
-        setupRacesWidget();
-    }
-}
-
-void RaceDialog::updateEditButtons()
-{
-    if( !isChoiceOnly ) {
-        ui->pushButtonEdit->setEnabled( haveChoice() );
-        ui->pushButtonDelete->setEnabled( haveChoice() );
     }
 }
 

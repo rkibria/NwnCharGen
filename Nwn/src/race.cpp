@@ -3,7 +3,8 @@
 
 namespace Nwn {
 
-Race::Race( const std::string& n, const std::string& c ) :
+Race::Race( int id, const std::string& n, const std::string& c ) :
+    id{ id },
     name{ n },
     classification{ c },
     ablAdjusts{ std::make_unique<AblBlock>() },

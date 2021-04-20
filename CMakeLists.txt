@@ -40,7 +40,6 @@ endif()
 qt5_wrap_cpp(MOC_SOURCES
     nwnchargen.h
     racedialog.h
-    raceeditdialog.h
     levelsmodel.h
     levelsclassdelegate.h
     levelsabldelegate.h
@@ -52,7 +51,6 @@ qt5_wrap_cpp(MOC_SOURCES
 qt5_wrap_ui(UI_SOURCES
     nwnchargen.ui
     racedialog.ui
-    raceeditdialog.ui
     chclassdialog.ui
     featdialog.ui
     )
@@ -65,7 +63,6 @@ add_executable(NwnCharGen
     main.cpp
     nwnchargen.cpp
     racedialog.cpp
-    raceeditdialog.cpp
     levelsmodel.cpp
     levelsclassdelegate.cpp
     chclassdialog.cpp

@@ -339,7 +339,7 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
             const auto descrRefOk = tlkSw.GetTalkString( descrRef, descr );
             assert( descrRefOk );
 
-            std::unique_ptr< Race > race = std::make_unique< Race >( name, baseRaceStr );
+            std::unique_ptr< Race > race = std::make_unique< Race >( row, name, baseRaceStr );
             race->setDescription( translateToNwn2Tags( descr ) );
 
             const auto readAblMod = [ &racialsubtypes_2da, &race, row ]( AblScore abl, const char* colName ) {

@@ -28,18 +28,18 @@ static constexpr const char* kDefaultClass = "Barbarian";
 
 void addDebugRules( Rules* nwnRules )
 {
-    std::unique_ptr<Race> human = std::make_unique<Race>( "Human", "Human" );
+    std::unique_ptr<Race> human = std::make_unique<Race>( 1, "Human", "Human" );
     human->setDescription("Humans are the most adaptable of the common races. Short generations and a penchant for migration and conquest mean they are very physically diverse as well. Skin shades range from nearly black to very pale, hair from black to blond, and facial hair (for men) from sparse to thick. Humans are often unorthodox in their dress, sporting unusual hairstyles, fanciful clothes, tattoos, and the like.");
     nwnRules->setRace( std::move( human ) );
 
-    std::unique_ptr<Race> goldDwarf = std::make_unique<Race>( "Gold Dwarf", "Dwarf" );
+    std::unique_ptr<Race> goldDwarf = std::make_unique<Race>( 2, "Gold Dwarf", "Dwarf" );
     goldDwarf->setDescription("The gold dwarves maintained their great kingdom in the Great Rift and managed to survive terrible wars against evil humanoids. While they practiced some magic, they never acquired the hubris that caused the downfall of some human nations. Confident and secure in their remote home, the gold dwarves gained a reputation for haughtiness and pride. Since the Thunder Blessing, many young gold dwarves have left the Great Rift and are exploring the rest of the region. The folk of other lands have learned that while some gold dwarves are aloof and suspicious, for the most part they are forthright warriors and shrewd traders.");
     goldDwarf->getAblAdjusts().setAbl( AblScore::Con, 2 );
     goldDwarf->getAblAdjusts().setAbl( AblScore::Dex, -2 );
     nwnRules->setRace( std::move( goldDwarf ) );
 
-    nwnRules->setRace( std::make_unique<Race>( "Gray Dwarf", "Dwarf" ) );
-    nwnRules->setRace( std::make_unique<Race>( "Drow", "Elf" ) );
+    nwnRules->setRace( std::make_unique<Race>( 3, "Gray Dwarf", "Dwarf" ) );
+    nwnRules->setRace( std::make_unique<Race>( 4, "Drow", "Elf" ) );
 
     std::unique_ptr< ChClass > barbarian = std::make_unique< ChClass >( 1, "Barbarian" );
     barbarian->setDescription( "Barbarians are brave, even reckless warriors whose great strength and heartiness makes them well suited for adventure. Where the fighter would rely on training and discipline, the barbarian enters a berserker state that makes him stronger, tougher, and more determined but less concerned with his health. These spectacular rages leave him winded, and he only has the energy for a few a day, but those usually suffice. He also knows the wild and runs at great speed." );

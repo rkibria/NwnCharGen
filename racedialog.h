@@ -24,9 +24,6 @@ public:
 
 private slots:
     void on_treeWidgetRace_itemSelectionChanged();
-    void on_pushButtonNew_clicked();
-    void on_pushButtonEdit_clicked();
-    void on_pushButtonDelete_clicked();
 
 private:
     Ui::RaceDialog *ui;
@@ -38,7 +35,6 @@ private:
 
     void setWidgetsChoiceOnly();
     void setupRacesWidget();
-    void updateEditButtons();
     void updateOkButton();
 };
 
