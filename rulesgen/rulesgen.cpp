@@ -18,6 +18,8 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
+#define READ_SCOD_RULES 1
+
 #include <boost/algorithm/string.hpp>
 
 #include "twodamapper.h"
@@ -440,14 +442,20 @@ int main()
 
     TwoDAMapper twodaMapper( nwn2Path, outputPath );
 
+#if READ_SCOD_RULES == 1
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
     TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
+#endif
 
     TlkFileReader16 dialogTlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
 
+#if READ_SCOD_RULES == 1
     TlkSwitcher tlkSw( dialogTlk, &otherTlk );
+#else
+    TlkSwitcher tlkSw( dialogTlk, nullptr );
+#endif
 
     Rules nwnRules;
 
@@ -455,5 +463,9 @@ int main()
     importRaces( nwnRules, tlkSw, twodaMapper );
     importFeats( nwnRules, tlkSw, twodaMapper );
 
+#if READ_SCOD_RULES == 1
     nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
+#else
+    nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
+#endif
 }
