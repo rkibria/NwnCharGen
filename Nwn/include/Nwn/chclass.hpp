@@ -19,14 +19,19 @@
 
 namespace Nwn {
 
+static constexpr int INVALID_CHCLASS_ID = -1;
+
 using FeatsPerLevelMap = std::map< int, std::set< int > >;
 
 class ChClass
 {
 public:
-    explicit ChClass( const std::string& n = "" );
+    explicit ChClass( int id = -1, const std::string& n = "" );
     ~ChClass();
     ChClass( const ChClass& );
+
+    int getId() const { return id; }
+    void setId( int id ) { this->id = id; }
 
     const std::string& getName() const { return name; }
     void setName( const std::string& n ) { name = n; }
@@ -59,7 +64,8 @@ private:
 
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ ) {
-        ar & boost::serialization::make_nvp( "name", name )
+        ar & boost::serialization::make_nvp( "id", id )
+           & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "description", description )
            & boost::serialization::make_nvp( "hitDie", hitDie )
            & boost::serialization::make_nvp( "babProgression", babProgression )
@@ -68,6 +74,7 @@ private:
            & boost::serialization::make_nvp( "bonusFeats", bonusFeats );
     }
 
+    int id = INVALID_CHCLASS_ID;
     std::string name;
     std::string description;
     Dice hitDie{ Dice::d4 };

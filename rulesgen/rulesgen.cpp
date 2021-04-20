@@ -292,7 +292,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             }
 
             std::cout << "importing class " << name << std::endl;
-            std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( name );
+            std::unique_ptr< ChClass > chClass = std::make_unique< ChClass >( row, name );
             chClass->setDescription( translateToNwn2Tags( descr ) );
             chClass->setHitDie( hitDie );
             chClass->setBabProgression( prg );

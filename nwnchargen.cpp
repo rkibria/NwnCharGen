@@ -41,13 +41,13 @@ void addDebugRules( Rules* nwnRules )
     nwnRules->setRace( std::make_unique<Race>( "Gray Dwarf", "Dwarf" ) );
     nwnRules->setRace( std::make_unique<Race>( "Drow", "Elf" ) );
 
-    std::unique_ptr< ChClass > barbarian = std::make_unique< ChClass >( "Barbarian" );
+    std::unique_ptr< ChClass > barbarian = std::make_unique< ChClass >( 1, "Barbarian" );
     barbarian->setDescription( "Barbarians are brave, even reckless warriors whose great strength and heartiness makes them well suited for adventure. Where the fighter would rely on training and discipline, the barbarian enters a berserker state that makes him stronger, tougher, and more determined but less concerned with his health. These spectacular rages leave him winded, and he only has the energy for a few a day, but those usually suffice. He also knows the wild and runs at great speed." );
     barbarian->setHitDie( Dice::d12 );
 //    barbarian->setBabProgression( BabProgression::high );
     nwnRules->setChClass( std::move( barbarian ) );
 
-    std::unique_ptr< ChClass > cleric = std::make_unique< ChClass >( "Cleric" );
+    std::unique_ptr< ChClass > cleric = std::make_unique< ChClass >( 2, "Cleric" );
     cleric->setDescription( "Clerics are masters of divine magic, which is especially good at healing. Even an inexperienced Cleric can bring people back from the brink of death, and an experienced Cleric can bring back people who have crossed over that brink. As channelers of divine energy, clerics can affect undead creatures. A Cleric can turn away or even destroy undead. Clerics have some combat training. They can use simple weapons, and they are trained in the use of armor, since armor does not interfere with divine spells the way it does with arcane spells." );
     cleric->setHitDie( Dice::d8 );
 //    cleric->setBabProgression( BabProgression::medium );
@@ -335,7 +335,10 @@ void NwnCharGen::on_comboBoxAlignment_currentIndexChanged( int index )
 
 void NwnCharGen::on_actionAbout_triggered()
 {
-    QMessageBox::about( this, "NwnCharGen", "Version 06-12-2020alpha1\nA character builder for Neverwinter Nights 2" );
+    QMessageBox::about( this, "NwnCharGen",
+                        "Version 06-12-2020alpha1\n"
+                        "A character builder for Neverwinter Nights 2\n"
+                        "Project page https://github.com/rkibria/NwnCharGen" );
 }
 
 void NwnCharGen::on_actionExit_triggered()

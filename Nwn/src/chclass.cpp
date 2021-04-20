@@ -2,7 +2,8 @@
 
 namespace Nwn {
 
-ChClass::ChClass( const std::string& n ) :
+ChClass::ChClass( int id, const std::string& n ) :
+    id{ id },
     name{ n },
     featsPerLvl{ std::make_unique< FeatsPerLevelMap >() }
 {
