@@ -4,6 +4,7 @@
 #include <sstream>
 #include <set>
 #include <map>
+#include <ctime>
 
 #include <Precomp.h>
 #include <2DAFileReader.h>
@@ -433,6 +434,14 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
     }
 }
 
+std::string getCurrentTimeString()
+{
+    const auto now = time(0);
+    std::string currentTime{ ctime( &now ) };
+    boost::trim_right( currentTime );
+    return currentTime;
+}
+
 } // namespace
 
 int main()
@@ -464,7 +473,7 @@ int main()
     importFeats( nwnRules, tlkSw, twodaMapper );
 
 #if READ_SCOD_RULES == 1
-    nwnRules.setDescription( "Sigil City of Doors" );
+    nwnRules.setDescription( std::string( "Sigil City of Doors, " ) + getCurrentTimeString() );
     nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
 #else
     nwnRules.setDescription( "NWN2 base game" );
