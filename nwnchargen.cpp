@@ -31,8 +31,10 @@ static constexpr const char* kNwn2BaseRules = "NWN2 base game";
 static constexpr const char* kScodRulesFile = "scod.xml";
 static constexpr const char* kScodRules = "Sigil City of Doors";
 
-void initCharacter( Character* nwnChar )
+void initCharacter( Character* nwnChar, const char* rules )
 {
+    nwnChar->setRules( rules );
+
     for( int i = 0; i < 30; ++i ) {
         nwnChar->pushLevel( kDefaultClass );
     }
@@ -406,13 +408,13 @@ void NwnCharGen::customMenuRequested( const QPoint &pos )
     }
 }
 
-void NwnCharGen::loadRules( const char* rules, const char* rulesDescr )
+void NwnCharGen::loadRules( const char* rulesFile, const char* rulesDescr )
 {
-    const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + rules );
+    const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + rulesFile );
     nwnRules->restore( qPrintable( fileName ) );
     currentRules = rulesDescr;
     nwnChar = std::make_unique<Character>();
-    initCharacter( nwnChar.get() );
+    initCharacter( nwnChar.get(), rulesFile );
 }
 
 void NwnCharGen::on_actionNWN2_base_game_triggered()

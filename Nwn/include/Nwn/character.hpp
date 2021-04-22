@@ -37,7 +37,11 @@ public:
     void setAlignment( const Alignment a ) { alignment = a; }
     Alignment getAlignment() const { return alignment; }
 
-    /* Abilities  */
+    /* Rules */
+    std::string getRules() const { return rules; }
+    void setRules( const std::string& r ) { rules = r; }
+
+    /* Abilities */
     AblBlock& getAbls() { return *abls; }
     const AblBlock& getAbls() const { return *abls; }
 
@@ -77,7 +81,8 @@ private:
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ )
     {
-        ar & boost::serialization::make_nvp( "name", name )
+        ar & boost::serialization::make_nvp( "rules", rules )
+           & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "description", description )
            & boost::serialization::make_nvp( "race", race )
            & boost::serialization::make_nvp( "alignment", alignment )
@@ -94,6 +99,7 @@ private:
     constexpr static const int minAblScore = 8;
     constexpr static const int maxAblScore = 18;
 
+    std::string rules;
     std::string name;
     std::string description;
     std::string race;
