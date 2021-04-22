@@ -29,6 +29,10 @@ public:
     explicit Rules();
     ~Rules();
 
+    // DESCRIPTION
+    void setDescription( const std::string d ) { description = d; }
+    const std::string& getDescription() const { return description; }
+
     // RACES
     void setRace( std::unique_ptr< Nwn::Race > r );
     ConstMapLooper< Race, RaceContainer > getRaces() const { return ConstMapLooper< Race, RaceContainer >( races ); }
@@ -71,11 +75,13 @@ private:
 
     template<class Archive>
     void serialize( Archive & ar, const unsigned int /* file_version */ ) {
-        ar & boost::serialization::make_nvp( "races", races )
+        ar & boost::serialization::make_nvp( "description", description )
+           & boost::serialization::make_nvp( "races", races )
            & boost::serialization::make_nvp( "chclasses", chclasses )
            & boost::serialization::make_nvp( "feats", feats );
     }
 
+    std::string description;
     RaceContainer races;
     ChClassContainer chclasses;
     FeatContainer feats;

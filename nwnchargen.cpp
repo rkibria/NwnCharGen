@@ -27,9 +27,7 @@ namespace {
 static constexpr const char* kDefaultClass = "Barbarian";
 
 static constexpr const char* kNwn2BaseRulesFile = "nwn2.xml";
-static constexpr const char* kNwn2BaseRules = "NWN2 base game";
 static constexpr const char* kScodRulesFile = "scod.xml";
-static constexpr const char* kScodRules = "Sigil City of Doors";
 
 void initCharacter( Character* nwnChar, const char* rules )
 {
@@ -51,7 +49,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , currentFile{ "character.xml" }
     , currentRules()
 {
-    loadRules( kNwn2BaseRulesFile, kNwn2BaseRules );
+    loadRules( kNwn2BaseRulesFile );
 
     ui->setupUi(this);
     initWidgets();
@@ -408,11 +406,11 @@ void NwnCharGen::customMenuRequested( const QPoint &pos )
     }
 }
 
-void NwnCharGen::loadRules( const char* rulesFile, const char* rulesDescr )
+void NwnCharGen::loadRules( const char* rulesFile )
 {
     const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + rulesFile );
     nwnRules->restore( qPrintable( fileName ) );
-    currentRules = rulesDescr;
+    currentRules = nwnRules->getDescription().c_str();
     nwnChar = std::make_unique<Character>();
     initCharacter( nwnChar.get(), rulesFile );
 }
@@ -424,7 +422,7 @@ void NwnCharGen::on_actionNWN2_base_game_triggered()
                               "Load rules? Current character will be reset.",
                               QMessageBox::Ok | QMessageBox::Cancel,
                               QMessageBox::Cancel ) == QMessageBox::Ok ) {
-        loadRules( kNwn2BaseRulesFile, kNwn2BaseRules );
+        loadRules( kNwn2BaseRulesFile );
         updateAll();
     }
 }
@@ -436,7 +434,7 @@ void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
                               "Load rules? Current character will be reset.",
                               QMessageBox::Ok | QMessageBox::Cancel,
                               QMessageBox::Cancel ) == QMessageBox::Ok ) {
-        loadRules( kScodRulesFile, kScodRules );
+        loadRules( kScodRulesFile );
         updateAll();
     }
 }

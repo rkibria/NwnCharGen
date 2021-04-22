@@ -82,7 +82,7 @@ private:
     void updateClasses();
     void initLevelsWidget();
 
-    void loadRules( const char* rules, const char* rulesDescr );
+    void loadRules( const char* rules );
 
     std::array< QLineEdit*, 6 > getAblLineEdits() const;
     std::array< QLineEdit*, 6 > getAblModLineEdits() const;

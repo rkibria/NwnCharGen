@@ -464,8 +464,10 @@ int main()
     importFeats( nwnRules, tlkSw, twodaMapper );
 
 #if READ_SCOD_RULES == 1
+    nwnRules.setDescription( "Sigil City of Doors" );
     nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
 #else
+    nwnRules.setDescription( "NWN2 base game" );
     nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
 #endif
 }
