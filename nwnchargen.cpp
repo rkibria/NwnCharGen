@@ -26,17 +26,10 @@ namespace {
 
 static constexpr const char* kDefaultClass = "Barbarian";
 
+static constexpr const char* kDefaultCharacterFile = "character.xml";
+
 static constexpr const char* kNwn2BaseRulesFile = "nwn2.xml";
 static constexpr const char* kScodRulesFile = "scod.xml";
-
-void initCharacter( Character* nwnChar, const char* rules )
-{
-    nwnChar->setRules( rules );
-
-    for( int i = 0; i < 30; ++i ) {
-        nwnChar->pushLevel( kDefaultClass );
-    }
-}
 
 } // namespace
 
@@ -46,7 +39,7 @@ NwnCharGen::NwnCharGen(QWidget *parent)
     , nwnChar( std::make_unique<Character>() )
     , nwnRules( std::make_unique<Rules>() )
     , dirtyFlag{ false }
-    , currentFile{ "character.xml" }
+    , currentFile{ kDefaultCharacterFile }
     , currentRules()
 {
     loadRules( kNwn2BaseRulesFile );
@@ -290,9 +283,10 @@ void NwnCharGen::on_actionOpen_triggered()
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
         nwnChar->restore( qPrintable( fileName ) );
+        loadRules( nwnChar->getRules().c_str() );
         currentFile = fileName;
-        clearDirtyFlag();
         updateAll();
+        clearDirtyFlag();
     }
 }
 
@@ -318,7 +312,8 @@ void NwnCharGen::on_actionExit_triggered()
 
 void NwnCharGen::on_actionNew_triggered()
 {
-    nwnChar = std::make_unique<Character>();
+    newCharacter();
+    currentFile = kDefaultCharacterFile;
     updateAll();
     clearDirtyFlag();
 }
@@ -406,13 +401,19 @@ void NwnCharGen::customMenuRequested( const QPoint &pos )
     }
 }
 
+void NwnCharGen::newCharacter()
+{
+    nwnChar = std::make_unique<Character>();
+    for( int i = 0; i < 30; ++i ) {
+        nwnChar->pushLevel( kDefaultClass );
+    }
+}
+
 void NwnCharGen::loadRules( const char* rulesFile )
 {
     const QString fileName = QDir::cleanPath( QCoreApplication::applicationDirPath() + QDir::separator() + rulesFile );
     nwnRules->restore( qPrintable( fileName ) );
     currentRules = nwnRules->getDescription().c_str();
-    nwnChar = std::make_unique<Character>();
-    initCharacter( nwnChar.get(), rulesFile );
 }
 
 void NwnCharGen::on_actionNWN2_base_game_triggered()
@@ -423,7 +424,11 @@ void NwnCharGen::on_actionNWN2_base_game_triggered()
                               QMessageBox::Ok | QMessageBox::Cancel,
                               QMessageBox::Cancel ) == QMessageBox::Ok ) {
         loadRules( kNwn2BaseRulesFile );
+        newCharacter();
+        currentFile = kDefaultCharacterFile;
+        nwnChar->setRules( kNwn2BaseRulesFile );
         updateAll();
+        clearDirtyFlag();
     }
 }
 
@@ -435,6 +440,10 @@ void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
                               QMessageBox::Ok | QMessageBox::Cancel,
                               QMessageBox::Cancel ) == QMessageBox::Ok ) {
         loadRules( kScodRulesFile );
+        newCharacter();
+        currentFile = kDefaultCharacterFile;
+        nwnChar->setRules( kScodRulesFile );
         updateAll();
+        clearDirtyFlag();
     }
 }
