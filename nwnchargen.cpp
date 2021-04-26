@@ -36,13 +36,14 @@ static constexpr const char* kScodRulesFile = "scod.xml";
 NwnCharGen::NwnCharGen(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::NwnCharGen)
-    , nwnChar( std::make_unique<Character>() )
     , nwnRules( std::make_unique<Rules>() )
     , dirtyFlag{ false }
     , currentFile{ kDefaultCharacterFile }
     , currentRules()
 {
     loadRules( kNwn2BaseRulesFile );
+    newCharacter();
+    nwnChar->setRules( kNwn2BaseRulesFile );
 
     ui->setupUi(this);
     initWidgets();
