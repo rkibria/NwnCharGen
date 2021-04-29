@@ -346,10 +346,10 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
             race->setDescription( translateToNwn2Tags( descr ) );
 
             const auto readAblMod = [ &racialsubtypes_2da, &race, row ]( AblScore abl, const char* colName ) {
-                int ablMod;
+                int ablMod = 0;
                 const auto ablModOk = racialsubtypes_2da.Get2DAInt( colName, row, ablMod );
                 if( !ablModOk ) {
-                    return false;
+                    ablMod = 0;
                 }
                 race->getAblAdjusts().setAbl( abl, ablMod );
                 return true;
