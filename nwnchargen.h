@@ -61,6 +61,8 @@ private slots:
     void on_actionNWN2_base_game_triggered();
     void on_actionSigil_City_of_Doors_triggered();
 
+    void on_actionSave_As_triggered();
+
 private:
     Ui::NwnCharGen *ui;
 
@@ -85,6 +87,7 @@ private:
     void initLevelsWidget();
     void newCharacter();
     void loadRules( const char* rules );
+    void saveCharacter( const QString& fileName );
 
     std::array< QLineEdit*, 6 > getAblLineEdits() const;
     std::array< QLineEdit*, 6 > getAblModLineEdits() const;

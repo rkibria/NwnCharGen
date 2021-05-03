@@ -2,3 +2,4 @@ Deployment:
 - copy NwnCharGen.exe to empty directory
 - open Qt console, run "windeployqt --debug EMPTY_DIR_PATH\NwnCharGen.exe"
 - copy nwn2.xml and scod.xml to EMPTY_DIR_PATH
+- copy C:\Qt\Tools\mingw810_64\bin\addr2line.exe to EMPTY_DIR_PATH\tools

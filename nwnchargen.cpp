@@ -262,17 +262,32 @@ void NwnCharGen::on_buttonRace_clicked()
     }
 }
 
+void NwnCharGen::saveCharacter( const QString& fileName )
+{
+    nwnChar->setDescription( ui->textEditDescription->toPlainText().toStdString() );
+    nwnChar->save( qPrintable( fileName ) );
+    currentFile = fileName;
+    clearDirtyFlag();
+}
+
 void NwnCharGen::on_actionSave_triggered()
+{
+    if( currentFile == kDefaultCharacterFile ) {
+        on_actionSave_As_triggered();
+    }
+    else {
+        saveCharacter( currentFile );
+    }
+}
+
+void NwnCharGen::on_actionSave_As_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
                                                     tr("Save Character"),
                                                     currentFile,
                                                     tr("Character files (*.xml)"));
     if( !fileName.isNull() ) {
-        nwnChar->setDescription( ui->textEditDescription->toPlainText().toStdString() );
-        nwnChar->save( qPrintable( fileName ) );
-        currentFile = fileName;
-        clearDirtyFlag();
+        saveCharacter( fileName );
     }
 }
 
