@@ -23,6 +23,7 @@ find_package(Boost REQUIRED COMPONENTS
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56746
 add_compile_options(-save-temps -ftrack-macro-expansion=0)
 
+add_subdirectory(asmCrashReport)
 add_subdirectory(Nwn)
 
 set( NWN2DATALIB_PATH "" CACHE STRING "Path to NWN2DataLib sources" )
@@ -82,4 +83,5 @@ unset(QRC_SOURCES)
 target_link_libraries(NwnCharGen PRIVATE
     Qt5::Widgets
     Nwn
+    asmCrashReport
     )

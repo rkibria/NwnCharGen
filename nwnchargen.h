@@ -9,6 +9,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class NwnCharGen; }
 QT_END_NAMESPACE
 
+#define NWNCHARGEN_VERSION "0.1.0"
+
 class QLineEdit;
 
 namespace Nwn {

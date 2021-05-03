@@ -301,7 +301,7 @@ void NwnCharGen::on_comboBoxAlignment_currentIndexChanged( int index )
 void NwnCharGen::on_actionAbout_triggered()
 {
     QMessageBox::about( this, "NwnCharGen",
-                        "Version 0.1.0\n"
+                        "Version " NWNCHARGEN_VERSION "\n"
                         "A character builder for Neverwinter Nights 2\n"
                         "Project page https://github.com/rkibria/NwnCharGen" );
 }
