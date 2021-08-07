@@ -64,7 +64,11 @@ public:
     std::set< int > getFeatsGainedAtLvl( const Character* chr, int lvl ) const;
 
     /// Only at that level, not including earlier ones
-    int getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const;
+    int getNumNormalFeatChoicesAtLvl( const Character* chr, int lvl ) const;
+    /// Only at that level, not including earlier ones
+    int getNumBonusFeatChoicesAtLvl( const Character* chr, int lvl ) const;
+    /// Only at that level, not including earlier ones
+    int getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const;
 
     // SERIALIZATION
     void save( const char* fileName ) const;

@@ -23,7 +23,7 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
     const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    const auto numFeatChoices = nwnRules->getNumFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numFeatChoices = nwnRules->getNumTotalFeatChoicesAtLvl( nwnChar, lvl );
 
     if( numFeatChoices ) {
         const auto& choices = nwnChar->getFeatChoicesAtLvl( lvl );
@@ -71,7 +71,7 @@ QSize FeatChoiceDelegate::sizeHint(const QStyleOptionViewItem &option, const QMo
     const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    const auto numFeatChoices = nwnRules->getNumFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numFeatChoices = nwnRules->getNumTotalFeatChoicesAtLvl( nwnChar, lvl );
 
     return QSize(100, numFeatChoices * heightPerFeatBox );
 }
@@ -96,7 +96,7 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
     const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    const auto numFeatChoices = nwnRules->getNumFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numFeatChoices = nwnRules->getNumTotalFeatChoicesAtLvl( nwnChar, lvl );
     if( !numFeatChoices ) {
         return true;
     }

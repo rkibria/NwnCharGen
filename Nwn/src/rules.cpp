@@ -242,7 +242,7 @@ std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl ) cons
     return feats;
 }
 
-int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
+int Rules::getNumNormalFeatChoicesAtLvl( const Character* chr, int lvl ) const
 {
     int total = 0;
 
@@ -271,6 +271,13 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
         }
     }
 
+    return total;
+}
+
+int Rules::getNumBonusFeatChoicesAtLvl( const Character* chr, int lvl ) const
+{
+    int total = 0;
+
     const auto& classAtLvl = chr->getLevel( lvl );
     const auto chClass = getChClassByName( classAtLvl );
     if( chClass ) {
@@ -279,6 +286,11 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
     }
 
     return total;
+}
+
+int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
+{
+    return getNumNormalFeatChoicesAtLvl( chr, lvl ) + getNumBonusFeatChoicesAtLvl( chr, lvl );
 }
 
 // SERIALIZATION
