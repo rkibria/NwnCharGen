@@ -225,7 +225,13 @@ loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
             continue;
         }
 
-        constexpr const int kAutomaticallyGranted = 3;
+        enum featListValues {
+            kSelectableOnLvlUp,
+            kRegularOrBonusFeat,
+            kBonusFeatOnly,
+            kAutomaticallyGranted
+        };
+
         if( list == kAutomaticallyGranted ) {
             const auto grantedLvl = granted - 1;
             if( (*featsPerLevel).find( grantedLvl ) == (*featsPerLevel).end() ) {
@@ -233,9 +239,12 @@ loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
             }
             (*featsPerLevel)[ grantedLvl ].insert( feat );
         }
+        else if( list <= kRegularOrBonusFeat && granted == -1 ) {
+            (*bonusFeats).insert( feat );
+        }
     }
 
-    return std::make_pair( std::move( featsPerLevel ), std::move( bonusFeats) );
+    return std::make_pair( std::move( featsPerLevel ), std::move( bonusFeats ) );
 }
 
 void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
@@ -289,7 +298,9 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             auto bonusChoices = std::make_unique< BonusFeatsSet >();
             if( featsOk ) {
                 boost::algorithm::to_lower( featsStr );
-                auto [ featsPerLvl, bonusChoices ] = loadClassFeatsTable( featsStr, twodaMapper );
+                auto [ tmpFeatsPerLvl, tmpBonusChoices ] = loadClassFeatsTable( featsStr, twodaMapper );
+                featsPerLvl = std::move( tmpFeatsPerLvl );
+                bonusChoices = std::move( tmpBonusChoices );
             }
 
             std::string bonusfeatsStr;
