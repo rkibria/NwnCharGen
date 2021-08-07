@@ -19,7 +19,7 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 1
+#define READ_SCOD_RULES 0
 
 #include <boost/algorithm/string.hpp>
 
@@ -417,16 +417,81 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
 
-            int allClassesCanUse;
-            const auto allClassesCanUseOk = feat_2da.Get2DAInt( "ALLCLASSESCANUSE", row, allClassesCanUse );
-            if( !allClassesCanUseOk ) {
-                std::cerr << "importFeats: skipping row " << row << ", could not read ALLCLASSESCANUSE" << std::endl;
-                continue;
-            }
-
             std::unique_ptr< Feat > feat = std::make_unique< Feat >( row, name );
             feat->setDescription( translateToNwn2Tags( descr ) );
-            feat->setAllClassesCanUse( allClassesCanUse ? true : false );
+
+            const auto readColumn = [ &feat_2da, row, &feat ]( const char* col ) {
+                int val;
+                const auto valOk = feat_2da.Get2DAInt( col, row, val );
+                if( valOk ) {
+                    feat->setColumn( col, val );
+                }
+            };
+
+            const std::vector<const char*> featCols = { // LABEL FEAT DESCRIPTION ICON
+                "MINATTACKBONUS",
+                "MINSTR",
+                "MINDEX",
+                "MININT",
+                "MINWIS",
+                "MINCON",
+                "MINCHA",
+                "MAXSTR",
+                "MAXDEX",
+                "MAXINT",
+                "MAXWIS",
+                "MAXCON",
+                "MAXCHA",
+                "MINSPELLLVL",
+                "MINCASTERLVL",
+                "PREREQFEAT1",
+                "PREREQFEAT2",
+                "GAINMULTIPLE",
+                "EFFECTSSTACK",
+                "ALLCLASSESCANUSE",
+                "CATEGORY",
+                "MAXCR",
+                "SPELLID",
+                "SUCCESSOR",
+                "CRValue",
+                "USESPERDAY",
+                "USESMAPFEAT",
+                "MASTERFEAT",
+                "TARGETSELF",
+                "OrReqFeat0",
+                "OrReqFeat1",
+                "OrReqFeat2",
+                "OrReqFeat3",
+                "OrReqFeat4",
+                "OrReqFeat5",
+                "REQSKILL",
+                "ReqSkillMaxRanks",
+                "ReqSkillMinRanks",
+                "REQSKILL2",
+                "ReqSkillMaxRanks2",
+                "ReqSkillMinRanks2",
+                // "Constant",
+                "TOOLSCATEGORIES",
+                "HostileFeat",
+                "MinLevel",
+                "MinLevelClass",
+                "MaxLevel",
+                "MinFortSave",
+                "PreReqEpic",
+                // "FeatCategory",
+                "IsActive",
+                "IsPersistent",
+                "ToggleMode",
+                "Cooldown",
+                "DMFeat",
+                // "REMOVED",
+                "AlignRestrict",
+                "ImmunityType",
+                "Instant"
+            };
+            for( const auto& col : featCols ) {
+                readColumn( col );
+            }
 
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
             nwnRules.setFeat( std::move( feat ) );
