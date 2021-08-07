@@ -9,6 +9,7 @@
 #include <Nwn/rules.hpp>
 #include <Nwn/character.hpp>
 #include <Nwn/feat.hpp>
+#include <Nwn/chclass.hpp>
 
 namespace {
 constexpr int heightPerFeatBox = 25;
@@ -81,7 +82,6 @@ QSize FeatChoiceDelegate::sizeHint(const QStyleOptionViewItem &option, const QMo
     return QSize(100, numFeatChoices * heightPerFeatBox );
 }
 
-#include <iostream>
 bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
                                      const QStyleOptionViewItem &option, const QModelIndex &index)
 {
@@ -115,7 +115,13 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
         return true;
     }
 
-    FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen );
+    const Nwn::BonusFeatsSet *bonusChoices = nullptr;
+    if( selectedIndex >= numNormalFeatChoices ) {
+        const auto chClass = nwnRules->getChClassByName( nwnChar->getLevel( lvl ) );
+        bonusChoices = &chClass->getBonusChoices();
+    }
+
+    FeatDialog ftd( nwnCharGen->getRules(), bonusChoices, nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
         nwnCharGen->getCharacter()->setFeatChoiceAtLvl( lvl, selectedIndex, ftd.getFeatChoice() );
         nwnCharGen->updateAll();

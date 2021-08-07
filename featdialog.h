@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <memory>
+#include <set>
 
 namespace Ui {
 class FeatDialog;
@@ -10,7 +11,6 @@ class FeatDialog;
 
 namespace Nwn {
 class Rules;
-class BonusFeatsSet;
 }
 
 class FeatDialog : public QDialog
@@ -18,7 +18,7 @@ class FeatDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FeatDialog( Nwn::Rules *rules, QWidget *parent );
+    explicit FeatDialog( Nwn::Rules *rules, const std::set< int >* bonusChoices, QWidget *parent );
     ~FeatDialog();
 
     int getFeatChoice() const { return featChoice; }
@@ -30,6 +30,7 @@ private:
     Ui::FeatDialog *ui;
     Nwn::Rules *nwnRules;
     int featChoice = -1;
+    const std::set< int > *pBonusChoices;
 
     void setupWidget();
 };

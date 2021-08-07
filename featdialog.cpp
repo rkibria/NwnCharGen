@@ -11,10 +11,11 @@
 
 using namespace Nwn;
 
-FeatDialog::FeatDialog(Nwn::Rules *rules, QWidget *parent ) :
+FeatDialog::FeatDialog(Nwn::Rules *rules, const std::set< int > *bonusChoices, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::FeatDialog ),
-    nwnRules{ rules }
+    nwnRules{ rules },
+    pBonusChoices{ bonusChoices }
 {
     ui->setupUi( this );
 
@@ -34,6 +35,9 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->setSortingEnabled( false );
     for( const auto& feat : nwnRules->getFeats() ) {
+        if( pBonusChoices && pBonusChoices->find( feat.getId() ) == pBonusChoices->end() ) {
+            continue;
+        }
         new QTreeWidgetItem( ui->treeWidgetFeat,
                              QStringList( QString( feat.getName().c_str() ) ),
                              feat.getId() );
