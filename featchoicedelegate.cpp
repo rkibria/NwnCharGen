@@ -23,9 +23,11 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
     const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    const auto numFeatChoices = nwnRules->getNumTotalFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numNormalFeatChoices = nwnRules->getNumNormalFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numBonusFeatChoices = nwnRules->getNumBonusFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numTotalFeatChoices = numNormalFeatChoices + numBonusFeatChoices;
 
-    if( numFeatChoices ) {
+    if( numTotalFeatChoices ) {
         const auto& choices = nwnChar->getFeatChoicesAtLvl( lvl );
 
         painter->save();
@@ -36,8 +38,9 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
         QRect rect = option.rect;
         rect.setHeight(heightPerFeatBox);
         static const std::string unassignedText = "Select Feat";
-        for( int i = 0; i < numFeatChoices; ++i ) {
-            auto text = &unassignedText;
+        static const std::string unassignedBonusText = "Select Bonus Feat";
+        for( int i = 0; i < numTotalFeatChoices; ++i ) {
+            auto text = ( i >= numNormalFeatChoices ) ? &unassignedBonusText : &unassignedText;
 
             const auto featId = ( i < choices.size() ) ? choices[ i ] : Nwn::INVALID_FEAT_ID;
             const auto feat = nwnRules->getFeat( featId );
@@ -47,12 +50,14 @@ void FeatChoiceDelegate::paint( QPainter *painter, const QStyleOptionViewItem &o
 
             painter->drawRoundedRect( rect.adjusted( 3, 3, -3, -3 ), 5.0, 5.0 );
 
-            if( text != &unassignedText ) {
+            bool needRestore = false;
+            if( text != &unassignedText && text != &unassignedBonusText ) {
                 painter->save();
                 painter->setPen( textPen );
+                needRestore = true;
             }
             painter->drawText( rect, Qt::AlignCenter, text->c_str() );
-            if( text != &unassignedText ) {
+            if( needRestore ) {
                 painter->restore();
             }
 
