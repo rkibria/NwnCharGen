@@ -33,4 +33,14 @@ bool ChClass::getBonusFeat( int lvl ) const
     return (*bonusFeats)[ lvl ];
 }
 
+void ChClass::setBonusChoices( std::unique_ptr< BonusFeatsSet > bc )
+{
+    bonusChoices = std::move( bc );
+}
+
+const BonusFeatsSet& ChClass::getBonusChoices() const
+{
+    return *bonusChoices;
+}
+
 } // namespace Nwn

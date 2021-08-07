@@ -22,6 +22,7 @@ namespace Nwn {
 static constexpr int INVALID_CHCLASS_ID = -1;
 
 using FeatsPerLevelMap = std::map< int, std::set< int > >;
+using BonusFeatsSet = std::set< int >;
 
 class ChClass
 {
@@ -59,6 +60,9 @@ public:
     void setBonusFeats( std::unique_ptr< std::vector< bool > > bf );
     bool getBonusFeat( int lvl ) const;
 
+    void setBonusChoices( std::unique_ptr< BonusFeatsSet > bc );
+    const BonusFeatsSet& getBonusChoices() const;
+
 private:
     friend class boost::serialization::access;
 
@@ -71,7 +75,8 @@ private:
            & boost::serialization::make_nvp( "babProgression", babProgression )
            & boost::serialization::make_nvp( "saves", saves )
            & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl )
-           & boost::serialization::make_nvp( "bonusFeats", bonusFeats );
+           & boost::serialization::make_nvp( "bonusFeats", bonusFeats )
+           & boost::serialization::make_nvp( "bonusChoices", bonusChoices );
     }
 
     int id = INVALID_CHCLASS_ID;
@@ -82,6 +87,7 @@ private:
     std::vector< SavingThrows > saves;
     std::unique_ptr< FeatsPerLevelMap > featsPerLvl;
     std::unique_ptr< std::vector< bool > > bonusFeats;
+    std::unique_ptr< BonusFeatsSet > bonusChoices;
 };
 
 } // namespace Nwn
