@@ -101,19 +101,21 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
     const auto nwnRules = nwnCharGen->getRules();
     const auto nwnChar = nwnCharGen->getCharacter();
 
-    const auto numFeatChoices = nwnRules->getNumTotalFeatChoicesAtLvl( nwnChar, lvl );
-    if( !numFeatChoices ) {
+    const auto numNormalFeatChoices = nwnRules->getNumNormalFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numBonusFeatChoices = nwnRules->getNumBonusFeatChoicesAtLvl( nwnChar, lvl );
+    const auto numTotalFeatChoices = numNormalFeatChoices + numBonusFeatChoices;
+    if( !numTotalFeatChoices ) {
         return true;
     }
 
     const auto pos = mouseEvent->pos();
     const auto y = pos.y() - option.rect.y();
     const auto selectedIndex = static_cast<int>( y / heightPerFeatBox );
-    if( selectedIndex >= numFeatChoices ) {
+    if( selectedIndex >= numTotalFeatChoices ) {
         return true;
     }
 
-    FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen->getCharacter(), nwnCharGen );
+    FeatDialog ftd( nwnCharGen->getRules(), nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
         nwnCharGen->getCharacter()->setFeatChoiceAtLvl( lvl, selectedIndex, ftd.getFeatChoice() );
         nwnCharGen->updateAll();

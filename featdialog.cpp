@@ -11,7 +11,7 @@
 
 using namespace Nwn;
 
-FeatDialog::FeatDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
+FeatDialog::FeatDialog(Nwn::Rules *rules, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::FeatDialog ),
     nwnRules{ rules }
@@ -34,9 +34,6 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->setSortingEnabled( false );
     for( const auto& feat : nwnRules->getFeats() ) {
-//        if( !feat.getAllClassesCanUse() ) {
-//            continue;
-//        }
         new QTreeWidgetItem( ui->treeWidgetFeat,
                              QStringList( QString( feat.getName().c_str() ) ),
                              feat.getId() );

@@ -10,6 +10,7 @@ class FeatDialog;
 
 namespace Nwn {
 class Rules;
+class BonusFeatsSet;
 }
 
 class FeatDialog : public QDialog
@@ -17,7 +18,7 @@ class FeatDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FeatDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent );
+    explicit FeatDialog( Nwn::Rules *rules, QWidget *parent );
     ~FeatDialog();
 
     int getFeatChoice() const { return featChoice; }
