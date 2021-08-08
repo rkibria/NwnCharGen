@@ -312,6 +312,17 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
         return false;
     }
 
+    static const std::string kAllClassesCanUseCol = "ALLCLASSESCANUSE";
+    if( feat->hasColumn( kAllClassesCanUseCol ) ) {
+        const auto canUse = feat->getColumn( kAllClassesCanUseCol );
+        if( canUse == 0 ) {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+
     static const std::string kMinAttackBonusCol = "MINATTACKBONUS";
     if( feat->hasColumn( kMinAttackBonusCol ) ) {
         const auto minAtkBonus = feat->getColumn( kMinAttackBonusCol );
