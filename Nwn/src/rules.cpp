@@ -403,6 +403,13 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
         }
     }
 
+    static const std::string kMaxLevelCol = "MaxLevel";
+    if( feat->hasColumn( kMaxLevelCol ) ) {
+        const auto maxLevel = feat->getColumn( kMaxLevelCol );
+        if( lvl + 1 > maxLevel ) {
+            return false;
+        }
+    }
 
     return true;
 }
