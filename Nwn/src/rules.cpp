@@ -295,6 +295,22 @@ int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
 
 bool Rules::isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const
 {
+    const auto feat = getFeat( featid );
+    if(!feat) {
+        return false;
+    }
+
+    static const std::string kMinAttackBonusCol = "MINATTACKBONUS";
+    if( feat->hasColumn( kMinAttackBonusCol ) ) {
+        const auto minAtkBonus = feat->getColumn( kMinAttackBonusCol );
+        const auto bab = getBabAtLvl( chr, lvl );
+        if( bab < minAtkBonus ) {
+            return false;
+        }
+    }
+
+
+
     return true;
 }
 

@@ -37,7 +37,7 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->setSortingEnabled( false );
     for( const auto& feat : nwnRules->getFeats() ) {
-        if( bonusChoices && bonusChoices->find( feat.getId() ) == bonusChoices->end() ) {
+        if( bonusChoices && !bonusChoices->empty() && bonusChoices->find( feat.getId() ) == bonusChoices->end() ) {
             continue;
         }
 
