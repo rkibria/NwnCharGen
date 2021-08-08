@@ -379,6 +379,31 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
         }
     }
 
+    const auto classCounts = nwnChar->getChClassCountsAtLvl( lvl );
+
+    static const std::string kMinLevelCol = "MinLevel";
+    static const std::string kMinLevelClassCol = "MinLevelClass";
+    if( feat->hasColumn( kMinLevelCol ) && feat->hasColumn( kMinLevelClassCol ) ) {
+        const auto minLevel = feat->getColumn( kMinLevelCol );
+        const auto minLevelClassId = feat->getColumn( kMinLevelClassCol );
+
+        bool hasMinLevel = false;
+        for( const auto& pr : classCounts ) {
+            const auto chClass = getChClassByName( pr.first );
+            if( chClass ) {
+                const auto classId = chClass->getId();
+                if( minLevelClassId == classId && pr.second >= minLevel ) {
+                    hasMinLevel = true;
+                }
+            }
+        }
+
+        if( !hasMinLevel ) {
+            return false;
+        }
+    }
+
+
     return true;
 }
 
