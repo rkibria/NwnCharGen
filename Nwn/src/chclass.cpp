@@ -5,7 +5,10 @@ namespace Nwn {
 ChClass::ChClass( int id, const std::string& n ) :
     id{ id },
     name{ n },
-    featsPerLvl{ std::make_unique< FeatsPerLevelMap >() }
+    featsPerLvl{ std::make_unique< FeatsPerLevelMap >() },
+    bonusFeats{ std::make_unique< std::vector< bool > >() },
+    bonusChoices{ std::make_unique< BonusFeatsSet >() },
+    exclusiveBonusChoices{ std::make_unique< BonusFeatsSet >() }
 {
 }
 

@@ -19,7 +19,7 @@ class FeatDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FeatDialog( Nwn::Rules *rules, const std::set< int >* bonusChoices, int lvl, Nwn::Character* nwnchar, QWidget *parent );
+    explicit FeatDialog( Nwn::Rules *rules, std::unique_ptr< std::set< int > > bonusChoices, int lvl, Nwn::Character* nwnchar, QWidget *parent );
     ~FeatDialog();
 
     int getFeatChoice() const { return featChoice; }
@@ -31,7 +31,7 @@ private:
     Ui::FeatDialog *ui;
     Nwn::Rules *nwnRules;
     int featChoice = -1;
-    const std::set< int > *pBonusChoices;
+    std::unique_ptr< std::set< int > > bonusChoices;
     const int lvl;
     Nwn::Character *nwnChar;
 

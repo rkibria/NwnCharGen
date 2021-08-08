@@ -115,13 +115,14 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
         return true;
     }
 
-    const Nwn::BonusFeatsSet *bonusChoices = nullptr;
+    auto bonusChoices = std::make_unique< Nwn::BonusFeatsSet >();
     if( selectedIndex >= numNormalFeatChoices ) {
         const auto chClass = nwnRules->getChClassByName( nwnChar->getLevel( lvl ) );
-        bonusChoices = &chClass->getBonusChoices();
+        *bonusChoices = chClass->getBonusChoices();
+        bonusChoices->insert( chClass->getExclusiveBonusChoices().cbegin(), chClass->getExclusiveBonusChoices().cend() );
     }
 
-    FeatDialog ftd( nwnCharGen->getRules(), bonusChoices, lvl, nwnChar, nwnCharGen );
+    FeatDialog ftd( nwnCharGen->getRules(), std::move( bonusChoices ), lvl, nwnChar, nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
         nwnCharGen->getCharacter()->setFeatChoiceAtLvl( lvl, selectedIndex, ftd.getFeatChoice() );
         nwnCharGen->updateAll();
