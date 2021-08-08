@@ -411,6 +411,14 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
         }
     }
 
+    static const std::string kPreReqEpicCol = "PreReqEpic";
+    if( feat->hasColumn( kPreReqEpicCol ) ) {
+        const auto preReqEpic = feat->getColumn( kPreReqEpicCol );
+        if( preReqEpic == 1 && lvl < 20 ) {
+            return false;
+        }
+    }
+
     return true;
 }
 
