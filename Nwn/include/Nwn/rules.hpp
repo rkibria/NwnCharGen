@@ -70,6 +70,8 @@ public:
     /// Only at that level, not including earlier ones
     int getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const;
 
+    bool isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const;
+
     // SERIALIZATION
     void save( const char* fileName ) const;
     void restore( const char* fileName );

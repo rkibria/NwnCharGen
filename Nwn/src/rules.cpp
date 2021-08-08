@@ -293,6 +293,11 @@ int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
     return getNumNormalFeatChoicesAtLvl( chr, lvl ) + getNumBonusFeatChoicesAtLvl( chr, lvl );
 }
 
+bool Rules::isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const
+{
+    return true;
+}
+
 // SERIALIZATION
 
 void Rules::save( const char* fileName ) const

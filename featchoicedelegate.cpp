@@ -121,7 +121,7 @@ bool FeatChoiceDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
         bonusChoices = &chClass->getBonusChoices();
     }
 
-    FeatDialog ftd( nwnCharGen->getRules(), bonusChoices, nwnCharGen );
+    FeatDialog ftd( nwnCharGen->getRules(), bonusChoices, lvl, nwnChar, nwnCharGen );
     if( ftd.exec() == QDialog::Accepted ) {
         nwnCharGen->getCharacter()->setFeatChoiceAtLvl( lvl, selectedIndex, ftd.getFeatChoice() );
         nwnCharGen->updateAll();
