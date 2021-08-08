@@ -293,7 +293,7 @@ int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
     return getNumNormalFeatChoicesAtLvl( chr, lvl ) + getNumBonusFeatChoicesAtLvl( chr, lvl );
 }
 
-bool Rules::isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const
+bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) const
 {
     const auto feat = getFeat( featid );
     if(!feat) {
@@ -303,13 +303,30 @@ bool Rules::isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const
     static const std::string kMinAttackBonusCol = "MINATTACKBONUS";
     if( feat->hasColumn( kMinAttackBonusCol ) ) {
         const auto minAtkBonus = feat->getColumn( kMinAttackBonusCol );
-        const auto bab = getBabAtLvl( chr, lvl );
+        const auto bab = getBabAtLvl( nwnChar, lvl );
         if( bab < minAtkBonus ) {
             return false;
         }
     }
 
-
+    static const std::vector< std::string > kMinAblCols = {
+        "MINSTR",
+        "MINDEX",
+        "MININT",
+        "MINWIS",
+        "MINCON",
+        "MINCHA"
+    };
+    for( int i = 0; i < 6; ++i ) {
+        const auto& ablCol = kMinAblCols[ i ];
+        if( feat->hasColumn( ablCol ) ) {
+            const auto minAbl = feat->getColumn( ablCol );
+            const auto abl = getAblAtLvl( nwnChar, indexToAbl( i ), lvl );
+            if( abl < minAbl ) {
+                return false;
+            }
+        }
+    }
 
     return true;
 }
