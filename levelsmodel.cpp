@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <sstream>
+#include <algorithm>
 
 #include <QStringList>
 
@@ -22,7 +23,17 @@ QString getFormattedFeats( const Nwn::Character* nwnChar,
                                int lvl )
 {
     QStringList out;
-    const auto feats = nwnRules->getFeatsGainedAtLvl( nwnChar, lvl );
+    auto feats = nwnRules->getFeatsGainedAtLvl( nwnChar, lvl );
+
+    for( int i = 0; i < lvl; ++i ) {
+        const auto earlierFeats = nwnRules->getFeatsGainedAtLvl( nwnChar, i );
+        std::set< int > diff;
+        std::set_difference( feats.cbegin(), feats.cend(),
+                             earlierFeats.cbegin(), earlierFeats.cend(),
+                             std::inserter(diff, diff.begin()) );
+        feats.swap( diff );
+    }
+
     if( !feats.empty() ) {
         out << "\n";
 
