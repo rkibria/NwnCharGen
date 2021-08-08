@@ -355,6 +355,29 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
         }
     }
 
+    static const std::vector< std::string > kOrReqFeatCols = {
+        "OrReqFeat0",
+        "OrReqFeat1",
+        "OrReqFeat2",
+        "OrReqFeat3",
+        "OrReqFeat4",
+        "OrReqFeat5"
+    };
+    if( feat->hasColumn( kOrReqFeatCols[ 0 ] ) ) {
+        bool hasFeat = false;
+        for( const auto& prereqCol : kOrReqFeatCols ) {
+            if( feat->hasColumn( prereqCol ) ) {
+                const auto prereqFeatId = feat->getColumn( prereqCol );
+                if( featsUptoNow.find( prereqFeatId ) != featsUptoNow.end() ) {
+                    hasFeat = true;
+                }
+            }
+        }
+
+        if( !hasFeat ) {
+            return false;
+        }
+    }
 
     return true;
 }
