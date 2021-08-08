@@ -190,14 +190,16 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
     return bonusFeats;
 }
 
-std::pair<
+std::tuple<
     std::unique_ptr< FeatsPerLevelMap >,
+    std::unique_ptr< BonusFeatsSet >,
     std::unique_ptr< BonusFeatsSet >
 >
 loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
     auto featsPerLevel = std::make_unique< FeatsPerLevelMap >();
     auto bonusFeats = std::make_unique< BonusFeatsSet >();
+    auto exclusiveBonusFeats = std::make_unique< BonusFeatsSet >();
 
     constexpr const auto colFeatIndex = "FeatIndex";
     constexpr const auto colList = "List";
@@ -239,12 +241,15 @@ loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
             }
             (*featsPerLevel)[ grantedLvl ].insert( feat );
         }
-        else if( list <= kRegularOrBonusFeat && granted == -1 ) {
+        else if( list <= kRegularOrBonusFeat ) {
             (*bonusFeats).insert( feat );
+        }
+        else if( list == kBonusFeatOnly ) {
+            (*exclusiveBonusFeats).insert( feat );
         }
     }
 
-    return std::make_pair( std::move( featsPerLevel ), std::move( bonusFeats ) );
+    return std::make_tuple( std::move( featsPerLevel ), std::move( bonusFeats ), std::move( exclusiveBonusFeats ) );
 }
 
 void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
@@ -296,11 +301,13 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             const auto featsOk = classes_2da.Get2DAString( "FeatsTable", row, featsStr );
             auto featsPerLvl = std::make_unique< FeatsPerLevelMap >();
             auto bonusChoices = std::make_unique< BonusFeatsSet >();
+            auto exclusiveBonusChoices = std::make_unique< BonusFeatsSet >();
             if( featsOk ) {
                 boost::algorithm::to_lower( featsStr );
-                auto [ tmpFeatsPerLvl, tmpBonusChoices ] = loadClassFeatsTable( featsStr, twodaMapper );
+                auto [ tmpFeatsPerLvl, tmpBonusChoices, tmpExclusiveBonusFeats ] = loadClassFeatsTable( featsStr, twodaMapper );
                 featsPerLvl = std::move( tmpFeatsPerLvl );
                 bonusChoices = std::move( tmpBonusChoices );
+                exclusiveBonusChoices = std::move( tmpExclusiveBonusFeats );
             }
 
             std::string bonusfeatsStr;
@@ -320,6 +327,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
             chClass->setBonusFeats( std::move( bonusFeats ) );
             chClass->setBonusChoices( std::move( bonusChoices ) );
+            chClass->setExclusiveBonusChoices( std::move( exclusiveBonusChoices ) );
             nwnRules.setChClass( std::move( chClass ) );
         }
     }

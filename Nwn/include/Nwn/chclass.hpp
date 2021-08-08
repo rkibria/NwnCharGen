@@ -63,6 +63,9 @@ public:
     void setBonusChoices( std::unique_ptr< BonusFeatsSet > bc );
     const BonusFeatsSet& getBonusChoices() const;
 
+    void setExclusiveBonusChoices( std::unique_ptr< BonusFeatsSet > bc );
+    const BonusFeatsSet& getExclusiveBonusChoices() const;
+
 private:
     friend class boost::serialization::access;
 
@@ -76,7 +79,8 @@ private:
            & boost::serialization::make_nvp( "saves", saves )
            & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl )
            & boost::serialization::make_nvp( "bonusFeats", bonusFeats )
-           & boost::serialization::make_nvp( "bonusChoices", bonusChoices );
+           & boost::serialization::make_nvp( "bonusChoices", bonusChoices )
+           & boost::serialization::make_nvp( "exclusiveBonusChoices", exclusiveBonusChoices );
     }
 
     int id = INVALID_CHCLASS_ID;
@@ -88,6 +92,7 @@ private:
     std::unique_ptr< FeatsPerLevelMap > featsPerLvl;
     std::unique_ptr< std::vector< bool > > bonusFeats;
     std::unique_ptr< BonusFeatsSet > bonusChoices;
+    std::unique_ptr< BonusFeatsSet > exclusiveBonusChoices;
 };
 
 } // namespace Nwn

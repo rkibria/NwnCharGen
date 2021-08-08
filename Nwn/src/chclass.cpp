@@ -43,4 +43,14 @@ const BonusFeatsSet& ChClass::getBonusChoices() const
     return *bonusChoices;
 }
 
+void ChClass::setExclusiveBonusChoices( std::unique_ptr< BonusFeatsSet > bc )
+{
+    exclusiveBonusChoices = std::move( bc );
+}
+
+const BonusFeatsSet& ChClass::getExclusiveBonusChoices() const
+{
+    return *exclusiveBonusChoices;
+}
+
 } // namespace Nwn
