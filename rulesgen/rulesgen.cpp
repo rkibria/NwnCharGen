@@ -19,7 +19,7 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 0
+#define READ_SCOD_RULES 1
 
 #include <boost/algorithm/string.hpp>
 
@@ -536,8 +536,8 @@ int main()
 
 #if READ_SCOD_RULES == 1
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
     TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
 #endif
 
