@@ -41,6 +41,19 @@ void FeatDialog::setupWidget()
             continue;
         }
 
+        if( !bonusChoices || ( bonusChoices && bonusChoices->empty() ) ) {
+            static const std::string kAllClassesCanUseCol = "ALLCLASSESCANUSE";
+            if( feat.hasColumn( kAllClassesCanUseCol ) ) {
+                const auto canUse = feat.getColumn( kAllClassesCanUseCol );
+                if( canUse == 0 ) {
+                    continue;
+                }
+            }
+            else {
+                continue;
+            }
+        }
+
         if( !nwnRules->isFeatAvailAtLvl( nwnChar, lvl, feat.getId() ) ) {
             continue;
         }

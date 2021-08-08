@@ -296,7 +296,7 @@ int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
 std::set< int > Nwn::Rules::getFeatsUptoLvl( const Character* nwnChar, int lvl ) const
 {
     std::set< int > featsUptoNow;
-    for( int i = 0; i < lvl; ++i ) {
+    for( int i = 0; i <= lvl; ++i ) {
         const auto featsGained = getFeatsGainedAtLvl( nwnChar, i );
         featsUptoNow.insert( featsGained.cbegin(), featsGained.cend() );
         const auto& featsChosen = nwnChar->getFeatChoicesAtLvl( i );
@@ -309,17 +309,6 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
 {
     const auto feat = getFeat( featid );
     if(!feat) {
-        return false;
-    }
-
-    static const std::string kAllClassesCanUseCol = "ALLCLASSESCANUSE";
-    if( feat->hasColumn( kAllClassesCanUseCol ) ) {
-        const auto canUse = feat->getColumn( kAllClassesCanUseCol );
-        if( canUse == 0 ) {
-            return false;
-        }
-    }
-    else {
         return false;
     }
 
@@ -381,7 +370,11 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
                 const auto prereqFeatId = feat->getColumn( prereqCol );
                 if( featsUptoNow.find( prereqFeatId ) != featsUptoNow.end() ) {
                     hasFeat = true;
+                    break;
                 }
+            }
+            else {
+                break;
             }
         }
 
