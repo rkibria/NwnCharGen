@@ -72,6 +72,8 @@ public:
 
     bool isFeatAvailAtLvl( const Character* chr, int lvl, int featid ) const;
 
+    std::set< int > getFeatsUptoLvl( const Character* nwnChar, int lvl ) const;
+
     // SERIALIZATION
     void save( const char* fileName ) const;
     void restore( const char* fileName );

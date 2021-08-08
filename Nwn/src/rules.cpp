@@ -293,6 +293,18 @@ int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
     return getNumNormalFeatChoicesAtLvl( chr, lvl ) + getNumBonusFeatChoicesAtLvl( chr, lvl );
 }
 
+std::set< int > Nwn::Rules::getFeatsUptoLvl( const Character* nwnChar, int lvl ) const
+{
+    std::set< int > featsUptoNow;
+    for( int i = 0; i < lvl; ++i ) {
+        const auto featsGained = getFeatsGainedAtLvl( nwnChar, i );
+        featsUptoNow.insert( featsGained.cbegin(), featsGained.cend() );
+        const auto& featsChosen = nwnChar->getFeatChoicesAtLvl( i );
+        featsUptoNow.insert( featsChosen.cbegin(), featsChosen.cend() );
+    }
+    return featsUptoNow;
+}
+
 bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) const
 {
     const auto feat = getFeat( featid );
@@ -327,6 +339,22 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
             }
         }
     }
+
+    const auto featsUptoNow = getFeatsUptoLvl( nwnChar, lvl );
+
+    static const std::vector< std::string > kPrereqFeatCols = {
+        "PREREQFEAT1",
+        "PREREQFEAT2"
+    };
+    for( const auto& prereqCol : kPrereqFeatCols ) {
+        if( feat->hasColumn( prereqCol ) ) {
+            const auto prereqFeatId = feat->getColumn( prereqCol );
+            if( featsUptoNow.find( prereqFeatId ) == featsUptoNow.end() ) {
+                return false;
+            }
+        }
+    }
+
 
     return true;
 }
