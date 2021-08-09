@@ -19,7 +19,7 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 0
+#define READ_SCOD_RULES 1
 
 #include <boost/algorithm/string.hpp>
 
