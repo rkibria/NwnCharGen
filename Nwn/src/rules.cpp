@@ -242,7 +242,7 @@ std::set< int > Rules::getFeatsGainedAtLvl( const Character* chr, int lvl ) cons
     return feats;
 }
 
-int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
+int Rules::getNumNormalFeatChoicesAtLvl( const Character* chr, int lvl ) const
 {
     int total = 0;
 
@@ -271,6 +271,13 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
         }
     }
 
+    return total;
+}
+
+int Rules::getNumBonusFeatChoicesAtLvl( const Character* chr, int lvl ) const
+{
+    int total = 0;
+
     const auto& classAtLvl = chr->getLevel( lvl );
     const auto chClass = getChClassByName( classAtLvl );
     if( chClass ) {
@@ -279,6 +286,144 @@ int Rules::getNumFeatChoicesAtLvl( const Character* chr, int lvl ) const
     }
 
     return total;
+}
+
+int Rules::getNumTotalFeatChoicesAtLvl( const Character* chr, int lvl ) const
+{
+    return getNumNormalFeatChoicesAtLvl( chr, lvl ) + getNumBonusFeatChoicesAtLvl( chr, lvl );
+}
+
+std::set< int > Nwn::Rules::getFeatsUptoLvl( const Character* nwnChar, int lvl ) const
+{
+    std::set< int > featsUptoNow;
+    for( int i = 0; i <= lvl; ++i ) {
+        const auto featsGained = getFeatsGainedAtLvl( nwnChar, i );
+        featsUptoNow.insert( featsGained.cbegin(), featsGained.cend() );
+        const auto& featsChosen = nwnChar->getFeatChoicesAtLvl( i );
+        featsUptoNow.insert( featsChosen.cbegin(), featsChosen.cend() );
+    }
+    return featsUptoNow;
+}
+
+bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) const
+{
+    const auto feat = getFeat( featid );
+    if(!feat) {
+        return false;
+    }
+
+    static const std::string kMinAttackBonusCol = "MINATTACKBONUS";
+    if( feat->hasColumn( kMinAttackBonusCol ) ) {
+        const auto minAtkBonus = feat->getColumn( kMinAttackBonusCol );
+        const auto bab = getBabAtLvl( nwnChar, lvl );
+        if( bab < minAtkBonus ) {
+            return false;
+        }
+    }
+
+    static const std::vector< std::string > kMinAblCols = {
+        "MINSTR",
+        "MINDEX",
+        "MININT",
+        "MINWIS",
+        "MINCON",
+        "MINCHA"
+    };
+    for( int i = 0; i < 6; ++i ) {
+        const auto& ablCol = kMinAblCols[ i ];
+        if( feat->hasColumn( ablCol ) ) {
+            const auto minAbl = feat->getColumn( ablCol );
+            const auto abl = getAblAtLvl( nwnChar, indexToAbl( i ), lvl );
+            if( abl < minAbl ) {
+                return false;
+            }
+        }
+    }
+
+    const auto featsUptoNow = getFeatsUptoLvl( nwnChar, lvl );
+
+    static const std::vector< std::string > kPrereqFeatCols = {
+        "PREREQFEAT1",
+        "PREREQFEAT2"
+    };
+    for( const auto& prereqCol : kPrereqFeatCols ) {
+        if( feat->hasColumn( prereqCol ) ) {
+            const auto prereqFeatId = feat->getColumn( prereqCol );
+            if( featsUptoNow.find( prereqFeatId ) == featsUptoNow.end() ) {
+                return false;
+            }
+        }
+    }
+
+    static const std::vector< std::string > kOrReqFeatCols = {
+        "OrReqFeat0",
+        "OrReqFeat1",
+        "OrReqFeat2",
+        "OrReqFeat3",
+        "OrReqFeat4",
+        "OrReqFeat5"
+    };
+    if( feat->hasColumn( kOrReqFeatCols[ 0 ] ) ) {
+        bool hasFeat = false;
+        for( const auto& prereqCol : kOrReqFeatCols ) {
+            if( feat->hasColumn( prereqCol ) ) {
+                const auto prereqFeatId = feat->getColumn( prereqCol );
+                if( featsUptoNow.find( prereqFeatId ) != featsUptoNow.end() ) {
+                    hasFeat = true;
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
+
+        if( !hasFeat ) {
+            return false;
+        }
+    }
+
+    const auto classCounts = nwnChar->getChClassCountsAtLvl( lvl );
+
+    static const std::string kMinLevelCol = "MinLevel";
+    static const std::string kMinLevelClassCol = "MinLevelClass";
+    if( feat->hasColumn( kMinLevelCol ) && feat->hasColumn( kMinLevelClassCol ) ) {
+        const auto minLevel = feat->getColumn( kMinLevelCol );
+        const auto minLevelClassId = feat->getColumn( kMinLevelClassCol );
+
+        bool hasMinLevel = false;
+        for( const auto& pr : classCounts ) {
+            const auto chClass = getChClassByName( pr.first );
+            if( chClass ) {
+                const auto classId = chClass->getId();
+                if( minLevelClassId == classId && pr.second >= minLevel ) {
+                    hasMinLevel = true;
+                }
+            }
+        }
+
+        if( !hasMinLevel ) {
+            return false;
+        }
+    }
+
+    static const std::string kMaxLevelCol = "MaxLevel";
+    if( feat->hasColumn( kMaxLevelCol ) ) {
+        const auto maxLevel = feat->getColumn( kMaxLevelCol );
+        if( lvl + 1 > maxLevel ) {
+            return false;
+        }
+    }
+
+    static const std::string kPreReqEpicCol = "PreReqEpic";
+    if( feat->hasColumn( kPreReqEpicCol ) ) {
+        const auto preReqEpic = feat->getColumn( kPreReqEpicCol );
+        if( preReqEpic == 1 && lvl < 20 ) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // SERIALIZATION

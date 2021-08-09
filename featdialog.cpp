@@ -11,10 +11,13 @@
 
 using namespace Nwn;
 
-FeatDialog::FeatDialog( Nwn::Rules *rules, bool choiceOnly, QWidget *parent ) :
+FeatDialog::FeatDialog(Nwn::Rules *rules, std::unique_ptr< std::set< int > > bonusChoices, int lvl, Nwn::Character* nwnchar, QWidget *parent ) :
     QDialog( parent ),
     ui( new Ui::FeatDialog ),
-    nwnRules{ rules }
+    nwnRules{ rules },
+    bonusChoices{ std::move( bonusChoices ) },
+    lvl{ lvl },
+    nwnChar{ nwnchar }
 {
     ui->setupUi( this );
 
@@ -34,9 +37,27 @@ void FeatDialog::setupWidget()
 
     ui->treeWidgetFeat->setSortingEnabled( false );
     for( const auto& feat : nwnRules->getFeats() ) {
-//        if( !feat.getAllClassesCanUse() ) {
-//            continue;
-//        }
+        if( bonusChoices && !bonusChoices->empty() && bonusChoices->find( feat.getId() ) == bonusChoices->end() ) {
+            continue;
+        }
+
+        if( !bonusChoices || ( bonusChoices && bonusChoices->empty() ) ) {
+            static const std::string kAllClassesCanUseCol = "ALLCLASSESCANUSE";
+            if( feat.hasColumn( kAllClassesCanUseCol ) ) {
+                const auto canUse = feat.getColumn( kAllClassesCanUseCol );
+                if( canUse == 0 ) {
+                    continue;
+                }
+            }
+            else {
+                continue;
+            }
+        }
+
+        if( !nwnRules->isFeatAvailAtLvl( nwnChar, lvl, feat.getId() ) ) {
+            continue;
+        }
+
         new QTreeWidgetItem( ui->treeWidgetFeat,
                              QStringList( QString( feat.getName().c_str() ) ),
                              feat.getId() );

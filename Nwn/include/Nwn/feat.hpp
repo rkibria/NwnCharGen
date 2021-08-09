@@ -3,9 +3,11 @@
 
 #include <Nwn/base.hpp>
 #include <string>
+#include <unordered_map>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/unique_ptr.hpp>
+#include <boost/serialization/unordered_map.hpp>
 
 namespace Nwn {
 
@@ -31,8 +33,9 @@ public:
     const std::string& getDescription() const { return description; }
     void setDescription( const std::string& d ) { description = d; }
 
-    void setAllClassesCanUse(bool e) { allClassesCanUse = e; }
-    const bool getAllClassesCanUse() const { return allClassesCanUse; }
+    bool hasColumn(const std::string& col) const;
+    int getColumn(const std::string& col) const;
+    void setColumn(const std::string& col, int val);
 
 private:
     friend class boost::serialization::access;
@@ -43,13 +46,13 @@ private:
         ar & boost::serialization::make_nvp( "id", id )
            & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "description", description )
-           & boost::serialization::make_nvp( "allClassesCanUse", allClassesCanUse );
+           & boost::serialization::make_nvp( "columns", columns );
     }
 
     int id = INVALID_FEAT_ID;
     std::string name;
     std::string description;
-    bool allClassesCanUse = false;
+    std::unordered_map<std::string, int> columns;
 };
 
 } // namespace Nwn

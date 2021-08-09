@@ -234,7 +234,7 @@ void NwnCharGen::modAbility( int iAbl, bool isInc )
     const auto abl = static_cast<AblScore>( iAbl );
     isInc ? nwnChar->incAbl( abl ) : nwnChar->decAbl( abl );
     setDirtyFlag();
-    updateAbilityBlock();
+    updateSummary();
 }
 
 void NwnCharGen::on_pushButtonStrMinus_clicked() { modAbility( static_cast<int>( AblScore::Str ), false ); }

@@ -190,9 +190,16 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
     return bonusFeats;
 }
 
-std::unique_ptr< FeatsPerLevelMap > loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+std::tuple<
+    std::unique_ptr< FeatsPerLevelMap >,
+    std::unique_ptr< BonusFeatsSet >,
+    std::unique_ptr< BonusFeatsSet >
+>
+loadClassFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
-    auto feats = std::make_unique< FeatsPerLevelMap >();
+    auto featsPerLevel = std::make_unique< FeatsPerLevelMap >();
+    auto bonusFeats = std::make_unique< BonusFeatsSet >();
+    auto exclusiveBonusFeats = std::make_unique< BonusFeatsSet >();
 
     constexpr const auto colFeatIndex = "FeatIndex";
     constexpr const auto colList = "List";
@@ -220,17 +227,29 @@ std::unique_ptr< FeatsPerLevelMap > loadClassFeatsTable( const std::string& tabl
             continue;
         }
 
-        constexpr const int kAutomaticallyGranted = 3;
+        enum featListValues {
+            kSelectableOnLvlUp,
+            kRegularOrBonusFeat,
+            kBonusFeatOnly,
+            kAutomaticallyGranted
+        };
+
         if( list == kAutomaticallyGranted ) {
             const auto grantedLvl = granted - 1;
-            if( (*feats).find( grantedLvl ) == (*feats).end() ) {
-                (*feats)[ grantedLvl ] = std::set<int>();
+            if( (*featsPerLevel).find( grantedLvl ) == (*featsPerLevel).end() ) {
+                (*featsPerLevel)[ grantedLvl ] = std::set<int>();
             }
-            (*feats)[ grantedLvl ].insert( feat );
+            (*featsPerLevel)[ grantedLvl ].insert( feat );
+        }
+        else if( list <= kRegularOrBonusFeat ) {
+            (*bonusFeats).insert( feat );
+        }
+        else if( list == kBonusFeatOnly ) {
+            (*exclusiveBonusFeats).insert( feat );
         }
     }
 
-    return feats;
+    return std::make_tuple( std::move( featsPerLevel ), std::move( bonusFeats ), std::move( exclusiveBonusFeats ) );
 }
 
 void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
@@ -281,9 +300,14 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             std::string featsStr;
             const auto featsOk = classes_2da.Get2DAString( "FeatsTable", row, featsStr );
             auto featsPerLvl = std::make_unique< FeatsPerLevelMap >();
+            auto bonusChoices = std::make_unique< BonusFeatsSet >();
+            auto exclusiveBonusChoices = std::make_unique< BonusFeatsSet >();
             if( featsOk ) {
                 boost::algorithm::to_lower( featsStr );
-                featsPerLvl = loadClassFeatsTable( featsStr, twodaMapper );
+                auto [ tmpFeatsPerLvl, tmpBonusChoices, tmpExclusiveBonusFeats ] = loadClassFeatsTable( featsStr, twodaMapper );
+                featsPerLvl = std::move( tmpFeatsPerLvl );
+                bonusChoices = std::move( tmpBonusChoices );
+                exclusiveBonusChoices = std::move( tmpExclusiveBonusFeats );
             }
 
             std::string bonusfeatsStr;
@@ -302,6 +326,8 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setSaves( saves );
             chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
             chClass->setBonusFeats( std::move( bonusFeats ) );
+            chClass->setBonusChoices( std::move( bonusChoices ) );
+            chClass->setExclusiveBonusChoices( std::move( exclusiveBonusChoices ) );
             nwnRules.setChClass( std::move( chClass ) );
         }
     }
@@ -417,16 +443,81 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 continue;
             }
 
-            int allClassesCanUse;
-            const auto allClassesCanUseOk = feat_2da.Get2DAInt( "ALLCLASSESCANUSE", row, allClassesCanUse );
-            if( !allClassesCanUseOk ) {
-                std::cerr << "importFeats: skipping row " << row << ", could not read ALLCLASSESCANUSE" << std::endl;
-                continue;
-            }
-
             std::unique_ptr< Feat > feat = std::make_unique< Feat >( row, name );
             feat->setDescription( translateToNwn2Tags( descr ) );
-            feat->setAllClassesCanUse( allClassesCanUse ? true : false );
+
+            const auto readColumn = [ &feat_2da, row, &feat ]( const char* col ) {
+                int val;
+                const auto valOk = feat_2da.Get2DAInt( col, row, val );
+                if( valOk ) {
+                    feat->setColumn( col, val );
+                }
+            };
+
+            const std::vector<const char*> featCols = { // LABEL FEAT DESCRIPTION ICON
+                "MINATTACKBONUS",
+                "MINSTR",
+                "MINDEX",
+                "MININT",
+                "MINWIS",
+                "MINCON",
+                "MINCHA",
+                "MAXSTR",
+                "MAXDEX",
+                "MAXINT",
+                "MAXWIS",
+                "MAXCON",
+                "MAXCHA",
+                "MINSPELLLVL",
+                "MINCASTERLVL",
+                "PREREQFEAT1",
+                "PREREQFEAT2",
+                "GAINMULTIPLE",
+                "EFFECTSSTACK",
+                "ALLCLASSESCANUSE",
+                "CATEGORY",
+                "MAXCR",
+                "SPELLID",
+                "SUCCESSOR",
+                "CRValue",
+                "USESPERDAY",
+                "USESMAPFEAT",
+                "MASTERFEAT",
+                "TARGETSELF",
+                "OrReqFeat0",
+                "OrReqFeat1",
+                "OrReqFeat2",
+                "OrReqFeat3",
+                "OrReqFeat4",
+                "OrReqFeat5",
+                "REQSKILL",
+                "ReqSkillMaxRanks",
+                "ReqSkillMinRanks",
+                "REQSKILL2",
+                "ReqSkillMaxRanks2",
+                "ReqSkillMinRanks2",
+                // "Constant",
+                "TOOLSCATEGORIES",
+                "HostileFeat",
+                "MinLevel",
+                "MinLevelClass",
+                "MaxLevel",
+                "MinFortSave",
+                "PreReqEpic",
+                // "FeatCategory",
+                "IsActive",
+                "IsPersistent",
+                "ToggleMode",
+                "Cooldown",
+                "DMFeat",
+                // "REMOVED",
+                "AlignRestrict",
+                "ImmunityType",
+                "Instant"
+            };
+            for( const auto& col : featCols ) {
+                readColumn( col );
+            }
 
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
             nwnRules.setFeat( std::move( feat ) );
@@ -453,8 +544,8 @@ int main()
 
 #if READ_SCOD_RULES == 1
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
     twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
     TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
 #endif
 
