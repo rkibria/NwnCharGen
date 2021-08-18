@@ -4,10 +4,12 @@
 #include <Nwn/base.hpp>
 #include <string>
 #include <unordered_map>
+#include <map>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/unique_ptr.hpp>
 #include <boost/serialization/unordered_map.hpp>
+#include <boost/serialization/map.hpp>
 
 namespace Nwn {
 
@@ -17,6 +19,15 @@ static constexpr int INVALID_FEAT_ID = -1;
 static constexpr int FEAT_ID_QUICK_TO_MASTER = 258;
 
 class AblBlock;
+
+enum class FeatEffectType
+{
+    FirstLvlBonusFeat,
+    HpBonus,
+    FortSave
+};
+
+using FeatEffectMap = std::map<FeatEffectType, int>;
 
 class Feat
 {
@@ -37,6 +48,10 @@ public:
     int getColumn(const std::string& col) const;
     void setColumn(const std::string& col, int val);
 
+    void addEffect(FeatEffectType type, int val);
+    bool hasEffect(FeatEffectType type) const;
+    int getEffect(FeatEffectType type) const;
+
 private:
     friend class boost::serialization::access;
 
@@ -46,13 +61,15 @@ private:
         ar & boost::serialization::make_nvp( "id", id )
            & boost::serialization::make_nvp( "name", name )
            & boost::serialization::make_nvp( "description", description )
-           & boost::serialization::make_nvp( "columns", columns );
+           & boost::serialization::make_nvp( "columns", columns )
+           & boost::serialization::make_nvp( "effects", effects );
     }
 
     int id = INVALID_FEAT_ID;
     std::string name;
     std::string description;
     std::unordered_map<std::string, int> columns;
+    FeatEffectMap effects;
 };
 
 } // namespace Nwn
