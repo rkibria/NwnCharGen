@@ -13,6 +13,7 @@
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
 #include <Nwn/chclass.hpp>
+#include <Nwn/feat.hpp>
 
 #include "racedialog.h"
 #include "levelsmodel.h"
@@ -462,4 +463,74 @@ void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
         updateAll();
         clearDirtyFlag();
     }
+}
+
+void NwnCharGen::on_actionExport_triggered()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+
+    std::stringstream s;
+    s << "Name: " << nwnChar->getName() << "\n";
+    s << "Race: " << nwnChar->getRace() << "\n";
+    s << "\n";
+
+    const auto finalLvl = nwnChar->getNumLevels() - 1;
+    for( int i = 0; i < 6; ++i ) {
+        switch( i ) {
+        case 0: s << "STR: "; break;
+        case 1: s << "DEX: "; break;
+        case 2: s << "CON: "; break;
+        case 3: s << "INT: "; break;
+        case 4: s << "WIS: "; break;
+        case 5: s << "CHA: "; break;
+        default: break;
+        }
+
+        const auto abl = indexToAbl( i );
+        const auto score = nwnRules->getAblAtLvl( nwnChar.get(), abl, 1 );
+        const auto finalScore = nwnRules->getAblAtLvl( nwnChar.get(), abl, finalLvl );
+        const auto mod = getAblMod( score );
+        const auto finalMod = getAblMod( finalScore );
+        s << score << " (" << (mod >= 0 ? "+" : "") << mod << "), final " << finalScore << " ("<< (finalMod >= 0 ? "+" : "") << finalMod << ")\n";
+    }
+    s << "\n";
+
+    s << "Classes: ";
+    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( nwnChar->getNumLevels() - 1 );
+    for( auto itr = curClassLvls.cbegin(); itr != curClassLvls.cend(); ++itr ) {
+        s << itr->first << " (" << itr->second << ") ";
+    }
+    s << "\n\n";
+
+    for( int lvl = 0; lvl < nwnChar->getNumLevels(); ++lvl ) {
+        s << lvl + 1 << ": ";
+        s << nwnChar->getLevel( lvl ) << " ";
+
+        const auto numNormalFeatChoices = nwnRules->getNumNormalFeatChoicesAtLvl( nwnChar.get(), lvl );
+        const auto numBonusFeatChoices = nwnRules->getNumBonusFeatChoicesAtLvl( nwnChar.get(), lvl );
+        const auto numTotalFeatChoices = numNormalFeatChoices + numBonusFeatChoices;
+
+        if( numTotalFeatChoices ) {
+            const auto& choices = nwnChar->getFeatChoicesAtLvl( lvl );
+            static const std::string unassignedText = "Unchosen feat";
+            for( int i = 0; i < numTotalFeatChoices; ++i ) {
+                auto text = &unassignedText;
+                const auto featId = ( i < choices.size() ) ? choices[ i ] : Nwn::INVALID_FEAT_ID;
+                const auto feat = nwnRules->getFeat( featId );
+                if( feat ) {
+                    text = &feat->getName();
+                }
+                s << "[" << *text << "] ";
+            }
+        }
+
+        s << "\n";
+    }
+
+    clipboard->setText(s.str().c_str());
+
+    QMessageBox::information( this,
+                              "Export",
+                              "Exported character to clipboard",
+                              QMessageBox::Ok );
 }
