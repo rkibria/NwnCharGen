@@ -22,6 +22,7 @@ class AblBlock;
 
 enum class FeatEffectType
 {
+    InvalidEffect,
     FirstLvlBonusFeat,
     HpBonus,
     FortSave,

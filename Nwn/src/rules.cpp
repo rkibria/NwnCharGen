@@ -105,6 +105,26 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
         ablVal += race->getAblAdjusts().getAbl( abl );
     }
 
+    FeatEffectType effect;
+    switch( abl ) {
+    case AblScore::Str: effect = FeatEffectType::StrBonus; break;
+    case AblScore::Dex: effect = FeatEffectType::DexBonus; break;
+    case AblScore::Con: effect = FeatEffectType::ConBonus; break;
+    case AblScore::Int: effect = FeatEffectType::IntBonus; break;
+    case AblScore::Wis: effect = FeatEffectType::WisBonus; break;
+    case AblScore::Cha: effect = FeatEffectType::ChaBonus; break;
+    default: break;
+    }
+
+    const auto feats = getFeatsUptoLvl( chr, lvl );
+    for( const auto id : feats ) {
+        const auto feat = getFeat( id ); // TODO Epic Barbarian not read?
+        if( feat && feat->hasEffect( effect ) ) {
+            const auto val = feat->getEffect( effect );
+            ablVal += val;
+        }
+    }
+
     switch( lvl ) {
     case 29:
     case 28:
