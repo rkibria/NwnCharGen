@@ -24,7 +24,15 @@ enum class FeatEffectType
 {
     FirstLvlBonusFeat,
     HpBonus,
-    FortSave
+    FortSave,
+    RefSave,
+    WillSave,
+    StrBonus,
+    DexBonus,
+    ConBonus,
+    IntBonus,
+    WisBonus,
+    ChaBonus
 };
 
 using FeatEffectMap = std::map<FeatEffectType, int>;

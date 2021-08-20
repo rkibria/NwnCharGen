@@ -405,6 +405,17 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
     }
 }
 
+void addFeatEffects( Feat& feat )
+{
+    const auto id = feat.getId();
+    const int greatCHA = 764;
+    const int greatINT = 794;
+
+    if( id >= greatINT && id < greatINT + 10 ) {
+        feat.addEffect( FeatEffectType::IntBonus, 1 );
+    }
+}
+
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
 {
     TwoDAFileReader feat_2da( twodaMapper.getFile( "feat" ).c_str() );
@@ -518,6 +529,8 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
             for( const auto& col : featCols ) {
                 readColumn( col );
             }
+
+            addFeatEffects( *feat );
 
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
             nwnRules.setFeat( std::move( feat ) );
