@@ -19,7 +19,7 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 1
+#define READ_SCOD_RULES 0
 
 #include <boost/algorithm/string.hpp>
 
@@ -409,11 +409,26 @@ void addFeatEffects( Feat& feat )
 {
     const auto id = feat.getId();
     const int greatCHA = 764;
+    const int greatCON = 774;
+    const int greatDEX = 784;
     const int greatINT = 794;
+    const int greatWIS = 804;
+    const int greatSTR = 814;
 
-    if( id >= greatINT && id < greatINT + 10 ) {
-        feat.addEffect( FeatEffectType::IntBonus, 1 );
-    }
+    const auto checkGreatAbl = [ &feat ]( int id, int ablId, FeatEffectType effect ) {
+        if( id >= ablId && id < ablId + 10 ) {
+            feat.addEffect( effect, 1 );
+            return true;
+        }
+        return false;
+    };
+
+    checkGreatAbl( id, greatSTR, FeatEffectType::StrBonus )
+            || checkGreatAbl( id, greatDEX, FeatEffectType::DexBonus )
+            || checkGreatAbl( id, greatCON, FeatEffectType::ConBonus )
+            || checkGreatAbl( id, greatINT, FeatEffectType::IntBonus )
+            || checkGreatAbl( id, greatWIS, FeatEffectType::WisBonus )
+            || checkGreatAbl( id, greatCHA, FeatEffectType::ChaBonus );
 }
 
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
