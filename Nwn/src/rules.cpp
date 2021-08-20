@@ -1,5 +1,6 @@
 #include <cassert>
 #include <fstream>
+#include <iostream>
 
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
@@ -85,6 +86,7 @@ const Nwn::Feat* Rules::getFeat( int id ) const
     if( feats.find( id ) != feats.end() ) {
         return feats.at( id ).get();
     }
+    std::cerr << "feat id " << id << " not found\n";
     return nullptr;
 }
 
