@@ -476,15 +476,7 @@ void NwnCharGen::on_actionExport_triggered()
 
     const auto finalLvl = nwnChar->getNumLevels() - 1;
     for( int i = 0; i < 6; ++i ) {
-        switch( i ) {
-        case 0: s << "STR: "; break;
-        case 1: s << "DEX: "; break;
-        case 2: s << "CON: "; break;
-        case 3: s << "INT: "; break;
-        case 4: s << "WIS: "; break;
-        case 5: s << "CHA: "; break;
-        default: break;
-        }
+        s << ablAbbrevs[ i ] << ": ";
 
         const auto abl = indexToAbl( i );
         const auto score = nwnRules->getAblAtLvl( nwnChar.get(), abl, 1 );
