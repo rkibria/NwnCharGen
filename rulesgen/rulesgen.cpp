@@ -405,9 +405,8 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
     }
 }
 
-void addFeatEffects( Feat& feat )
+bool addGreatAblEffects( Feat& feat, const int id )
 {
-    const auto id = feat.getId();
     const int greatCHA = 764;
     const int greatCON = 774;
     const int greatDEX = 784;
@@ -423,12 +422,19 @@ void addFeatEffects( Feat& feat )
         return false;
     };
 
-    checkGreatAbl( id, greatSTR, FeatEffectType::StrBonus )
+    return checkGreatAbl( id, greatSTR, FeatEffectType::StrBonus )
             || checkGreatAbl( id, greatDEX, FeatEffectType::DexBonus )
             || checkGreatAbl( id, greatCON, FeatEffectType::ConBonus )
             || checkGreatAbl( id, greatINT, FeatEffectType::IntBonus )
             || checkGreatAbl( id, greatWIS, FeatEffectType::WisBonus )
             || checkGreatAbl( id, greatCHA, FeatEffectType::ChaBonus );
+}
+
+void addFeatEffects( Feat& feat )
+{
+    const auto id = feat.getId();
+
+    addGreatAblEffects(feat, id);
 }
 
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
