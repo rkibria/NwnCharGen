@@ -506,6 +506,11 @@ void NwnCharGen::on_actionExport_triggered()
         s << lvl + 1 << ": ";
         s << nwnChar->getLevel( lvl ) << " ";
 
+        if( ( lvl + 1 ) % 4 == 0 ) {
+            const auto abl = nwnChar->getAblInc( lvl / 4 );
+            s << "[" << ablAbbrevs[ static_cast< int >( abl ) ] << "+1] ";
+        }
+
         const auto numNormalFeatChoices = nwnRules->getNumNormalFeatChoicesAtLvl( nwnChar.get(), lvl );
         const auto numBonusFeatChoices = nwnRules->getNumBonusFeatChoicesAtLvl( nwnChar.get(), lvl );
         const auto numTotalFeatChoices = numNormalFeatChoices + numBonusFeatChoices;
