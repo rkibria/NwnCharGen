@@ -17,6 +17,7 @@ static constexpr int INVALID_FEAT_ID = -1;
 
 static constexpr int FEAT_ID_QUICK_TO_MASTER = 258;
 static constexpr int FEAT_ID_TOUGHNESS = 40;
+static constexpr int FEAT_ID_STEADFAST_DETERMINATION = 2170;
 
 class AblBlock;
 

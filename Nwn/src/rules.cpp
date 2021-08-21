@@ -258,7 +258,14 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl ) const
 
     sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl, &featsUptoLvl ) );
     sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl, &featsUptoLvl ) );
-    sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl, &featsUptoLvl ) );
+
+    const bool hasSteadfast = ( featsUptoLvl.count( FEAT_ID_STEADFAST_DETERMINATION ) == 1 );
+    if( !hasSteadfast ) {
+        sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl, &featsUptoLvl ) );
+    }
+    else {
+        sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl, &featsUptoLvl ) );
+    }
 
     for( const auto id : featsUptoLvl ) {
         const auto feat = getFeat( id );
