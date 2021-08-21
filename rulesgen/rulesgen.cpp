@@ -456,13 +456,24 @@ bool addBasicSaveBonusEffects( Feat& feat, const int id )
     return false;
 }
 
+bool addEpicToughnessEffects( Feat& feat, const int id )
+{
+    const int epicToughness = 754;
+    if( id >= epicToughness && id < epicToughness + 10 ) {
+        feat.addEffect( FeatEffectType::HpBonus, 30 );
+        return true;
+    }
+    return false;
+}
+
 void addFeatEffects( Feat& feat )
 {
     const auto id = feat.getId();
 
     addGreatAblEffects( feat, id )
             || addLuckOfHeroesEffects( feat, id )
-            || addBasicSaveBonusEffects( feat, id );
+            || addBasicSaveBonusEffects( feat, id )
+            || addEpicToughnessEffects( feat, id );
 }
 
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )

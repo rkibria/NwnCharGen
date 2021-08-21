@@ -203,6 +203,19 @@ int Rules::getHpAtLvl( const Character* chr, int lvl ) const
             hp += conBonus;
         }
     }
+
+    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
+
+    for( const auto id : featsUptoLvl ) {
+        const auto feat = getFeat( id );
+        if( feat ) {
+            if( feat->hasEffect( FeatEffectType::HpBonus ) ) {
+                const auto val = feat->getEffect( FeatEffectType::HpBonus );
+                hp += val;
+            }
+        }
+    }
+
     return hp;
 }
 
