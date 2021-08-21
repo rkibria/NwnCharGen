@@ -245,13 +245,23 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl ) const
     sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl, &featsUptoLvl ) );
     sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl, &featsUptoLvl ) );
 
-//    for( const auto id : featsUptoLvl ) {
-//        const auto feat = getFeat( id );
-//        if( feat && feat->hasEffect( effect ) ) {
-//            const auto val = feat->getEffect( effect );
-//            ablVal += val;
-//        }
-//    }
+    for( const auto id : featsUptoLvl ) {
+        const auto feat = getFeat( id );
+        if( feat ) {
+            if( feat->hasEffect( FeatEffectType::FortSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::FortSave );
+                sav.Fort += val;
+            }
+            if( feat->hasEffect( FeatEffectType::RefSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::RefSave );
+                sav.Ref += val;
+            }
+            if( feat->hasEffect( FeatEffectType::WillSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::WillSave );
+                sav.Will += val;
+            }
+        }
+    }
 
     return sav;
 }
