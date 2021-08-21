@@ -164,7 +164,11 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
     auto bonusFeats = std::make_unique< std::vector< bool > >();
     bonusFeats->resize( Character::maxLevel );
 
+    auto normalFeats = std::make_unique< std::vector< bool > >();
+    normalFeats->resize( Character::maxLevel );
+
     constexpr const auto colBonus = "Bonus";
+    constexpr const auto colNormal = "Normal";
 
     const auto& filePath = twodaMapper.getFile( tableName );
     if( !filePath.empty() ) {
@@ -181,7 +185,17 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
             if( !featOk ) {
                 continue;
             }
-            (*bonusFeats)[ row ] = isBonus;
+
+            int isNormal = 0;
+            if( class_bfeat_2da.HasColumn( colNormal ) ) {
+                const auto normalOk = class_bfeat_2da.Get2DAInt( colNormal, row, isNormal );
+                if( !normalOk ) {
+                    continue;
+                }
+            }
+
+            (*bonusFeats)[ row ] = isBonus == 1;
+            (*normalFeats)[ row ] = isNormal == 1;
         }
     }
 
