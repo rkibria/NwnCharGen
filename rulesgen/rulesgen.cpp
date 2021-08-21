@@ -439,12 +439,30 @@ bool addLuckOfHeroesEffects( Feat& feat, const int id )
     return false;
 }
 
+bool addBasicSaveBonusEffects( Feat& feat, const int id )
+{
+    if( id == 14 ) {
+        feat.addEffect( FeatEffectType::FortSave, 2 );
+        return true;
+    }
+    if( id == 24 ) {
+        feat.addEffect( FeatEffectType::RefSave, 2 );
+        return true;
+    }
+    if( id == 22 ) {
+        feat.addEffect( FeatEffectType::WillSave, 2 );
+        return true;
+    }
+    return false;
+}
+
 void addFeatEffects( Feat& feat )
 {
     const auto id = feat.getId();
 
     addGreatAblEffects( feat, id )
-            || addLuckOfHeroesEffects( feat, id );
+            || addLuckOfHeroesEffects( feat, id )
+            || addBasicSaveBonusEffects( feat, id );
 }
 
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
