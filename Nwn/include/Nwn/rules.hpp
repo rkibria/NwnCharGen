@@ -55,7 +55,7 @@ public:
     ConstMapLooper< Feat, FeatContainer > getFeats() const { return ConstMapLooper< Feat, FeatContainer >( feats ); }
 
     // CHARACTER METHODS
-    int getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const;
+    int getAblAtLvl( const Character* chr, AblScore abl, int lvl, const std::set< int > *featsUptoLvl = nullptr ) const;
     int getHpAtLvl( const Character* chr, int lvl ) const;
     int getBabAtLvl( const Character* chr, int lvl ) const;
     SavingThrows getSavesAtLvl( const Character* chr, int lvl ) const;

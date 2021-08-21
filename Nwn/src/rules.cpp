@@ -86,7 +86,7 @@ const Nwn::Feat* Rules::getFeat( int id ) const
     if( feats.find( id ) != feats.end() ) {
         return feats.at( id ).get();
     }
-    std::cerr << "feat id " << id << " not found\n";
+    // std::cerr << "feat id " << id << " not found\n";
     return nullptr;
 }
 
@@ -97,7 +97,7 @@ void Rules::setFeat( std::unique_ptr< Nwn::Feat > f )
 
 // CHARACTER METHODS
 
-int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
+int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl, const std::set< int > *featsUptoLvl ) const
 {
     int ablVal = chr->getAbls().getAbl( abl );
 
@@ -118,13 +118,22 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
     default: break;
     }
 
-    const auto feats = getFeatsUptoLvl( chr, lvl );
-    for( const auto id : feats ) {
-        const auto feat = getFeat( id ); // TODO Epic Barbarian not read?
-        if( feat && feat->hasEffect( effect ) ) {
-            const auto val = feat->getEffect( effect );
-            ablVal += val;
+    const auto checkFeats = [ this, &ablVal ]( const std::set< int > *feats, FeatEffectType effect ) {
+        for( const auto id : *feats ) {
+            const auto feat = getFeat( id );
+            if( feat && feat->hasEffect( effect ) ) {
+                const auto val = feat->getEffect( effect );
+                ablVal += val;
+            }
         }
+    };
+
+    if( featsUptoLvl ) {
+        checkFeats( featsUptoLvl, effect );
+    }
+    else {
+        const auto feats = getFeatsUptoLvl( chr, lvl );
+        checkFeats( &feats, effect );
     }
 
     switch( lvl ) {
@@ -230,9 +239,20 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl ) const
         }
     }
 
-    sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
-    sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl ) );
-    sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl ) );
+    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
+
+    sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl, &featsUptoLvl ) );
+    sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl, &featsUptoLvl ) );
+    sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl, &featsUptoLvl ) );
+
+//    for( const auto id : featsUptoLvl ) {
+//        const auto feat = getFeat( id );
+//        if( feat && feat->hasEffect( effect ) ) {
+//            const auto val = feat->getEffect( effect );
+//            ablVal += val;
+//        }
+//    }
+
     return sav;
 }
 
