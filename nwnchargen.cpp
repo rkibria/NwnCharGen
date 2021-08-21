@@ -475,6 +475,7 @@ void NwnCharGen::on_actionExport_triggered()
     s << "\n";
 
     const auto finalLvl = nwnChar->getNumLevels() - 1;
+
     for( int i = 0; i < 6; ++i ) {
         s << ablAbbrevs[ i ] << ": ";
 
@@ -488,11 +489,17 @@ void NwnCharGen::on_actionExport_triggered()
     s << "\n";
 
     s << "Classes: ";
-    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( nwnChar->getNumLevels() - 1 );
+    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( finalLvl );
     for( auto itr = curClassLvls.cbegin(); itr != curClassLvls.cend(); ++itr ) {
         s << itr->first << " (" << itr->second << ") ";
     }
     s << "\n\n";
+
+    s << "       HP: " << nwnRules->getHpAtLvl( nwnChar.get(), finalLvl ) << "\n";
+    const auto saves = nwnRules->getSavesAtLvl( nwnChar.get(), finalLvl );
+    s << "Fortitude: " << saves.Fort << "\n";
+    s << "   Reflex: " << saves.Ref << "\n";
+    s << "     Will: " << saves.Will << "\n\n";
 
     for( int lvl = 0; lvl < nwnChar->getNumLevels(); ++lvl ) {
         s << lvl + 1 << ": ";
