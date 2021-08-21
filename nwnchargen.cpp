@@ -467,12 +467,10 @@ void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
 
 void NwnCharGen::on_actionExport_triggered()
 {
-    QClipboard *clipboard = QGuiApplication::clipboard();
-
     std::stringstream s;
-    s << "Name: " << nwnChar->getName() << "\n";
-    s << "Race: " << nwnChar->getRace() << "\n";
-    s << "\n";
+    s << "     Name: " << nwnChar->getName() << "\n";
+    s << "     Race: " << nwnChar->getRace() << "\n";
+    s << "Alignment: " << alignmentToStr( nwnChar->getAlignment() ) << "\n\n";
 
     const auto finalLvl = nwnChar->getNumLevels() - 1;
 
@@ -531,6 +529,7 @@ void NwnCharGen::on_actionExport_triggered()
         s << "\n";
     }
 
+    QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(s.str().c_str());
 
     QMessageBox::information( this,
