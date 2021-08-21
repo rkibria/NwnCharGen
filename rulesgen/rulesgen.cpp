@@ -441,15 +441,15 @@ bool addLuckOfHeroesEffects( Feat& feat, const int id )
 
 bool addBasicSaveBonusEffects( Feat& feat, const int id )
 {
-    if( id == 14 ) {
+    if( id == 14 || id == 583 ) {
         feat.addEffect( FeatEffectType::FortSave, 2 );
         return true;
     }
-    if( id == 24 ) {
+    if( id == 24 || id == 585 ) {
         feat.addEffect( FeatEffectType::RefSave, 2 );
         return true;
     }
-    if( id == 22 ) {
+    if( id == 22 || id == 695 ) {
         feat.addEffect( FeatEffectType::WillSave, 2 );
         return true;
     }
