@@ -19,8 +19,6 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 0
-
 #include <boost/algorithm/string.hpp>
 
 #include "twodamapper.h"
@@ -32,7 +30,7 @@ namespace  {
 class TlkSwitcher
 {
 public:
-    TlkSwitcher( TlkFileReader16& main, TlkFileReader16* aux )
+    TlkSwitcher( const TlkFileReader16& main, TlkFileReader16* aux )
         : mainTlk{ main },
           auxTlk{ aux }
     {
@@ -569,27 +567,10 @@ std::string getCurrentTimeString()
 
 } // namespace
 
-int main()
+void readBasegameRules( const std::string& outputPath, const std::string& nwn2Path, const TlkFileReader16& dialogTlk )
 {
-    const auto outputPath = std::string( OUTPUT_PATH );
-    const auto nwn2Path = std::string( NWN2_PATH );
-
     TwoDAMapper twodaMapper( nwn2Path, outputPath );
-
-#if READ_SCOD_RULES == 1
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
-    TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
-#endif
-
-    TlkFileReader16 dialogTlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
-
-#if READ_SCOD_RULES == 1
-    TlkSwitcher tlkSw( dialogTlk, &otherTlk );
-#else
     TlkSwitcher tlkSw( dialogTlk, nullptr );
-#endif
 
     Rules nwnRules;
 
@@ -597,11 +578,37 @@ int main()
     importRaces( nwnRules, tlkSw, twodaMapper );
     importFeats( nwnRules, tlkSw, twodaMapper );
 
-#if READ_SCOD_RULES == 1
-    nwnRules.setDescription( std::string( "Sigil City of Doors, " ) + getCurrentTimeString() );
-    nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
-#else
     nwnRules.setDescription( "NWN2 base game" );
     nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
-#endif
+}
+
+void readScodRules( const std::string& outputPath, const std::string& nwn2Path, const TlkFileReader16& dialogTlk )
+{
+    TwoDAMapper twodaMapper( nwn2Path, outputPath );
+
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
+    TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
+
+    TlkSwitcher tlkSw( dialogTlk, &otherTlk );
+
+    Rules nwnRules;
+
+    importClasses( nwnRules, tlkSw, twodaMapper );
+    importRaces( nwnRules, tlkSw, twodaMapper );
+    importFeats( nwnRules, tlkSw, twodaMapper );
+
+    nwnRules.setDescription( std::string( "Sigil City of Doors, " ) + getCurrentTimeString() );
+    nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
+}
+
+int main()
+{
+    const auto outputPath = std::string( OUTPUT_PATH );
+    const auto nwn2Path = std::string( NWN2_PATH );
+    TlkFileReader16 dialogTlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
+
+    readBasegameRules( outputPath, nwn2Path, dialogTlk );
+    readScodRules( outputPath, nwn2Path, dialogTlk );
 }
