@@ -159,7 +159,11 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     return feats;
 }
 
-std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+std::tuple<
+    std::unique_ptr< std::vector< bool > >,
+    std::unique_ptr< std::vector< bool > >
+>
+loadBonusFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
     auto bonusFeats = std::make_unique< std::vector< bool > >();
     bonusFeats->resize( Character::maxLevel );
@@ -199,7 +203,7 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
         }
     }
 
-    return bonusFeats;
+    return std::make_tuple( std::move( bonusFeats ), std::move( normalFeats ) );
 }
 
 std::tuple<
@@ -325,9 +329,12 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             std::string bonusfeatsStr;
             const auto bonusfeatsOk = classes_2da.Get2DAString( "BonusFeatsTable", row, bonusfeatsStr );
             auto bonusFeats = std::make_unique< std::vector< bool > >();
+            auto normalFeats = std::make_unique< std::vector< bool > >();
             if( bonusfeatsOk ) {
                 boost::algorithm::to_lower( bonusfeatsStr );
-                bonusFeats = loadBonusFeatsTable( bonusfeatsStr, twodaMapper );
+                auto [ tmpBonusFeats, tmpNormalFeats ] = loadBonusFeatsTable( bonusfeatsStr, twodaMapper );
+                bonusFeats = std::move( tmpBonusFeats );
+                normalFeats = std::move( tmpNormalFeats );
             }
 
             std::cout << "importing class " << name << std::endl;
