@@ -193,6 +193,10 @@ int getLvlItrLimit( const Character* chr, int lvl )
 
 int Rules::getHpAtLvl( const Character* chr, int lvl ) const
 {
+    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
+
+    const bool hasToughness = featsUptoLvl.count( FEAT_ID_TOUGHNESS ) == 1;
+
     int hp = 0;
     const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
     for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
@@ -200,11 +204,9 @@ int Rules::getHpAtLvl( const Character* chr, int lvl ) const
         if( isChClassValid( lvlClass ) ) {
             const auto chClass = getChClassByName( lvlClass );
             hp += diceToInt( chClass->getHitDie() );
-            hp += conBonus;
+            hp += conBonus + ( hasToughness ? 1 : 0 );
         }
     }
-
-    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
 
     for( const auto id : featsUptoLvl ) {
         const auto feat = getFeat( id );
