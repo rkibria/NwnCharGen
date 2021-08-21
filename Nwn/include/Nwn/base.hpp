@@ -18,6 +18,10 @@ enum class AblScore : int {
     Cha
 };
 
+static const std::array<std::string, 6> ablAbbrevs = {
+    "STR", "DEX", "CON", "INT", "WIS", "CHA"
+};
+
 AblScore indexToAbl( int i );
 
 int getAblMod( int score );

@@ -77,12 +77,15 @@ QVariant LevelsModel::headerData(int section, Qt::Orientation orientation, int r
         case kClassCol: return QString("Class");
         case kHpCol:    return QString("HP");
         case kBabCol:   return QString("BAB");
-        case kSTRCol:   return QString("STR");
-        case kDEXCol:   return QString("DEX");
-        case kCONCol:   return QString("CON");
-        case kINTCol:   return QString("INT");
-        case kWISCol:   return QString("WIS");
-        case kCHACol:   return QString("CHA");
+
+        case kSTRCol:
+        case kDEXCol:
+        case kCONCol:
+        case kINTCol:
+        case kWISCol:
+        case kCHACol:
+            return QString( ablAbbrevs[ section - kSTRCol ].c_str() );
+
         case kSavesCol: return QString("Saves");
         case kFeatChoiceCol: return QString("Feats");
         case kFeatsGainedCol: return QString("Gained");

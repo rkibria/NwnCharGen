@@ -107,7 +107,7 @@ private:
     int ablPointsRemain = ablPointBuy;
     std::unique_ptr< AblBlock > abls;
     std::vector< std::string > levels;
-    std::array< AblScore, 7 > ablIncs;
+    std::array< AblScore, 7 > ablIncs = { AblScore::Str,  AblScore::Str, AblScore::Str, AblScore::Str, AblScore::Str, AblScore::Str, AblScore::Str };
     FeatChoiceContainer featChoices;
 };
 

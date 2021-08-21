@@ -19,8 +19,6 @@
 #include <Nwn/feat.hpp>
 using namespace Nwn;
 
-#define READ_SCOD_RULES 1
-
 #include <boost/algorithm/string.hpp>
 
 #include "twodamapper.h"
@@ -32,7 +30,7 @@ namespace  {
 class TlkSwitcher
 {
 public:
-    TlkSwitcher( TlkFileReader16& main, TlkFileReader16* aux )
+    TlkSwitcher( const TlkFileReader16& main, TlkFileReader16* aux )
         : mainTlk{ main },
           auxTlk{ aux }
     {
@@ -161,12 +159,20 @@ std::unique_ptr< std::set<int> > loadRacialFeatsTable( const std::string& tableN
     return feats;
 }
 
-std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
+std::tuple<
+    std::unique_ptr< std::vector< bool > >,
+    std::unique_ptr< std::vector< bool > >
+>
+loadBonusFeatsTable( const std::string& tableName, TwoDAMapper& twodaMapper )
 {
     auto bonusFeats = std::make_unique< std::vector< bool > >();
     bonusFeats->resize( Character::maxLevel );
 
+    auto normalFeats = std::make_unique< std::vector< bool > >();
+    normalFeats->resize( Character::maxLevel );
+
     constexpr const auto colBonus = "Bonus";
+    constexpr const auto colNormal = "Normal";
 
     const auto& filePath = twodaMapper.getFile( tableName );
     if( !filePath.empty() ) {
@@ -183,11 +189,21 @@ std::unique_ptr< std::vector< bool > > loadBonusFeatsTable( const std::string& t
             if( !featOk ) {
                 continue;
             }
-            (*bonusFeats)[ row ] = isBonus;
+
+            int isNormal = 0;
+            if( class_bfeat_2da.HasColumn( colNormal ) ) {
+                const auto normalOk = class_bfeat_2da.Get2DAInt( colNormal, row, isNormal );
+                if( !normalOk ) {
+                    continue;
+                }
+            }
+
+            (*bonusFeats)[ row ] = isBonus == 1;
+            (*normalFeats)[ row ] = isNormal == 1;
         }
     }
 
-    return bonusFeats;
+    return std::make_tuple( std::move( bonusFeats ), std::move( normalFeats ) );
 }
 
 std::tuple<
@@ -313,9 +329,12 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             std::string bonusfeatsStr;
             const auto bonusfeatsOk = classes_2da.Get2DAString( "BonusFeatsTable", row, bonusfeatsStr );
             auto bonusFeats = std::make_unique< std::vector< bool > >();
+            auto normalFeats = std::make_unique< std::vector< bool > >();
             if( bonusfeatsOk ) {
                 boost::algorithm::to_lower( bonusfeatsStr );
-                bonusFeats = loadBonusFeatsTable( bonusfeatsStr, twodaMapper );
+                auto [ tmpBonusFeats, tmpNormalFeats ] = loadBonusFeatsTable( bonusfeatsStr, twodaMapper );
+                bonusFeats = std::move( tmpBonusFeats );
+                normalFeats = std::move( tmpNormalFeats );
             }
 
             std::cout << "importing class " << name << std::endl;
@@ -326,6 +345,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setSaves( saves );
             chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
             chClass->setBonusFeats( std::move( bonusFeats ) );
+            chClass->setNormalFeats( std::move( normalFeats ) );
             chClass->setBonusChoices( std::move( bonusChoices ) );
             chClass->setExclusiveBonusChoices( std::move( exclusiveBonusChoices ) );
             nwnRules.setChClass( std::move( chClass ) );
@@ -403,6 +423,79 @@ void importRaces( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
             nwnRules.setRace( std::move( race ) );
         }
     }
+}
+
+bool addGreatAblEffects( Feat& feat, const int id )
+{
+    const int greatCHA = 764;
+    const int greatCON = 774;
+    const int greatDEX = 784;
+    const int greatINT = 794;
+    const int greatWIS = 804;
+    const int greatSTR = 814;
+
+    const auto checkGreatAbl = [ &feat ]( int id, int ablId, FeatEffectType effect ) {
+        if( id >= ablId && id < ablId + 10 ) {
+            feat.addEffect( effect, 1 );
+            return true;
+        }
+        return false;
+    };
+
+    return checkGreatAbl( id, greatSTR, FeatEffectType::StrBonus )
+            || checkGreatAbl( id, greatDEX, FeatEffectType::DexBonus )
+            || checkGreatAbl( id, greatCON, FeatEffectType::ConBonus )
+            || checkGreatAbl( id, greatINT, FeatEffectType::IntBonus )
+            || checkGreatAbl( id, greatWIS, FeatEffectType::WisBonus )
+            || checkGreatAbl( id, greatCHA, FeatEffectType::ChaBonus );
+}
+
+bool addLuckOfHeroesEffects( Feat& feat, const int id )
+{
+    if( id == 382 ) {
+        feat.addEffect( FeatEffectType::FortSave, 1 );
+        feat.addEffect( FeatEffectType::RefSave, 1 );
+        feat.addEffect( FeatEffectType::WillSave, 1 );
+        return true;
+    }
+    return false;
+}
+
+bool addBasicSaveBonusEffects( Feat& feat, const int id )
+{
+    if( id == 14 || id == 583 ) {
+        feat.addEffect( FeatEffectType::FortSave, 2 );
+        return true;
+    }
+    if( id == 24 || id == 585 ) {
+        feat.addEffect( FeatEffectType::RefSave, 2 );
+        return true;
+    }
+    if( id == 22 || id == 695 ) {
+        feat.addEffect( FeatEffectType::WillSave, 2 );
+        return true;
+    }
+    return false;
+}
+
+bool addEpicToughnessEffects( Feat& feat, const int id )
+{
+    const int epicToughness = 754;
+    if( id >= epicToughness && id < epicToughness + 10 ) {
+        feat.addEffect( FeatEffectType::HpBonus, 30 );
+        return true;
+    }
+    return false;
+}
+
+void addFeatEffects( Feat& feat )
+{
+    const auto id = feat.getId();
+
+    addGreatAblEffects( feat, id )
+            || addLuckOfHeroesEffects( feat, id )
+            || addBasicSaveBonusEffects( feat, id )
+            || addEpicToughnessEffects( feat, id );
 }
 
 void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaMapper )
@@ -519,6 +612,8 @@ void importFeats( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twodaM
                 readColumn( col );
             }
 
+            addFeatEffects( *feat );
+
             std::cout << "importing feat ID " << row << ": " << name << std::endl;
             nwnRules.setFeat( std::move( feat ) );
         }
@@ -535,27 +630,10 @@ std::string getCurrentTimeString()
 
 } // namespace
 
-int main()
+void readBasegameRules( const std::string& outputPath, const std::string& nwn2Path, const TlkFileReader16& dialogTlk )
 {
-    const auto outputPath = std::string( OUTPUT_PATH );
-    const auto nwn2Path = std::string( NWN2_PATH );
-
     TwoDAMapper twodaMapper( nwn2Path, outputPath );
-
-#if READ_SCOD_RULES == 1
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
-    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
-    TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
-#endif
-
-    TlkFileReader16 dialogTlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
-
-#if READ_SCOD_RULES == 1
-    TlkSwitcher tlkSw( dialogTlk, &otherTlk );
-#else
     TlkSwitcher tlkSw( dialogTlk, nullptr );
-#endif
 
     Rules nwnRules;
 
@@ -563,11 +641,37 @@ int main()
     importRaces( nwnRules, tlkSw, twodaMapper );
     importFeats( nwnRules, tlkSw, twodaMapper );
 
-#if READ_SCOD_RULES == 1
-    nwnRules.setDescription( std::string( "Sigil City of Doors, " ) + getCurrentTimeString() );
-    nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
-#else
     nwnRules.setDescription( "NWN2 base game" );
     nwnRules.save( ( outputPath + "\\nwn2.xml" ).c_str() );
-#endif
+}
+
+void readScodRules( const std::string& outputPath, const std::string& nwn2Path, const TlkFileReader16& dialogTlk )
+{
+    TwoDAMapper twodaMapper( nwn2Path, outputPath );
+
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_rc.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_main.hak" );
+    twodaMapper.readHak( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\hak\\scod3_2da_core.hak" );
+    TlkFileReader16 otherTlk( "C:\\Users\\Raihan\\Documents\\Neverwinter Nights 2\\tlk\\scod2.tlk" );
+
+    TlkSwitcher tlkSw( dialogTlk, &otherTlk );
+
+    Rules nwnRules;
+
+    importClasses( nwnRules, tlkSw, twodaMapper );
+    importRaces( nwnRules, tlkSw, twodaMapper );
+    importFeats( nwnRules, tlkSw, twodaMapper );
+
+    nwnRules.setDescription( std::string( "Sigil City of Doors, " ) + getCurrentTimeString() );
+    nwnRules.save( ( outputPath + "\\scod.xml" ).c_str() );
+}
+
+int main()
+{
+    const auto outputPath = std::string( OUTPUT_PATH );
+    const auto nwn2Path = std::string( NWN2_PATH );
+    TlkFileReader16 dialogTlk( ( nwn2Path + "\\dialog.TLK" ).c_str() );
+
+    readBasegameRules( outputPath, nwn2Path, dialogTlk );
+    readScodRules( outputPath, nwn2Path, dialogTlk );
 }

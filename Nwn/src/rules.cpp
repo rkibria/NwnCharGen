@@ -1,5 +1,6 @@
 #include <cassert>
 #include <fstream>
+#include <iostream>
 
 #include <Nwn/race.hpp>
 #include <Nwn/rules.hpp>
@@ -85,6 +86,7 @@ const Nwn::Feat* Rules::getFeat( int id ) const
     if( feats.find( id ) != feats.end() ) {
         return feats.at( id ).get();
     }
+    // std::cerr << "feat id " << id << " not found\n";
     return nullptr;
 }
 
@@ -95,7 +97,7 @@ void Rules::setFeat( std::unique_ptr< Nwn::Feat > f )
 
 // CHARACTER METHODS
 
-int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
+int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl, const std::set< int > *featsUptoLvl ) const
 {
     int ablVal = chr->getAbls().getAbl( abl );
 
@@ -103,6 +105,35 @@ int Rules::getAblAtLvl( const Character* chr, AblScore abl, int lvl ) const
     if( isRaceValid( raceName ) ) {
         const auto race = getRaceByName( raceName );
         ablVal += race->getAblAdjusts().getAbl( abl );
+    }
+
+    FeatEffectType effect;
+    switch( abl ) {
+    case AblScore::Str: effect = FeatEffectType::StrBonus; break;
+    case AblScore::Dex: effect = FeatEffectType::DexBonus; break;
+    case AblScore::Con: effect = FeatEffectType::ConBonus; break;
+    case AblScore::Int: effect = FeatEffectType::IntBonus; break;
+    case AblScore::Wis: effect = FeatEffectType::WisBonus; break;
+    case AblScore::Cha: effect = FeatEffectType::ChaBonus; break;
+    default: break;
+    }
+
+    const auto checkFeats = [ this, &ablVal ]( const std::set< int > *feats, FeatEffectType effect ) {
+        for( const auto id : *feats ) {
+            const auto feat = getFeat( id );
+            if( feat && feat->hasEffect( effect ) ) {
+                const auto val = feat->getEffect( effect );
+                ablVal += val;
+            }
+        }
+    };
+
+    if( featsUptoLvl ) {
+        checkFeats( featsUptoLvl, effect );
+    }
+    else {
+        const auto feats = getFeatsUptoLvl( chr, lvl );
+        checkFeats( &feats, effect );
     }
 
     switch( lvl ) {
@@ -162,6 +193,10 @@ int getLvlItrLimit( const Character* chr, int lvl )
 
 int Rules::getHpAtLvl( const Character* chr, int lvl ) const
 {
+    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
+
+    const bool hasToughness = featsUptoLvl.count( FEAT_ID_TOUGHNESS ) == 1;
+
     int hp = 0;
     const auto conBonus = getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
     for( int i = 0; i <= getLvlItrLimit( chr, lvl ); ++i ) {
@@ -169,9 +204,20 @@ int Rules::getHpAtLvl( const Character* chr, int lvl ) const
         if( isChClassValid( lvlClass ) ) {
             const auto chClass = getChClassByName( lvlClass );
             hp += diceToInt( chClass->getHitDie() );
-            hp += conBonus;
+            hp += conBonus + ( hasToughness ? 1 : 0 );
         }
     }
+
+    for( const auto id : featsUptoLvl ) {
+        const auto feat = getFeat( id );
+        if( feat ) {
+            if( feat->hasEffect( FeatEffectType::HpBonus ) ) {
+                const auto val = feat->getEffect( FeatEffectType::HpBonus );
+                hp += val;
+            }
+        }
+    }
+
     return hp;
 }
 
@@ -208,9 +254,37 @@ SavingThrows Rules::getSavesAtLvl( const Character* chr, int lvl ) const
         }
     }
 
-    sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl ) );
-    sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl ) );
-    sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl ) );
+    const auto featsUptoLvl = getFeatsUptoLvl( chr, lvl );
+
+    sav.Fort += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl, &featsUptoLvl ) );
+    sav.Ref += getAblMod( getAblAtLvl( chr, AblScore::Dex, lvl, &featsUptoLvl ) );
+
+    const bool hasSteadfast = ( featsUptoLvl.count( FEAT_ID_STEADFAST_DETERMINATION ) == 1 );
+    if( !hasSteadfast ) {
+        sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Wis, lvl, &featsUptoLvl ) );
+    }
+    else {
+        sav.Will += getAblMod( getAblAtLvl( chr, AblScore::Con, lvl, &featsUptoLvl ) );
+    }
+
+    for( const auto id : featsUptoLvl ) {
+        const auto feat = getFeat( id );
+        if( feat ) {
+            if( feat->hasEffect( FeatEffectType::FortSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::FortSave );
+                sav.Fort += val;
+            }
+            if( feat->hasEffect( FeatEffectType::RefSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::RefSave );
+                sav.Ref += val;
+            }
+            if( feat->hasEffect( FeatEffectType::WillSave ) ) {
+                const auto val = feat->getEffect( FeatEffectType::WillSave );
+                sav.Will += val;
+            }
+        }
+    }
+
     return sav;
 }
 
@@ -269,6 +343,13 @@ int Rules::getNumNormalFeatChoicesAtLvl( const Character* chr, int lvl ) const
                 ++total;
             }
         }
+    }
+
+    const auto& classAtLvl = chr->getLevel( lvl );
+    const auto chClass = getChClassByName( classAtLvl );
+    if( chClass ) {
+        const auto chClassLvls = chr->getChClassCountsAtLvl( lvl );
+        total += chClass->getNormalFeat( chClassLvls.at( classAtLvl ) - 1 ) ? 1 : 0;
     }
 
     return total;

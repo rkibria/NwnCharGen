@@ -27,4 +27,19 @@ void Feat::setColumn(const std::string& col, int val)
     columns[col] = val;
 }
 
+void Feat::addEffect(FeatEffectType type, int val)
+{
+    effects[type] = val;
+}
+
+bool Feat::hasEffect(FeatEffectType type) const
+{
+    return (effects.find( type ) != effects.end());
+}
+
+int Feat::getEffect(FeatEffectType type) const
+{
+    return effects.at( type );
+}
+
 } // namespace Nwn

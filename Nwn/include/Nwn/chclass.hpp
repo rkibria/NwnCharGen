@@ -60,6 +60,9 @@ public:
     void setBonusFeats( std::unique_ptr< std::vector< bool > > bf );
     bool getBonusFeat( int lvl ) const;
 
+    void setNormalFeats( std::unique_ptr< std::vector< bool > > nf );
+    bool getNormalFeat( int lvl ) const;
+
     void setBonusChoices( std::unique_ptr< BonusFeatsSet > bc );
     const BonusFeatsSet& getBonusChoices() const;
 
@@ -80,7 +83,8 @@ private:
            & boost::serialization::make_nvp( "featsPerLvl", featsPerLvl )
            & boost::serialization::make_nvp( "bonusFeats", bonusFeats )
            & boost::serialization::make_nvp( "bonusChoices", bonusChoices )
-           & boost::serialization::make_nvp( "exclusiveBonusChoices", exclusiveBonusChoices );
+           & boost::serialization::make_nvp( "exclusiveBonusChoices", exclusiveBonusChoices )
+           & boost::serialization::make_nvp( "normalFeats", normalFeats );
     }
 
     int id = INVALID_CHCLASS_ID;
@@ -93,6 +97,7 @@ private:
     std::unique_ptr< std::vector< bool > > bonusFeats;
     std::unique_ptr< BonusFeatsSet > bonusChoices;
     std::unique_ptr< BonusFeatsSet > exclusiveBonusChoices;
+    std::unique_ptr< std::vector< bool > > normalFeats;
 };
 
 } // namespace Nwn

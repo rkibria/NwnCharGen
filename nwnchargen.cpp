@@ -467,24 +467,15 @@ void NwnCharGen::on_actionSigil_City_of_Doors_triggered()
 
 void NwnCharGen::on_actionExport_triggered()
 {
-    QClipboard *clipboard = QGuiApplication::clipboard();
-
     std::stringstream s;
-    s << "Name: " << nwnChar->getName() << "\n";
-    s << "Race: " << nwnChar->getRace() << "\n";
-    s << "\n";
+    s << "     Name: " << nwnChar->getName() << "\n";
+    s << "     Race: " << nwnChar->getRace() << "\n";
+    s << "Alignment: " << alignmentToStr( nwnChar->getAlignment() ) << "\n\n";
 
     const auto finalLvl = nwnChar->getNumLevels() - 1;
+
     for( int i = 0; i < 6; ++i ) {
-        switch( i ) {
-        case 0: s << "STR: "; break;
-        case 1: s << "DEX: "; break;
-        case 2: s << "CON: "; break;
-        case 3: s << "INT: "; break;
-        case 4: s << "WIS: "; break;
-        case 5: s << "CHA: "; break;
-        default: break;
-        }
+        s << ablAbbrevs[ i ] << ": ";
 
         const auto abl = indexToAbl( i );
         const auto score = nwnRules->getAblAtLvl( nwnChar.get(), abl, 1 );
@@ -496,15 +487,26 @@ void NwnCharGen::on_actionExport_triggered()
     s << "\n";
 
     s << "Classes: ";
-    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( nwnChar->getNumLevels() - 1 );
+    const auto curClassLvls = nwnChar->getChClassCountsAtLvl( finalLvl );
     for( auto itr = curClassLvls.cbegin(); itr != curClassLvls.cend(); ++itr ) {
         s << itr->first << " (" << itr->second << ") ";
     }
     s << "\n\n";
 
+    s << "       HP: " << nwnRules->getHpAtLvl( nwnChar.get(), finalLvl ) << "\n";
+    const auto saves = nwnRules->getSavesAtLvl( nwnChar.get(), finalLvl );
+    s << "Fortitude: " << saves.Fort << "\n";
+    s << "   Reflex: " << saves.Ref << "\n";
+    s << "     Will: " << saves.Will << "\n\n";
+
     for( int lvl = 0; lvl < nwnChar->getNumLevels(); ++lvl ) {
         s << lvl + 1 << ": ";
         s << nwnChar->getLevel( lvl ) << " ";
+
+        if( ( lvl + 1 ) % 4 == 0 ) {
+            const auto abl = nwnChar->getAblInc( lvl / 4 );
+            s << "[" << ablAbbrevs[ static_cast< int >( abl ) ] << "+1] ";
+        }
 
         const auto numNormalFeatChoices = nwnRules->getNumNormalFeatChoicesAtLvl( nwnChar.get(), lvl );
         const auto numBonusFeatChoices = nwnRules->getNumBonusFeatChoicesAtLvl( nwnChar.get(), lvl );
@@ -527,6 +529,7 @@ void NwnCharGen::on_actionExport_triggered()
         s << "\n";
     }
 
+    QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(s.str().c_str());
 
     QMessageBox::information( this,

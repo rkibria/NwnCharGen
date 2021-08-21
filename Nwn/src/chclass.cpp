@@ -8,7 +8,8 @@ ChClass::ChClass( int id, const std::string& n ) :
     featsPerLvl{ std::make_unique< FeatsPerLevelMap >() },
     bonusFeats{ std::make_unique< std::vector< bool > >() },
     bonusChoices{ std::make_unique< BonusFeatsSet >() },
-    exclusiveBonusChoices{ std::make_unique< BonusFeatsSet >() }
+    exclusiveBonusChoices{ std::make_unique< BonusFeatsSet >() },
+    normalFeats{ std::make_unique< std::vector< bool > >() }
 {
 }
 
@@ -34,6 +35,16 @@ void ChClass::setBonusFeats( std::unique_ptr< std::vector< bool > > bf )
 bool ChClass::getBonusFeat( int lvl ) const
 {
     return (*bonusFeats)[ lvl ];
+}
+
+void ChClass::setNormalFeats( std::unique_ptr< std::vector< bool > > nf )
+{
+    normalFeats = std::move( nf );
+}
+
+bool ChClass::getNormalFeat( int lvl ) const
+{
+    return (*normalFeats)[ lvl ];
 }
 
 void ChClass::setBonusChoices( std::unique_ptr< BonusFeatsSet > bc )
