@@ -345,6 +345,13 @@ int Rules::getNumNormalFeatChoicesAtLvl( const Character* chr, int lvl ) const
         }
     }
 
+    const auto& classAtLvl = chr->getLevel( lvl );
+    const auto chClass = getChClassByName( classAtLvl );
+    if( chClass ) {
+        const auto chClassLvls = chr->getChClassCountsAtLvl( lvl );
+        total += chClass->getNormalFeat( chClassLvls.at( classAtLvl ) - 1 ) ? 1 : 0;
+    }
+
     return total;
 }
 

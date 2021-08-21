@@ -345,6 +345,7 @@ void importClasses( Rules &nwnRules, const TlkSwitcher& tlkSw, TwoDAMapper& twod
             chClass->setSaves( saves );
             chClass->setFeatsPerLvl( std::move( featsPerLvl ) );
             chClass->setBonusFeats( std::move( bonusFeats ) );
+            chClass->setNormalFeats( std::move( normalFeats ) );
             chClass->setBonusChoices( std::move( bonusChoices ) );
             chClass->setExclusiveBonusChoices( std::move( exclusiveBonusChoices ) );
             nwnRules.setChClass( std::move( chClass ) );
