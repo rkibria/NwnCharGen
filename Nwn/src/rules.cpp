@@ -405,9 +405,9 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
     static const std::vector< std::string > kMinAblCols = {
         "MINSTR",
         "MINDEX",
+        "MINCON",
         "MININT",
         "MINWIS",
-        "MINCON",
         "MINCHA"
     };
     for( int i = 0; i < 6; ++i ) {
