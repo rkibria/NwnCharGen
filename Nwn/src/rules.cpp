@@ -468,23 +468,32 @@ bool Rules::isFeatAvailAtLvl( const Character* nwnChar, int lvl, int featid ) co
 
     static const std::string kMinLevelCol = "MinLevel";
     static const std::string kMinLevelClassCol = "MinLevelClass";
-    if( feat->hasColumn( kMinLevelCol ) && feat->hasColumn( kMinLevelClassCol ) ) {
-        const auto minLevel = feat->getColumn( kMinLevelCol );
-        const auto minLevelClassId = feat->getColumn( kMinLevelClassCol );
 
-        bool hasMinLevel = false;
-        for( const auto& pr : classCounts ) {
-            const auto chClass = getChClassByName( pr.first );
-            if( chClass ) {
-                const auto classId = chClass->getId();
-                if( minLevelClassId == classId && pr.second >= minLevel ) {
-                    hasMinLevel = true;
+    if( feat->hasColumn( kMinLevelCol ) ) {
+        const auto minLevel = feat->getColumn( kMinLevelCol );
+
+        if( feat->hasColumn( kMinLevelClassCol ) ) {
+            const auto minLevelClassId = feat->getColumn( kMinLevelClassCol );
+
+            bool hasMinLevel = false;
+            for( const auto& pr : classCounts ) {
+                const auto chClass = getChClassByName( pr.first );
+                if( chClass ) {
+                    const auto classId = chClass->getId();
+                    if( minLevelClassId == classId && pr.second >= minLevel ) {
+                        hasMinLevel = true;
+                    }
                 }
             }
-        }
 
-        if( !hasMinLevel ) {
-            return false;
+            if( !hasMinLevel ) {
+                return false;
+            }
+        }
+        else {
+            if( lvl + 1 < minLevel ) {
+                return false;
+            }
         }
     }
 
